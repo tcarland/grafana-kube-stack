@@ -1,0 +1,23 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: monitoring
+
+resources:
+- namespace.yaml
+
+secretGenerator:
+- name: s3-secret
+  envs:
+  - secrets.env
+
+helmCharts:
+- name: mimir-distributed
+  includeCRDs: true
+  releaseName: mimir
+  namespace: monitoring
+  version: 5.6.0
+  repo: https://grafana.github.io/helm-charts
+  valuesFile: mimir-values.yaml
+  additionalValuesFiles:
+    - mimir-structuredConfig.yaml

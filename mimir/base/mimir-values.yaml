@@ -1,0 +1,63 @@
+global:
+  extraEnvFrom:
+    - secretRef:
+        name: s3-secret
+  podAnnotations:
+    bucketSecretVersion: "0"
+
+alertmanager:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+  persistentVolume:
+    size: 4Gi
+
+distributor:
+#  replicas: 3
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+
+ingester:
+  replicas: 3
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+  persistentVolume:
+    size: 1Gi
+
+compactor:
+  persistentVolume:
+    size: 1Gi
+    
+minio:
+  enabled: false
+nginx:
+  enabled: false
+store_gateway:
+  enabled: false
+  
+metaMonitoring:
+  serviceMonitor:
+    enabled: false
+  grafanaAgent:
+    enabled: false
+  metrics:
+    enabled: false
+    remote:
+      url: ''
+      headers: {}
+      auth:
+        username: ''
+        passwordSecretName: ''
+        passwordSecretKey: ''
+    scrapeK8s:
+      enabled: false
+
+graphite:
+  enabled: false
+enterprise:
+  enabled: false
