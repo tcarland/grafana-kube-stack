@@ -42,7 +42,7 @@ if [[ "$S3_ENDPOINT" =~ "http" ]]; then
     export S3_ENDPOINT=${S3_ENDPOINT#*//}
 fi
 
-( echo "$s3_secrets" | envsubst > mimir/base/secrets.env )
+echo "$s3_secrets" | envsubst > mimir/base/secrets.env
 
 if [[ "$INGRESS_NAMESPACE" =~ "istio" ]]; then
     ingress="istio"
@@ -55,5 +55,6 @@ if [ -d env/${envname}/certs ]; then
     cp env/${envname}/certs/* prometheus/$ingress/base/
 fi
 
+cat tempo/base/tempo-values.template.yaml | envsubst > tempo/base/tempo-values.yaml
 
 exit 0

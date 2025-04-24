@@ -69,7 +69,7 @@ done
 Ensure the charts are pulled to the local *charts* cache by running
 *kustomize build* first.
 ```sh
-kustomize build --enable helm prometheus/
+kustomize build --enable-helm prometheus/
 ```
 
 Prometheus *CRDs* are rather large, which forced moving them to a
