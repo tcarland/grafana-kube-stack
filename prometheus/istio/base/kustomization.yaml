@@ -1,0 +1,59 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - grafana-virtualservice.yaml
+  - grafana-gateway.yaml
+
+configMapGenerator:
+  - name: grafana-istio-params
+    envs:
+      - params.env
+secretGenerator:
+  - name: grafana-tls
+    namespace: istio-system
+    behavior: create
+    type: "kubernetes.io/tls"
+    files:
+      - tls.crt=grafana.crt
+      - tls.key=grafana.key
+generatorOptions:
+  disableNameSuffixHash: true
+
+replacements:
+  - source:
+      fieldPath: data.GRAFANA_DOMAINNAME
+      kind: ConfigMap
+      name: trino-istio-params
+      version: v1
+    targets:
+      - select:
+          name: trino-gateway
+          kind: Gateway
+        fieldPaths:
+          - spec.servers.*.hosts.0
+      - select:
+          name: trino-vs
+          kind: VirtualService
+        fieldPaths:
+          - spec.hosts.0
+  - source:
+      fieldPath: data.ingress_namespace
+      kind: ConfigMap
+      name: grafana-istio-params
+      version: v1
+    targets:
+      - select:
+          name: grafana-tls
+          kind: Secret
+        fieldPaths:
+          - metadata.namespace
+
+labels:
+  - includeSelectors: true
+    pairs:
+      app.kubernetes.io/component: grafana-ingress
+      app.kubernetes.io/name: istio-ingress
+      app.kubernetes.io/part-of: grafana-kube-stack
+      app.kubernetes.io/version: v25.04.18
+      kustomize.component: grafana-ingress

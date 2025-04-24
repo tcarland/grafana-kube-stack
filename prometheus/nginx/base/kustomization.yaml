@@ -1,0 +1,43 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - grafana-ingress.yaml
+
+configMapGenerator:
+  - name: grafana-nginx-params
+    envs:
+      - params.env
+secretGenerator:
+  - name: grafana-tls
+    behavior: create
+    type: "kubernetes.io/tls"
+    files:
+      - tls.crt=grafana.crt
+      - tls.key=grafana.key
+generatorOptions:
+  disableNameSuffixHash: true
+
+replacements:
+  - source:
+      fieldPath: data.GRAFANA_DOMAINNAME
+      kind: ConfigMap
+      name: grafana-nginx-params
+      version: v1
+    targets:
+      - select:
+          name: grafana-ingress
+          kind: Ingress
+        fieldPaths:
+          - spec.tls.*.hosts.0
+          - spec.rules.0.host
+
+labels:
+  - includeSelectors: true
+    pairs:
+      app.kubernetes.io/component: grafana-ingress
+      app.kubernetes.io/name: nginx
+      app.kubernetes.io/part-of: grafana-kube-stack
+      app.kubernetes.io/version: v25.04.18
+      kustomize.component: grafana-ingress

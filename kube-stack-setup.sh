@@ -7,16 +7,15 @@ VERSION="v25.04.25"
 binpath=$(dirname "$0")
 project=$(dirname "$(realpath "$binpath")")
 
+envname="$1"
+
 export S3_BUCKET_NAME=${S3_BUCKET_NAME:-"mimir/data"}
 export S3_SKIP_VERIFY=${MINIO_TLS_INSECURE:-"true"}
-
-# strip protocol from endpoint
-
 
 s3_secrets="
 S3_REGION=\${S3_REGION}
 S3_ENDPOINT=\${S3_ENDPOINT}
-S3_BUCKET_NAME=\${S3_BUCKET_NAME
+S3_BUCKET_NAME=\${S3_BUCKET_NAME}
 S3_ACCESS_KEY=\${S3_ACCESS_KEY}
 S3_SECRET_KEY=\${S3_SECRET_KEY}
 S3_SKIP_VERIFY=\${S3_SKIP_VERIFY}
@@ -38,5 +37,23 @@ if [[ -z "$S3_ACCESS_KEY" || -z "$S3_SECRET_KEY" ]]; then
     exit 1
 fi
 
+# strip protocol from endpoint
+if [[ "$S3_ENDPOINT" =~ "http" ]]; then
+    export S3_ENDPOINT=${S3_ENDPOINT#*//}
+fi
 
 ( echo "$s3_secrets" | envsubst > mimir/base/secrets.env )
+
+if [[ "$INGRESS_NAMESPACE" =~ "istio" ]]; then
+    ingress="istio"
+else
+    ingress="nginx"
+fi
+
+cat prometheus/$ingress/base/params.env.template | envsubst > prometheus/$ingress/base/params.env
+if [ -d env/${envname}/certs ]; then
+    cp env/${envname}/certs/* prometheus/$ingress/base/
+fi
+
+
+exit 0

@@ -1,0 +1,25 @@
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: trino-vs
+  namespace: $(namespace)
+spec:
+  gateways:
+  - grafana-gateway
+  hosts:
+  - "$GRAFANA_DOMAINNAME"
+  http:
+  - headers:
+      request:
+        set:
+          X-Forwarded-Proto: https
+    match:
+    - uri:
+        prefix: /
+    name: prometheus-grafana
+    route:
+    - destination:
+        host: prometheus-grafana.monitoring.svc.cluster.local
+        port:
+          number: 80

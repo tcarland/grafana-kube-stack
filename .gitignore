@@ -1,6 +1,10 @@
 **/*.sw*
 *.env
 !secrets.env
-s3-secret.yaml
 tempo/tempo-values.yaml
 **/base/charts
+*.cert
+*.crt
+*.key
+
+**/base/params.env

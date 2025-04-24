@@ -56,15 +56,15 @@ prometheus:
       metric_relabel_configs:
           - source_labels: [__name__]
             regex: ".+_FifteenMinute.+|.+_FiveMinute.+|.+IterativeOptimizer.+|.*io_airlift_http_client_type_HttpClient.+"
-            action: drop # droping some highly granular metrics 
+            action: drop # droping some highly granular metrics
           - source_labels: [__meta_kubernetes_pod_name]
             regex: ".+"
             target_label: pod
-            action: replace 
+            action: replace
           - source_labels: [__meta_kubernetes_pod_container_name]
             regex: ".+"
             target_label: container
-            action: replace 
+            action: replace
       scheme: http
       tls_config:
         insecure_skip_verify: true
@@ -83,7 +83,7 @@ grafana:
   nodeSelector:
     node-role.kubernetes.io/worker: ""
   service:
-    type: LoadBalancer
+    type: NodePort
     nodePort: 30200
   persistence:
     enabled: true
