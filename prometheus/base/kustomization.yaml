@@ -5,7 +5,7 @@ namespace: monitoring
 
 helmCharts:
 - name: kube-prometheus-stack
-  includeCRDs: true
+  includeCRDs: false
   releaseName: prometheus
   namespace: monitoring
   version: 70.3.0

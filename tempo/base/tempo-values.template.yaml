@@ -1,0 +1,53 @@
+global:
+  image:
+    registry: ""
+storage:
+  trace:
+    backend: s3
+    s3:
+      bucket: tempo-traces
+      endpoint: ${S3_ENDPOINT}
+      access_key: ${S3_ACCESS_KEY}
+      secret_key: ${S3_SECRET_KEY}
+      insecure: true
+      insecure_skip_verify: ${S3_SKIP_VERIFY}
+minio:
+  enabled: false
+
+ingester:
+  replicas: 1
+  config:
+    replication_factor: 1
+  persistence:
+    enabled: true
+    inMemory: false
+    size: 2Gi
+    #storageClass: standard
+metricsGenerator:
+  enabled: false
+  replicas: 1
+  walEmptyDir:
+    medium: "Memory"
+    sizeLimit: 1Gi
+traces:
+  otlp:
+    grpc:
+      enabled: true
+    http:
+      enabled: true
+  jaeger:
+    thriftHttp:
+      enabled: true
+  opencensus:
+    enabled: false
+  zipkin:
+    enabled: false
+distributor:
+  replicas: 1
+  config:
+    log_received_spans:
+      enabled: true
+compactor:
+  replicas: 1
+  config:
+    block_retention: 48h

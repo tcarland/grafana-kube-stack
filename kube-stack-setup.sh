@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-#
+# Timothy C. Arland <tcarland at gmail dot com>
 PNAME=${0##*\/}
 VERSION="v25.04.25"
 
