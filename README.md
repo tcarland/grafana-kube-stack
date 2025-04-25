@@ -92,3 +92,7 @@ kustomize build --enable-helm prometheus/ | k apply -f -
 ## Tempo
 
 Note that recent Tempo releases require Kubernetes 1.29+
+
+The tempo chart does not take S3 credentials from a secret like Mimir,
+unfortunately, so a *values* template is used to generate the input
+for the Tempo chart.

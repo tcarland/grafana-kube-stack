@@ -50,11 +50,12 @@ else
     ingress="nginx"
 fi
 
-cat prometheus/$ingress/base/params.env.template | envsubst > prometheus/$ingress/base/params.env
+cat prometheus/${ingress}/base/params.env.template | envsubst > prometheus/${ingress}/base/params.env
 if [ -d env/${envname}/certs ]; then
-    cp env/${envname}/certs/* prometheus/$ingress/base/
+    cp env/${envname}/certs/* prometheus/${ingress}/base/
 fi
 
+cat prometheus/base/prom-values.template.yaml | envsubst > prometheus/base/prom-values.yaml
 cat tempo/base/tempo-values.template.yaml | envsubst > tempo/base/tempo-values.yaml
 
 exit 0

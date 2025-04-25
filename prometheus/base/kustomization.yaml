@@ -11,28 +11,3 @@ helmCharts:
   version: 70.3.0
   repo: https://prometheus-community.github.io/helm-charts
   valuesFile: prom-values.yaml
-  valuesInline:
-    prometheusOperator:
-      nodeSelector:
-        node-role.kubernetes.io/worker: ""
-    prometheus:
-      service:
-        type: NodePort
-        nodePort: 30500
-    alertmanager:
-      alertmanagerSpec:
-        nodeSelector:
-          node-role.kubernetes.io/worker: ""
-      service:
-        type: NodePort
-        nodePort: 30400
-    grafana:
-      adminPassword: admin
-      nodeSelector:
-        node-role.kubernetes.io/worker: ""
-      service:
-        type: LoadBalancer
-        nodePort: 30200
-      persistence:
-        enabled: true
-        size: 4Gi
