@@ -21,11 +21,11 @@ prometheus:
       tls_config:
         insecure_skip_verify: true
       basic_auth:
-        username: tdh
-        password: tdhadmin
+        username: ${TRINO_USER}
+        password: ${TRINO_PASSWORD}
       static_configs:
        - targets:
-         - trino.charltontechnology.net:443
+         - $(TRINO_DOMAINNAME)
     - job_name: trino-metrics-worker
       scrape_interval: 10s
       scrape_timeout: 10s
@@ -69,7 +69,7 @@ prometheus:
       tls_config:
         insecure_skip_verify: true
       basic_auth:
-        username: tdh
+        username: ${TRINO_USER}
 
 alertmanager:
   alertmanagerSpec:
