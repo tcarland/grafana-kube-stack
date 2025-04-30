@@ -25,7 +25,7 @@ prometheus:
         password: ${TRINO_PASSWORD}
       static_configs:
        - targets:
-         - $(TRINO_DOMAINNAME)
+         - ${TRINO_DOMAINNAME}
     - job_name: trino-metrics-worker
       scrape_interval: 10s
       scrape_timeout: 10s

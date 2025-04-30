@@ -8,4 +8,5 @@
 **/secrets.env
 **/base/params.env
 
-tempo/tempo-values.yaml
+prometheus/base/prom-values.yaml
+tempo/base/tempo-values.yaml

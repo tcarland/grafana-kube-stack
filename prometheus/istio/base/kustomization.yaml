@@ -24,16 +24,16 @@ replacements:
   - source:
       fieldPath: data.GRAFANA_DOMAINNAME
       kind: ConfigMap
-      name: trino-istio-params
+      name: grafana-istio-params
       version: v1
     targets:
       - select:
-          name: trino-gateway
+          name: grafana-gateway
           kind: Gateway
         fieldPaths:
           - spec.servers.*.hosts.0
       - select:
-          name: trino-vs
+          name: grafana-vs
           kind: VirtualService
         fieldPaths:
           - spec.hosts.0
@@ -55,5 +55,5 @@ labels:
       app.kubernetes.io/component: grafana-ingress
       app.kubernetes.io/name: istio-ingress
       app.kubernetes.io/part-of: grafana-kube-stack
-      app.kubernetes.io/version: v25.04.18
+      app.kubernetes.io/version: v25.04.30
       kustomize.component: grafana-ingress
