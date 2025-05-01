@@ -2,7 +2,7 @@
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: trino-vs
+  name: grafana-vs
   namespace: $(namespace)
 spec:
   gateways:
