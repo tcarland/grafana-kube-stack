@@ -2,7 +2,7 @@
 #
 # Timothy C. Arland <tcarland at gmail dot com>
 PNAME=${0##*\/}
-VERSION="v25.04.30"
+VERSION="v25.05.05"
 
 binpath=$(dirname "$0")
 project=$(dirname "$(realpath "$binpath")")
