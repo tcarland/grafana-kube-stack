@@ -11,3 +11,5 @@ helmCharts:
   version: 70.3.0
   repo: https://prometheus-community.github.io/helm-charts
   valuesFile: prom-values.yaml
+  additionalValuesFiles:
+    - prom-addScrapeConfigs.yaml
