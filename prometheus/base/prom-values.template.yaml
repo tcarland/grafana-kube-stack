@@ -15,85 +15,6 @@ prometheus:
   prometheusSpec:
     remoteWrite:
     - url: http://mimir-distributor.monitoring.svc.cluster.local:8080/api/v1/push
-    additionalScrapeConfigs:
-    - job_name: trino-metrics-coordinator
-      scheme: https
-      tls_config:
-        insecure_skip_verify: true
-      basic_auth:
-        username: ${TRINO_USER}
-        password: ${TRINO_PASSWORD}
-      static_configs:
-       - targets:
-         - ${TRINO_DOMAINNAME}
-    - job_name: trino-metrics-worker
-      scrape_interval: 10s
-      scrape_timeout: 10s
-      kubernetes_sd_configs:
-        - role: pod
-      relabel_configs:
-      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_trino_scrape]
-        action: keep # scrape only pods with the trino scrape anotation
-        regex: true
-      - source_labels: [__meta_kubernetes_pod_container_name]
-        action: keep # dont try to scrape non trino container
-        regex: trino-worker
-      #- action: hashmod
-      #  modulus: $(SHARDS)
-      #  source_labels:
-      #  - __address__
-      #  target_label: __tmp_hash
-      #- action: keep
-      #  regex: $(SHARD)
-      #  source_labels:
-      #  - __tmp_hash
-      - source_labels: [__meta_kubernetes_pod_name]
-        action: replace
-        target_label: pod
-      - source_labels: [__meta_kubernetes_pod_container_name]
-        action: replace
-        target_label: container
-      metric_relabel_configs:
-          - source_labels: [__name__]
-            regex: ".+_FifteenMinute.+|.+_FiveMinute.+|.+IterativeOptimizer.+|.*io_airlift_http_client_type_HttpClient.+"
-            action: drop # droping some highly granular metrics
-          - source_labels: [__meta_kubernetes_pod_name]
-            regex: ".+"
-            target_label: pod
-            action: replace
-          - source_labels: [__meta_kubernetes_pod_container_name]
-            regex: ".+"
-            target_label: container
-            action: replace
-      scheme: http
-      tls_config:
-        insecure_skip_verify: true
-      basic_auth:
-        username: ${TRINO_USER}
-
-    - job_name: 'jmx-exporter'
-      kubernetes_sd_configs:
-        - role: pod
-      relabel_configs:
-        - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_jmx_scrape]
-          action: keep
-          regex: true
-        - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_jmx_port]
-          action: replace
-          target_label: __address__
-          regex: (.+)
-          replacement: $1
-        - source_labels: [__address__, __meta_kubernetes_pod_ip]
-          action: replace
-          target_label: __address__
-          regex: ([^:]+);(.+)
-          replacement: $2:$1
-        - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_jmx_path]
-          action: replace
-          target_label: __metrics_path__
-          regex: (.+)
-        - action: labelmap
-          regex: __meta_kubernetes_pod_label_(.+)
 
 alertmanager:
   alertmanagerSpec:
@@ -102,6 +23,7 @@ alertmanager:
   service:
     type: NodePort
     nodePort: 30400
+
 grafana:
   adminPassword: admin
   nodeSelector:
