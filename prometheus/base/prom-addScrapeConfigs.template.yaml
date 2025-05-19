@@ -1,6 +1,7 @@
 prometheus:
   prometheusSpec:
     additionalScrapeConfigs:
+      
     - job_name: trino-metrics-coordinator
       scheme: https
       tls_config:
