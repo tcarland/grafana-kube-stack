@@ -2,7 +2,7 @@
 #
 # Timothy C. Arland <tcarland at gmail dot com>
 PNAME=${0##*\/}
-VERSION="v25.05.15"
+VERSION="v25.10.02"
 
 binpath=$(dirname "$0")
 project=$(dirname "$(realpath "$binpath")")
@@ -41,8 +41,11 @@ if [[ -z "$S3_ACCESS_KEY" || -z "$S3_SECRET_KEY" ]]; then
 fi
 
 if [ -z "$envname" ]; then
-    echo "$PNAME Warning, envname not set"
+    echo "$PNAME envname not provided"
+    exit 1
 fi
+
+source env/${envname}/${envname}.env
 
 # strip protocol from endpoint
 if [[ "$S3_ENDPOINT" =~ "http" ]]; then

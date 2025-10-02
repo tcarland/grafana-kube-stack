@@ -4,7 +4,7 @@ Grafana - Prometheus Stack Deploy
 Steps for customizing and deploying the Grafana Ecosystem, including
 the Mimir, Prometheus, Tempo, Loki and Grafana.
 
-2025.05.05  Timothy C. Arland <tarland@trace3.com>
+Created 2025.05.05 by Timothy C. Arland <tcarland@gmail.com>
 
 # Components
 
