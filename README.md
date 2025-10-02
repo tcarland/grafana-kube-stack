@@ -1,10 +1,16 @@
 Grafana - Prometheus Stack Deploy
 =================================
 
-Steps for customizing and deploying the Grafana Ecosystem, including
-the Mimir, Prometheus, Tempo, Loki and Grafana.
-
 Created 2025.05.05 by Timothy C. Arland <tcarland@gmail.com>
+
+
+Steps for customizing and deploying the Grafana Ecosystem, including
+the Mimir, Prometheus, Tempo, Loki and Grafana. This repository serves 
+as a means for handling various secrets and configuration requirements 
+to automate *helm* values generation. Given the flexible pattern of 
+handling various environment configurations with *kustomize*, the project 
+uses the `--enable-helm` functionality of *kustomize* to manage the 
+various configs.
 
 # Components
 
@@ -13,7 +19,6 @@ Created 2025.05.05 by Timothy C. Arland <tcarland@gmail.com>
 - Grafana
 - Loki
 - Tempo
-
 
 ## Pre-Deployment Secrets
 
@@ -36,22 +41,33 @@ The following list of buckets should be provisioned prior to deployment.
 - mimir-alertmanager
 - tempo-traces
 
-## Installing Mimir
+```sh
+./bin/create-buckets.sh create
+```
 
-Test or view manifests prior to install
+# Installing Mimir
+
+First fetch the chart for testing or viewing manifests prior to the install.
 ```sh
 kustomize build --enable-helm mimir/ | less
 ```
 
-Similar to running the helm template command. Note that the *charts*
-path is seeded after running `kustomize build`
+This is similar to running the *helm* template command. Note that the 
+*charts* path is seeded after running `kustomize build`.  
+The equivalent helm command would be:
 ```sh
 helm template mimir ./base/charts/mimir-distributed-5.6.0/mimir-distributed \
--f base/mimir-values.yaml -f mimir-structuredConfig.yaml \
--n monitoring
+  -f base/mimir-values.yaml \
+  -f mimir-structuredConfig.yaml \
+  -n monitoring
 ```
 
-## Prometheus Operator
+Install by outputting to *kubectl*
+```sh
+kustomize build --enable-helm mimir/ | kubectl apply -f -
+```
+
+# Prometheus Operator
 
 Note that the kustomize manifests make use of a *node-selector* for
 targeting *worker* nodes. Typically, *control-plane* nodes are already
@@ -86,10 +102,15 @@ kubectl apply -f kube-prometheus-stack/charts/crds/crds/ \
 
 Install prometheus
 ```sh
-kustomize build --enable-helm prometheus/ | k apply -f -
+kustomize build --enable-helm prometheus/ | kubectl apply -f -
 ```
 
-## Tempo
+Ingress resources are provided for *Istio* or *Nginx* and are 
+configured when the environment configuration includes environment
+settings for `GRAFANA_DOMAINNAME` and `INGRESS_NAMESPACE`.
+
+
+# Tempo
 
 Note that recent Tempo releases require Kubernetes 1.29+
 

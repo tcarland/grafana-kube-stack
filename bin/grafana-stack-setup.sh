@@ -6,7 +6,6 @@ VERSION="v25.10.02"
 
 binpath=$(dirname "$0")
 project=$(dirname "$(realpath "$binpath")")
-
 envname="$1"
 ingress="nginx"
 
