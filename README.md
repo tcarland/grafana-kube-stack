@@ -1,24 +1,24 @@
 Grafana - Prometheus Stack Deploy
 =================================
-
-Created 2025.05.05 by Timothy C. Arland <tcarland@gmail.com>
+Created 2025.05.05 by Timothy C. Arland <tcarland at gmail dot com>
 
 
 Steps for customizing and deploying the Grafana Ecosystem, including
-the Mimir, Prometheus, Tempo, Loki and Grafana. This repository serves 
-as a means for handling various secrets and configuration requirements 
-to automate *helm* values generation. Given the flexible pattern of 
-handling various environment configurations with *kustomize*, the project 
-uses the `--enable-helm` functionality of *kustomize* to manage the 
+the Mimir, Prometheus, Tempo, Loki and Grafana. This repository serves
+as a means for handling various secrets and configuration requirements
+to automate *helm* values generation. Given the flexible pattern of
+handling various environment configurations with *kustomize*, the project
+uses the `--enable-helm` functionality of *kustomize* to manage the
 various configs.
 
 # Components
+|  Component  |  Version      | Helm Chart |
+| Mimir       |  **v2.17.x**  |
+| Prometheus  |  **70.3.0**   |
+| Grafana     |  **11.5.2**   |
+| Loki        |  **3.5.5**    |  *6.42.0*
+| Tempo       |  **1.38.2**   |
 
-- Mimir
-- Prometheus
-- Grafana
-- Loki
-- Tempo
 
 ## Pre-Deployment Secrets
 
@@ -52,8 +52,8 @@ First fetch the chart for testing or viewing manifests prior to the install.
 kustomize build --enable-helm mimir/ | less
 ```
 
-This is similar to running the *helm* template command. Note that the 
-*charts* path is seeded after running `kustomize build`.  
+This is similar to running the *helm* template command. Note that the
+*charts* path is seeded after running `kustomize build`.
 The equivalent helm command would be:
 ```sh
 helm template mimir ./base/charts/mimir-distributed-5.6.0/mimir-distributed \
@@ -105,7 +105,7 @@ Install prometheus
 kustomize build --enable-helm prometheus/ | kubectl apply -f -
 ```
 
-Ingress resources are provided for *Istio* or *Nginx* and are 
+Ingress resources are provided for *Istio* or *Nginx* and are
 configured when the environment configuration includes environment
 settings for `GRAFANA_DOMAINNAME` and `INGRESS_NAMESPACE`.
 

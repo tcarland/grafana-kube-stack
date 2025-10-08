@@ -11,9 +11,9 @@ buckets=(
 # prefer minio client
 if which mc >/dev/null 2>&1; then
     if [ -z "${MINIO_ALIAS}" ]; then
-        echo "> MINIO_ALIAS not set, must set to use 'mc'"
-    else        
-        echo "> Found Minio Client first, using 'mc mb ${MINIO_ALIAS}/'"
+        echo "> MINIO_ALIAS is not set, configure it to use 'mc'"
+    else
+        echo "> Found Minio Client first, using 'mc mb ${MINIO_ALIAS}/'..."
         cmd="mc mb ${MINIO_ALIAS}/"
     fi
 fi
@@ -28,6 +28,7 @@ if [ -z "$cmd" ]; then
         exit 1
     fi
 fi
+
 
 case "$action" in
 'create'|'start'|'init')
