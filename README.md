@@ -1,23 +1,27 @@
 Grafana - Prometheus Stack Deploy
 =================================
-Created 2025.05.05 by Timothy C. Arland <tcarland at gmail dot com>
+Created 2025.05.05
+by Timothy C. Arland <tcarland at gmail dot com>
 
 
 Steps for customizing and deploying the Grafana Ecosystem, including
-the Mimir, Prometheus, Tempo, Loki and Grafana. This repository serves
-as a means for handling various secrets and configuration requirements
+the Prometheus, Loki, Grafana, Tempo, and Mimir (LGTM). This repository
+serves as a means for handling various secrets and configuration requirements
 to automate *helm* values generation. Given the flexible pattern of
 handling various environment configurations with *kustomize*, the project
-uses the `--enable-helm` functionality of *kustomize* to manage the
-various configs.
+uses the `--enable-helm` functionality of *kustomize* to manage
+environment overlays.
+
 
 # Components
-|  Component  |  Version      | Helm Chart |
-| Mimir       |  **v2.17.x**  |
-| Prometheus  |  **70.3.0**   |
-| Grafana     |  **11.5.2**   |
-| Loki        |  **3.5.5**    |  *6.42.0*
-| Tempo       |  **1.38.2**   |
+
+|       **Component**                           |  **Version**  | **Helm Chart** |
+| --------------------------------------------- | ------------- | -------------- |
+| [Mimir](https://github.com/grafana/mimir)     |  **v2.17.x**  |                |
+| [Prometheus]()                                |  **70.3.0**   |                |
+| [Grafana](https://github.com/grafana/grafana) |  **11.5.2**   |                |
+| [Loki](https://github.com/grafana/loki)       |  **3.5.5**    |   *6.42.0*     |
+| [Tempo](https://github.com/grafana/tempo)     |  **1.38.2**   |                |
 
 
 ## Pre-Deployment Secrets
