@@ -1,18 +1,27 @@
 Grafana - Prometheus Stack Deploy
 =================================
+Created 2025.05.05
+by Timothy C. Arland <tcarland at gmail dot com>
+
 
 Steps for customizing and deploying the Grafana Ecosystem, including
-the Mimir, Prometheus, Tempo, Loki and Grafana.
+the Prometheus, Loki, Grafana, Tempo, and Mimir (LGTM). This repository
+serves as a means for handling various secrets and configuration requirements
+to automate *helm* values generation. Given the flexible pattern of
+handling various environment configurations with *kustomize*, the project
+uses the `--enable-helm` functionality of *kustomize* to manage
+environment overlays.
 
-2025.05.05  Timothy C. Arland <tarland@trace3.com>
 
 # Components
 
-- Mimir
-- Prometheus
-- Grafana
-- Loki
-- Tempo
+|       **Component**                           |  **Version**  | **Helm Chart** |
+| --------------------------------------------- | ------------- | -------------- |
+| [Mimir](https://github.com/grafana/mimir)     |  **v2.17.x**  |                |
+| [Prometheus]()                                |  **70.3.0**   |                |
+| [Grafana](https://github.com/grafana/grafana) |  **11.5.2**   |                |
+| [Loki](https://github.com/grafana/loki)       |  **3.5.5**    |   *6.42.0*     |
+| [Tempo](https://github.com/grafana/tempo)     |  **1.38.2**   |                |
 
 
 ## Pre-Deployment Secrets
@@ -36,22 +45,33 @@ The following list of buckets should be provisioned prior to deployment.
 - mimir-alertmanager
 - tempo-traces
 
-## Installing Mimir
+```sh
+./bin/create-buckets.sh create
+```
 
-Test or view manifests prior to install
+# Installing Mimir
+
+First fetch the chart for testing or viewing manifests prior to the install.
 ```sh
 kustomize build --enable-helm mimir/ | less
 ```
 
-Similar to running the helm template command. Note that the *charts*
-path is seeded after running `kustomize build`
+This is similar to running the *helm* template command. Note that the
+*charts* path is seeded after running `kustomize build`.
+The equivalent helm command would be:
 ```sh
 helm template mimir ./base/charts/mimir-distributed-5.6.0/mimir-distributed \
--f base/mimir-values.yaml -f mimir-structuredConfig.yaml \
--n monitoring
+  -f base/mimir-values.yaml \
+  -f mimir-structuredConfig.yaml \
+  -n monitoring
 ```
 
-## Prometheus Operator
+Install by outputting to *kubectl*
+```sh
+kustomize build --enable-helm mimir/ | kubectl apply -f -
+```
+
+# Prometheus Operator
 
 Note that the kustomize manifests make use of a *node-selector* for
 targeting *worker* nodes. Typically, *control-plane* nodes are already
@@ -86,10 +106,15 @@ kubectl apply -f kube-prometheus-stack/charts/crds/crds/ \
 
 Install prometheus
 ```sh
-kustomize build --enable-helm prometheus/ | k apply -f -
+kustomize build --enable-helm prometheus/ | kubectl apply -f -
 ```
 
-## Tempo
+Ingress resources are provided for *Istio* or *Nginx* and are
+configured when the environment configuration includes environment
+settings for `GRAFANA_DOMAINNAME` and `INGRESS_NAMESPACE`.
+
+
+# Tempo
 
 Note that recent Tempo releases require Kubernetes 1.29+
 
