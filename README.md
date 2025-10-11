@@ -4,13 +4,14 @@ Created 2025.05.05
 by Timothy C. Arland <tcarland at gmail dot com>
 
 
-Steps for customizing and deploying the Grafana Ecosystem, including
-the Prometheus, Loki, Grafana, Tempo, and Mimir (LGTM). This repository
-serves as a means for handling various secrets and configuration requirements
-to automate *helm* values generation. Given the flexible pattern of
-handling various environment configurations with *kustomize*, the project
-uses the `--enable-helm` functionality of *kustomize* to manage
-environment overlays.
+Steps for customizing and deploying the Grafana Ecosystem, consisting 
+of Prometheus, and the Loki, Grafana, Tempo, and Mimir (LGTM) stack. 
+This  repository serves as a means for cleaner handling of secrets and 
+environment configuration requirements to automate *helm* values 
+generation. Given the flexible pattern of handling various environment 
+configurations with *kustomize*, the project uses the `--enable-helm` 
+functionality of *kustomize* to manage environment overlays essentially 
+combining the use of *kustomize* and *helm*.
 
 
 # Components
@@ -18,7 +19,7 @@ environment overlays.
 |       **Component**                           |  **Version**  | **Helm Chart** |
 | --------------------------------------------- | ------------- | -------------- |
 | [Mimir](https://github.com/grafana/mimir)     |  **v2.17.x**  |                |
-| [Prometheus]()                                |  **70.3.0**   |                |
+| [Kube-Prometheus-Stack]()                     |  **70.3.0**   |                |
 | [Grafana](https://github.com/grafana/grafana) |  **11.5.2**   |                |
 | [Loki](https://github.com/grafana/loki)       |  **3.5.5**    |   *6.42.0*     |
 | [Tempo](https://github.com/grafana/tempo)     |  **1.38.2**   |                |
@@ -39,15 +40,8 @@ or create overlays accordingly.
 
 ## S3 Buckets
 
-The following list of buckets should be provisioned prior to deployment.
-- mimir-blocks
-- mimir-ruler
-- mimir-alertmanager
-- tempo-traces
-
-```sh
-./bin/create-buckets.sh create
-```
+The necessary buckets are scraped from the generated values files and 
+created via `mc mb` or alternatively `aws s3 
 
 # Installing Mimir
 

@@ -1,13 +1,17 @@
 **/*.sw*
-*.env
 *.cert
 *.crt
 *.key
+
+env/*
+!env/env.template
+!env/example
 
 **/base/charts
 **/secrets.env
 **/base/params.env
 
+loki/base/loki-values.yaml
+tempo/base/tempo-values.yaml
 prometheus/base/prom-values.yaml
 prometheus/base/prom-addScrapeConfigs.yaml
-tempo/base/tempo-values.yaml
