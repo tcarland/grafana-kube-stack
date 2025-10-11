@@ -2,7 +2,7 @@ mimir:
   structuredConfig:
     alertmanager_storage:
       s3:
-        bucket_name: mimir-alertmanager
+        bucket_name: mimir-${GRAFANA_ENV}-alertmanager
         endpoint: ${S3_ENDPOINT}
         access_key_id: ${S3_ACCESS_KEY}
         secret_access_key: ${S3_SECRET_KEY}
@@ -11,7 +11,7 @@ mimir:
     blocks_storage:
       backend: s3
       s3:
-        bucket_name: mimir-blocks
+        bucket_name: mimir-${GRAFANA_ENV}-blocks
         endpoint: ${S3_ENDPOINT}
         access_key_id: ${S3_ACCESS_KEY}
         secret_access_key: ${S3_SECRET_KEY}
@@ -19,7 +19,7 @@ mimir:
           insecure_skip_verify: true
     ruler_storage:
       s3:
-        bucket_name: mimir-ruler
+        bucket_name: mimir-${GRAFANA_ENV}-ruler
         endpoint: ${S3_ENDPOINT}
         access_key_id: ${S3_ACCESS_KEY}
         secret_access_key: ${S3_SECRET_KEY}

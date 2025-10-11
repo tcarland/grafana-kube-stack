@@ -12,4 +12,4 @@ helmCharts:
   namespace: monitoring
   version: 6.42.0
   repo: https://grafana.github.io/helm-charts
-  valuesFile: loki-values-ss.yaml
+  valuesFile: loki-values.yaml
