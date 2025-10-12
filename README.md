@@ -26,11 +26,11 @@ installs the `kube-state-metrics` and `grafana` charts.
 
 |       **Component**                           |  **Version**  | **Helm Chart** |
 | --------------------------------------------- | ------------- | -------------- |
-| [Mimir](https://github.com/grafana/mimir)     |  **v2.17.x**  |                |
-| [Kube-Prometheus-Stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)           |  **70.3.0**   |                |
-|  -> [Grafana](https://github.com/grafana/grafana) |  **11.5.2**   |                |
-| [Loki](https://github.com/grafana/loki)       |  **3.5.5**    |   *6.42.0*     |
-| [Tempo](https://github.com/grafana/tempo)     |  **1.38.2**   |                |
+| [Mimir](https://github.com/grafana/mimir)     |  **v2.15.x**  |    *5.6.0*     |
+| [Kube-Prometheus-Stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)           |  **v3.2.1**   |      *70.3.0*          |
+|  -> [Grafana](https://github.com/grafana/grafana) | **11.5.2**  |
+| [Loki](https://github.com/grafana/loki)       |  **v3.5.5**    |   *6.42.0*    |
+| [Tempo](https://github.com/grafana/tempo)     |   |   *1.38.2*    |
 
 
 ## Pre-Deployment Secrets
