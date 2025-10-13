@@ -2,7 +2,7 @@
 #
 # Timothy C. Arland <tcarland at gmail dot com>
 PNAME=${0##*\/}
-VERSION="v25.10.11"
+VERSION="v25.10.12"
 
 binpath=$(dirname "$0")
 project=$(dirname "$(realpath "$binpath")")
@@ -26,11 +26,11 @@ S3_SECRET_KEY=\${S3_SECRET_KEY}
 S3_SKIP_VERIFY=\${S3_SKIP_VERIFY}
 "
 
-function create_s3_buckets() 
+function create_s3_buckets()
 {
     local ary=("$@")
     local rt=0
-    
+
     for b in ${ary[@]}; do
         echo "${cmd}${b}"
         ( ${cmd}${b} >/dev/null 2>&1 )
@@ -38,9 +38,9 @@ function create_s3_buckets()
         if [ $rt -gt 1 ]; then
             echo "Make bucket error..  $rt"
             break
-        fi 
+        fi
     done
-    return $rt 
+    return $rt
 }
 
 # ---------------------------------------
@@ -51,8 +51,12 @@ if ! which helm >/dev/null 2>&1; then
     exit 2
 fi
 
+if ! which yq >/dev/null 2>&1; then
+    echo "$PNAME Error, required binary 'yq' not found in PATH." >&2
+fi
+
 if [ -z "$envname" ]; then
-    echo "$PNAME ENV name not provided"
+    echo "$PNAME ENV name not provided" >&2
     exit 1
 fi
 
@@ -94,7 +98,7 @@ if [ -z "$cmd" ]; then
         echo "> Found the AWS CLI, using 'aws s3 mb s3://'"
         cmd="aws s3 mb s3://"
     else
-        echo "$0 Error, no s3 client found (ie. mc or aws)"
+        echo "$0 Error, no s3 client found (ie. mc or aws)" >&2
         exit 1
     fi
 fi
@@ -106,7 +110,7 @@ if [[ "${LOKI_DISTRIBUTED,,}" == "true" ]]; then
     cat loki/base/loki-values-distributed.yaml | envsubst > loki/base/loki-values.yaml
 else
     cat loki/base/loki-values-ss.yaml | envsubst > loki/base/loki-values.yaml
-fi    
+fi
 
 echo " -> Creating secrets.env for Mimir"
 echo "$s3_secrets" | envsubst > mimir/base/secrets.env

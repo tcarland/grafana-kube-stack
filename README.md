@@ -1,24 +1,24 @@
-Grafana - Prometheus Stack Deployments 
+Grafana - Prometheus Stack Deployments
 ======================================
-v25.10.11
+v25.10.12
 
-Steps for customizing and deploying the Grafana Ecosystem, consisting 
-of Prometheus, Loki, Grafana, Tempo, and Mimir; the (LGTM) stack. 
+Steps for customizing and deploying the Grafana Ecosystem, consisting
+of Prometheus, Loki, Grafana, Tempo, and Mimir; the (LGTM) stack.
 
 # Overview
 
-This repository serves as a means for cleaner handling of secrets and 
-environment configuration requirements to automate *helm* values 
-generation. 
+This repository serves as a means for cleaner handling of secrets and
+environment configuration requirements to automate *helm* values
+generation.
 
-Given the flexible pattern of handling various environment 
-configurations with *kustomize*, the project uses the `--enable-helm` 
-feature of *kustomize* to manage environment overlays combining the 
+Given the flexible pattern of handling various environment
+configurations with *kustomize*, the project uses the `--enable-helm`
+feature of *kustomize* to manage environment overlays combining the
 use of *kustomize* and *helm*; essentially acting as a wrapper to the
 official *Prometheus Community*  [helm charts](https://github.com/prometheus-community/helm-chart)
 
-The [Prometheus-Community](https://github.com/prometheus-community) helm 
-chart `kube-prometheus-stack` is used to install *Prometheus*, which also 
+The [Prometheus-Community](https://github.com/prometheus-community) helm
+chart `kube-prometheus-stack` is used to install *Prometheus*, which also
 installs the `kube-state-metrics` and `grafana` charts.
 
 
@@ -32,6 +32,13 @@ installs the `kube-state-metrics` and `grafana` charts.
 | [Loki](https://github.com/grafana/loki)       |  **v3.5.5**    |   *6.42.0*    |
 | [Tempo](https://github.com/grafana/tempo)     |   |   *1.38.2*    |
 
+
+## Requirements
+
+- [kustomize](https://github.com/kubernetes-sigs/kustomize) : v5.7.1
+- [helm](https://github.com/helm/helm) : v3.18.6
+- [yq](https://github.com/mikefarah/yq) : v4.47.2
+- [mc](https://github.com/minio/mc) : latest stable
 
 ## Pre-Deployment Secrets
 
@@ -49,8 +56,8 @@ or create overlays accordingly.
 
 ## S3 Buckets
 
-The necessary buckets are scraped from the generated values files and 
-created via `mc mb` or alternatively `aws s3`. 
+The necessary buckets are scraped from the generated values files and
+created via `mc mb` or alternatively `aws s3`.
 
 
 ## Installing Mimir
@@ -99,10 +106,10 @@ Ensure the charts are pulled to the local *charts* cache by running
 kustomize build --enable-helm prometheus/
 ```
 
-Prometheus *CRDs* are rather large (for helm), which has forced 
-moving them to a separate chart. Kubectl (and Kustomize) do not 
+Prometheus *CRDs* are rather large (for helm), which has forced
+moving them to a separate chart. Kubectl (and Kustomize) do not
 directly account for the large size on the client-side of *kubectl*
-and will throw an error when trying to directly apply the chart. 
+and will throw an error when trying to directly apply the chart.
 Instead, the *CRDs* are installed independently first.
 ```sh
 cd prometheus/base/charts/kube-prometheus-stack-${prometheus_version}
@@ -119,7 +126,7 @@ kustomize build --enable-helm prometheus/ | kubectl apply -f -
 ## Ingress
 
 Ingress resources are provided for *Istio* or *Nginx* and are
-configured when the environment configuration includes 
+configured when the environment configuration includes
 settings for `GRAFANA_DOMAINNAME` and `INGRESS_NAMESPACE`.
 
 
