@@ -2,13 +2,13 @@
 #
 # Timothy C. Arland <tcarland at gmail dot com>
 PNAME=${0##*\/}
-VERSION="v25.10.12"
+VERSION="v25.10.27"
 
 binpath=$(dirname "$0")
 project=$(dirname "$(realpath "$binpath")")
 envname="$1"
 ingress="nginx"
-cmd=
+s3cmd=
 buckets=()
 
 
@@ -32,8 +32,8 @@ function create_s3_buckets()
     local rt=0
 
     for b in ${ary[@]}; do
-        echo "${cmd}${b}"
-        ( ${cmd}${b} >/dev/null 2>&1 )
+        echo "${s3cmd}${b}"
+        ( ${s3cmd}${b} >/dev/null 2>&1 )
         rt=$?
         if [ $rt -gt 1 ]; then
             echo "Make bucket error..  $rt"
@@ -88,15 +88,15 @@ if which mc >/dev/null 2>&1; then
         echo "> MINIO_ALIAS is not set, configure it to use 'mc'"
     else
         echo "> Found Minio Client first, using 'mc mb ${MINIO_ALIAS}/'..."
-        cmd="mc mb ${MINIO_ALIAS}/"
+        s3cmd="mc mb ${MINIO_ALIAS}/"
     fi
 fi
 
 # alternatively use aws cli
-if [ -z "$cmd" ]; then
+if [ -z "$s3cmd" ]; then
     if which aws >/dev/null 2>&1; then
         echo "> Found the AWS CLI, using 'aws s3 mb s3://'"
-        cmd="aws s3 mb s3://"
+        s3cmd="aws s3 mb s3://"
     else
         echo "$0 Error, no s3 client found (ie. mc or aws)" >&2
         exit 1
