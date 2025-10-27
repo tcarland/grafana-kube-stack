@@ -1,9 +1,5 @@
 
-
-clean: distclean
-
-
-distclean:
+clean: 
 	( rm -f mimir/base/secrets.env \
 	  loki/base/loki-values.yaml \
 	  prometheus/base/prom-values.yaml \
@@ -14,3 +10,11 @@ distclean:
 	  prometheus/nginx/base/*.crt \
 	  prometheus/nginx/base/*.key \
 	  prometheus/nginx/base/params.env )
+
+clean-charts:
+	( rm -rf mimir/base/charts \
+	  loki/base/charts \
+	  prometheus/base/charts \
+	  tempo/base/charts )
+
+distclean: clean-charts

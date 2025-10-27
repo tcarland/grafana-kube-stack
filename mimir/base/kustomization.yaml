@@ -16,7 +16,7 @@ helmCharts:
   includeCRDs: true
   releaseName: mimir
   namespace: monitoring
-  version: 5.6.0
+  version: 5.8.0
   repo: https://grafana.github.io/helm-charts
   valuesFile: mimir-values.yaml
   additionalValuesFiles:

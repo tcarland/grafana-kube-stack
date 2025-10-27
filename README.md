@@ -1,6 +1,6 @@
 Grafana - Prometheus Stack Deployments
 ======================================
-v25.10.12
+v25.10.27
 
 Steps for customizing and deploying the Grafana Ecosystem, consisting
 of Prometheus, Loki, Grafana, Tempo, and Mimir; the (LGTM) stack.
@@ -26,19 +26,20 @@ installs the `kube-state-metrics` and `grafana` charts.
 
 |       **Component**                           |  **Version**  | **Helm Chart** |
 | --------------------------------------------- | ------------- | -------------- |
-| [Mimir](https://github.com/grafana/mimir)     |  **v2.15.x**  |    *5.6.0*     |
-| [Kube-Prometheus-Stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)           |  **v3.2.1**   |      *70.3.0*          |
-|  -> [Grafana](https://github.com/grafana/grafana) | **11.5.2**  |
-| [Loki](https://github.com/grafana/loki)       |  **v3.5.5**    |   *6.42.0*    |
-| [Tempo](https://github.com/grafana/tempo)     |   |   *1.38.2*    |
+| [Mimir](https://github.com/grafana/mimir)     |  **v2.17.0**  |    *5.8.0*     |
+| [Kube-Prometheus-Stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)           |  **v3.2.1**   |      *78.5.0*          |
+|  -> [Prometheus](https://github.com/) | **3.7.2**  |  |
+|  -> [Grafana](https://github.com/grafana/grafana)  | **12.2.0**  |  |
+| [Loki](https://github.com/grafana/loki)            |  **v3.5.5**    |   *6.42.0*    |
+| [Tempo](https://github.com/grafana/tempo)          |  **2.9.0**    |  *1.38.2* |
 
 
 ## Requirements
 
 - [kustomize](https://github.com/kubernetes-sigs/kustomize) : v5.7.1
-- [helm](https://github.com/helm/helm) : v3.18.6
+- [helm](https://github.com/helm/helm) : v3.19.0
 - [yq](https://github.com/mikefarah/yq) : v4.47.2
-- [mc](https://github.com/minio/mc) : latest stable
+- [mc](https://github.com/minio/mc) : latest stable (if using MinIO)
 
 ## Pre-Deployment Secrets
 
@@ -56,7 +57,7 @@ or create overlays accordingly.
 
 ## S3 Buckets
 
-The necessary buckets are scraped from the generated values files and
+The necessary buckets are scraped from the generated helm *values* files and
 created via `mc mb` or alternatively `aws s3`.
 
 
@@ -72,7 +73,7 @@ This is similar to running the *helm* template command. Note that the
 
 The equivalent helm command would be:
 ```sh
-helm template mimir ./base/charts/mimir-distributed-5.6.0/mimir-distributed \
+helm template mimir ./base/charts/mimir-distributed-5.8.0/mimir-distributed \
   -f base/mimir-values.yaml \
   -f mimir-structuredConfig.yaml \
   -n monitoring
