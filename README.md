@@ -1,6 +1,6 @@
 Grafana - Prometheus Stack Deployments
 ======================================
-v25.10.27
+v25.10.28
 
 Steps for customizing and deploying the Grafana Ecosystem, consisting
 of Prometheus, Loki, Grafana, Tempo, and Mimir; the (LGTM) stack.
@@ -58,7 +58,9 @@ or create overlays accordingly.
 ## S3 Buckets
 
 The necessary buckets are scraped from the generated helm *values* files and
-created via `mc mb` or alternatively `aws s3`.
+created via `mc mb` or alternatively `aws s3`. If neither tool is available,
+the buckets needed are displayed and must be manually created prior to applying
+manifests.
 
 
 ## Installing Mimir
