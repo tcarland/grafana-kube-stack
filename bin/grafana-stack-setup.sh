@@ -2,7 +2,7 @@
 #
 # Timothy C. Arland <tcarland at gmail dot com>
 PNAME=${0##*\/}
-VERSION="v25.10.28"
+VERSION="v25.10.29"
 
 binpath=$(dirname "$0")
 project=$(dirname "$(realpath "$binpath")")
@@ -98,7 +98,7 @@ if [ -z "$s3cmd" ]; then
         echo "> Found the AWS CLI, using 'aws s3 mb s3://'"
         s3cmd="aws s3 mb s3://"
     else
-        echo "$PNAME Warning, no s3 client found (ie. mc or aws), buckets will not be created." >&2
+        echo "$PNAME Warning, no s3 client found, buckets will not be created." >&2
     fi
 fi
 
