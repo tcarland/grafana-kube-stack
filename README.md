@@ -1,6 +1,6 @@
 Grafana - Prometheus Stack Deployments
 ======================================
-v25.10.27
+v25.10.29
 
 Steps for customizing and deploying the Grafana Ecosystem, consisting
 of Prometheus, Loki, Grafana, Tempo, and Mimir; the (LGTM) stack.
@@ -21,17 +21,61 @@ The [Prometheus-Community](https://github.com/prometheus-community) helm
 chart `kube-prometheus-stack` is used to install *Prometheus*, which also
 installs the `kube-state-metrics` and `grafana` charts.
 
+```
+                    ┌───────────────────────────────┐
+                    │         Data Sources          │
+                    │ ───────────────────────────── │
+                    │ • Applications & Services     │
+                    │ • Kubernetes Logs (FluentBit) │
+                    │ • Prometheus Exporters        │
+                    │ • Tracing Instrumentation     │
+                    └──────────────┬────────────────┘
+                                   │
+             ┌─────────────────────┼─────────────────────┐
+             │                     │                     │
+             ▼                     ▼                     ▼
+   ┌────────────────┐    ┌────────────────┐     ┌────────────────┐
+   │     Loki       │    │     Mimir      │     │     Tempo      │
+   │ (Logs Backend) │    │ (Metrics Store)│     │ (Traces Store) │
+   └──────┬─────────┘    └──────┬─────────┘     └──────┬─────────┘
+          │                     │                      │
+          ▼                     ▼                      ▼
+   ┌──────────────────────────────────────────────────────────┐
+   │                   Amazon S3 (Object Storage)             │
+   │  - Loki chunks, index, and ruler data                    │
+   │  - Mimir blocks (TSDB data)                              │
+   │  - Tempo trace blocks (compact traces)                   │
+   └──────────────────────────────────────────────────────────┘
+          ▲                     ▲                      ▲
+          │                     │                      │
+   ┌──────┴──────────┐   ┌──────┴─────────┐     ┌──────┴──────────┐
+   │     Caches      │   │     Caches     │     │     Caches      │
+   │ (Memcached,     │   │ (Memcached,    │     │ (Memcached,     │
+   │  Redis, etc.)   │   │  Redis, etc.)  │     │  Redis, etc.)   │
+   └──────┬──────────┘   └──────┬─────────┘     └──────┬──────────┘
+          │                     │                      │
+          └──────────────┬──────┴──────────────┬───────┘
+                         ▼                     ▼
+                    ┌────────────────────────────────┐
+                    │          Grafana UI            │
+                    │────────────────────────────────│
+                    │ • Unified visualization layer  │
+                    │ • Dashboards for Logs, Metrics │
+                    │   and Traces (correlated view) │
+                    │ • Alerting and data queries    │
+                    └────────────────────────────────┘
+```
 
 ## Components Matrix
 
-|       **Component**                           |  **Version**  | **Helm Chart** |
-| --------------------------------------------- | ------------- | -------------- |
-| [Mimir](https://github.com/grafana/mimir)     |  **v2.17.0**  |    *5.8.0*     |
-| [Kube-Prometheus-Stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)           |  **v3.2.1**   |      *78.5.0*          |
-|  -> [Prometheus](https://github.com/) | **3.7.2**  |  |
-|  -> [Grafana](https://github.com/grafana/grafana)  | **12.2.0**  |  |
-| [Loki](https://github.com/grafana/loki)            |  **v3.5.5**    |   *6.42.0*    |
-| [Tempo](https://github.com/grafana/tempo)          |  **2.9.0**    |  *1.38.2* |
+|       **Component**                                |  **Version**  | **Helm Chart** |
+| -------------------------------------------------- | ------------- | -------------- |
+| [Mimir](https://github.com/grafana/mimir)          | **v2.17.0**   |    *5.8.0*     |
+| [Kube-Prometheus-Stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack) | **v3.2.1**  |  *78.5.0*  |
+|  -> [Prometheus](https://github.com/)              | **v3.7.2**    | --- |
+|  -> [Grafana](https://github.com/grafana/grafana)  | **v12.2.0**   | --- |
+| [Loki](https://github.com/grafana/loki)            | **v3.5.5**    |   *6.42.0*     |
+| [Tempo](https://github.com/grafana/tempo)          | **v2.9.0**    |   *1.38.2*     |
 
 
 ## Requirements
@@ -58,7 +102,9 @@ or create overlays accordingly.
 ## S3 Buckets
 
 The necessary buckets are scraped from the generated helm *values* files and
-created via `mc mb` or alternatively `aws s3`.
+created via `mc mb` or alternatively `aws s3`. If neither tool is available,
+the buckets needed are displayed and must be manually created prior to applying
+manifests.
 
 
 ## Installing Mimir

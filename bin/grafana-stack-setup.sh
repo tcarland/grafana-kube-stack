@@ -2,7 +2,7 @@
 #
 # Timothy C. Arland <tcarland at gmail dot com>
 PNAME=${0##*\/}
-VERSION="v25.10.27"
+VERSION="v25.10.29"
 
 binpath=$(dirname "$0")
 project=$(dirname "$(realpath "$binpath")")
@@ -98,8 +98,7 @@ if [ -z "$s3cmd" ]; then
         echo "> Found the AWS CLI, using 'aws s3 mb s3://'"
         s3cmd="aws s3 mb s3://"
     else
-        echo "$0 Error, no s3 client found (ie. mc or aws)" >&2
-        exit 1
+        echo "$PNAME Warning, no s3 client found, buckets will not be created." >&2
     fi
 fi
 
@@ -146,7 +145,14 @@ buckets+=("$(yq e '.loki.storage.bucketNames.admin' loki/base/loki-values.yaml)"
 # tempo s3 bucket
 buckets+=("$(yq -e '.storage.trace.s3.bucket' tempo/base/tempo-values.yaml)")
 
-create_s3_buckets "${buckets[@]}"
+if [ -z "$s3cmd" ]; then
+    echo " -> S3 Buckets needed:"
+    for b in ${ary[@]}; do
+        echo "$b"
+    done
+else
+    create_s3_buckets "${buckets[@]}"
+fi
 
 echo " -> Finished."
 
