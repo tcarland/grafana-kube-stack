@@ -65,6 +65,11 @@ installs the `kube-state-metrics` and `grafana` charts.
                     │ • Alerting and data queries    │
                     └────────────────────────────────┘
 ```
+<br>
+
+---
+
+<br>
 
 ## Components Matrix
 
@@ -77,6 +82,17 @@ installs the `kube-state-metrics` and `grafana` charts.
 | [Loki](https://github.com/grafana/loki)            | **v3.5.5**    |   *6.42.0*     |
 | [Tempo](https://github.com/grafana/tempo)          | **v2.9.0**    |   *1.38.2*     |
 
+<br>
+
+## Architecture and Documentation
+
+Each component in the stack uses a distributed set of microservices running as pods in Kubernetes.
+Refer to the official Grafana documentation for each component for details of the internal architecture.
+
+- [Loki](https://grafana.com/docs/loki/latest/get-started/architecture/)
+- [Grafana](https://grafana.com/docs/grafana/latest/fundamentals/)
+- [Tempo](https://grafana.com/docs/tempo/latest/introduction/architecture/)
+- [Mimir](https://grafana.com/docs/mimir/latest/get-started/about-grafana-mimir-architecture/)
 
 ## Requirements
 
@@ -106,8 +122,11 @@ created via `mc mb` or alternatively `aws s3`. If neither tool is available,
 the buckets needed are displayed and must be manually created prior to applying
 manifests.
 
+<br>
 
-## Installing Mimir
+---
+
+# Mimir
 
 First pre-fetch the chart for testing or viewing manifests prior to the install.
 ```sh
@@ -129,9 +148,11 @@ Install by shipping the output to *kubectl*
 ```sh
 kustomize build --enable-helm mimir/ | kubectl apply -f -
 ```
+<br>
 
+---
 
-## Prometheus Operator
+# Prometheus Operator
 
 Note that the kustomize manifests make use of a *node-selector* for
 targeting *worker* nodes. Typically, *control-plane* nodes are already
@@ -176,13 +197,16 @@ Ingress resources are provided for *Istio* or *Nginx* and are
 configured when the environment configuration includes
 settings for `GRAFANA_DOMAINNAME` and `INGRESS_NAMESPACE`.
 
+<br>
+
+---
 
 # Tempo
 
-Note that recent Tempo releases require Kubernetes 1.29+
+**Note that recent Tempo releases require Kubernetes 1.29+**
 
-The tempo chart does not take S3 credentials from a secret like Mimir,
-unfortunately, so a *values.template* is used to generate the input
+The current *Tempo* chart does not take S3 credentials from a secret
+like Mimir, so a *values.template* is used to generate the input
 for the Tempo chart.
 
 Fetch the chart first for validation.
@@ -192,8 +216,31 @@ kustomize build --enable-helm tempo | less
 
 Install the chart via *kustomize*
 ```sh
-kustomize build --enable-helm tempo/ | kubectls apply -f -
+kustomize build --enable-helm tempo/ | kubectl apply -f -
 ```
+<br>
+
+---
+
+# Loki
+
+Loki supports a few different deployment modes, *Simple-Scalable*
+and *Distributed*.  The *distributed* chart deploys all services
+as pods whereas *simple-scalable* focuses on scaling the main
+components. This is controlled by setting the LOKI_DISTRIBUTED
+variable
+
+Fetch the chart first for validation.
+```sh
+kustomize build --enable-helm loki | less
+```
+
+Install the chart via *kustomize*
+```sh
+kustomize build --enable-helm loki/ | kubectl apply -f -
+```
+
+<br>
 
 ---
 ```
