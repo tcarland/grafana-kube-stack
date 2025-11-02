@@ -1,0 +1,62 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: monitoring
+
+secretGenerator:
+- name: ge-license
+  files:
+  - license.jwt=license.jwt
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+patches:
+- patch: |-
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: prometheus-grafana
+      namespace: $(namespace)
+    data:
+      grafana.ini: |
+        [analytics]
+        check_for_updates = false
+        [grafana_net]
+        url = https://grafana.net
+        [log]
+        mode = console
+        [paths]
+        data = /var/lib/grafana/
+        logs = /var/log/grafana
+        plugins = /var/lib/grafana/plugins
+        provisioning = /etc/grafana/provisioning
+        [enterprise]
+        license_path = /etc/grafana/license/license.jwt
+        [server]
+        domain = ''
+        root_url = /your/license/root/url
+- patch: |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: prometheus-grafana
+      namespace: $(namespace)
+    spec:
+      template:
+        spec:
+          containers:
+          - name: grafana
+            image: grafana/grafana-enterprise:12.2
+            resources:
+              limits:
+                memory: 4Gi
+              requests:
+                cpu:100m
+                memory: 2Gi
+            volumeMounts:
+            - name: ge-license
+              mountPath: /etc/grafana/license
+          volumes:
+          - name: ge-license
+            secret:
+              secretName: ge-license

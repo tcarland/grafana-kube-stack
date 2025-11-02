@@ -2,6 +2,7 @@
 *.cert
 *.crt
 *.key
+*.jwt
 
 env/*
 !env/env.template

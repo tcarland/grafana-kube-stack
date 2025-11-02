@@ -25,3 +25,5 @@ mimir:
         secret_access_key: ${S3_SECRET_KEY}
         http:
           insecure_skip_verify: true
+    #tenant_federation:
+    #  enabled: true
