@@ -195,6 +195,23 @@ Install the chart via *kustomize*
 kustomize build --enable-helm tempo/ | kubectls apply -f -
 ```
 
+<br>
+
+---
+
+<br>
+  
+# Notes
+## Add node exporters
+```yaml
+      - job_name: 'node_exporter'
+        static_configs:
+          - targets: ['<NODE_EXPORTER_IP_OR_HOSTNAME>:9100']
+            labels:
+              instance: '<NODE_EXPORTER_NAME>' 
+```
+
+
 ---
 ```
 Created 2025.05.05

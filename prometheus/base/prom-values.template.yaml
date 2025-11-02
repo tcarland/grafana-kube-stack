@@ -15,6 +15,8 @@ prometheus:
   prometheusSpec:
     remoteWrite:
     - url: http://mimir-distributor.monitoring.svc.cluster.local:8080/api/v1/push
+      headers:
+        X-Scope-OrgID: ${GRAFANA_ENV}
 
 alertmanager:
   alertmanagerSpec:

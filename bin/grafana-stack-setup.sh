@@ -2,7 +2,7 @@
 #
 # Timothy C. Arland <tcarland at gmail dot com>
 PNAME=${0##*\/}
-VERSION="v25.10.29"
+VERSION="v25.11.01"
 
 binpath=$(dirname "$0")
 project=$(dirname "$(realpath "$binpath")")
@@ -128,10 +128,25 @@ if [ -n "$GRAFANA_DOMAINNAME" ]; then
     fi
 fi
 
-echo " -> Creating configurations from templates"
+echo " -> Creating Helm Values from templates"
 cat prometheus/base/prom-values.template.yaml | envsubst > prometheus/base/prom-values.yaml
 cat prometheus/base/prom-addScrapeConfigs.template.yaml | envsubst > prometheus/base/prom-addScrapeConfigs.yaml
 cat tempo/base/tempo-values.template.yaml | envsubst > tempo/base/tempo-values.yaml
+
+# license check
+if [ -f env/${envname}/license.jwt ]; then
+    echo " -> License file found, copying to overlay.."
+    if [[ ! -d prometheus/overlays/${envname} ]]; then
+        echo " -> Overlay directory for '${envname}' not found, creating.."
+        mkdir -p prometheus/overlays/${envname}  # ensure path
+        cp prometheus/overlays/example/kustomization.yaml prometheus/overlays/${envname}/
+    fi
+    cp env/${envname}/license.jwt prometheus/overlays/${envname}/
+    if [ $? -ne 0 ]; then
+        echo "$PNAME Error copying license file" >&2
+        exit 2
+    fi
+fi
 
 echo " -> Creating S3 Buckets "
 # mimir s3 bucket names
