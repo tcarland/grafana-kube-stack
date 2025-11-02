@@ -1,6 +1,6 @@
 Grafana - Prometheus Stack Deployments
 ======================================
-v25.10.29
+v25.11.01
 
 Steps for customizing and deploying the Grafana Ecosystem, consisting
 of Prometheus, Loki, Grafana, Tempo, and Mimir; the (LGTM) stack.
@@ -239,8 +239,6 @@ Install the chart via *kustomize*
 ```sh
 kustomize build --enable-helm loki/ | kubectl apply -f -
 ```
-
-<br>
 
 <br>
 
