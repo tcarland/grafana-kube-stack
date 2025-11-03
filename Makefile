@@ -16,6 +16,7 @@ clean-charts:
 	( rm -rf mimir/base/charts \
 	  loki/base/charts \
 	  prometheus/base/charts \
-	  tempo/base/charts )
+	  tempo/base/charts \
+	  alloy/base/charts )
 
 distclean: clean-charts
