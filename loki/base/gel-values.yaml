@@ -1,0 +1,8 @@
+enterprise:
+  enabled: true
+  cluster_name: <cluster name>
+  # -- Use GEL gateway, if false will use the default nginx gateway
+  gelGateway: true
+  useExternalLicense: true
+  externalLicenseName: ge-logs-license
+  #externalConfigName: <configName>
