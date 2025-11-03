@@ -1,0 +1,5 @@
+// Write your Alloy config here:
+logging {
+  level = "info"
+  format = "logfmt"
+}

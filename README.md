@@ -1,6 +1,6 @@
 Grafana - Prometheus Stack Deployments
 ======================================
-v25.11.01
+v25.11.03
 
 Steps for customizing and deploying the Grafana Ecosystem, consisting
 of Prometheus, Loki, Grafana, Tempo, and Mimir; the (LGTM) stack.
