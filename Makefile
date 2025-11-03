@@ -1,6 +1,7 @@
 
-clean: 
+clean:
 	( rm -f mimir/base/secrets.env \
+	  alloy/base/config.alloy \
 	  loki/base/loki-values.yaml \
 	  prometheus/base/prom-values.yaml \
 	  tempo/base/tempo-values.yaml \
