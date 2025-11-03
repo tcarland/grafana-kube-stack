@@ -128,10 +128,11 @@ if [ -n "$GRAFANA_DOMAINNAME" ]; then
     fi
 fi
 
-echo " -> Creating Helm Values from templates"
+echo " -> Creating Helm Values and configs from templates"
 cat prometheus/base/prom-values.template.yaml | envsubst > prometheus/base/prom-values.yaml
 cat prometheus/base/prom-addScrapeConfigs.template.yaml | envsubst > prometheus/base/prom-addScrapeConfigs.yaml
 cat tempo/base/tempo-values.template.yaml | envsubst > tempo/base/tempo-values.yaml
+cat alloy/base/config-template.alloy | envsubst > alloy/base/config.alloy
 
 # license check
 if [ -f env/${envname}/license.jwt ]; then
@@ -161,7 +162,8 @@ buckets+=("$(yq e '.loki.storage.bucketNames.admin' loki/base/loki-values.yaml)"
 buckets+=("$(yq -e '.storage.trace.s3.bucket' tempo/base/tempo-values.yaml)")
 
 if [ -z "$s3cmd" ]; then
-    echo " -> S3 Buckets needed:"
+    echo " -> No S3 CLI detected, not creating buckets"
+    echo "S3 Buckets needed:"
     for b in ${ary[@]}; do
         echo "$b"
     done
