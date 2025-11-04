@@ -1,9 +1,11 @@
-Grafana - Prometheus Stack Deployments
-======================================
+Grafana Stack on Kubernetes
+===========================
 v25.11.04
 
-Steps for customizing and deploying the Grafana Ecosystem, consisting
-of Prometheus, Loki, Grafana, Tempo, and Mimir; the (LGTM) stack.
+Steps for customizing and deploying the [Grafana](https://grafana.com)
+Ecosystem, consisting of Loki, Grafana, Tempo, and Mimir; the (LGTM) stack.
+This project also includes deploying the [Prometheus](https://prometheus.io)
+Community chart.
 
 # Overview
 
@@ -26,7 +28,7 @@ installs the `kube-state-metrics` and `grafana` charts.
                     │         Data Sources          │
                     │ ───────────────────────────── │
                     │ • Applications & Services     │
-                    │ • Kubernetes Logs (FluentBit) │
+                    │ • Kubernetes Logs             │
                     │ • Prometheus Exporters        │
                     │ • Tracing Instrumentation     │
                     └──────────────┬────────────────┘
@@ -41,7 +43,7 @@ installs the `kube-state-metrics` and `grafana` charts.
           │                     │                      │
           ▼                     ▼                      ▼
    ┌──────────────────────────────────────────────────────────┐
-   │                   Amazon S3 (Object Storage)             │
+   │                    S3 (Object Storage)             │
    │  - Loki chunks, index, and ruler data                    │
    │  - Mimir blocks (TSDB data)                              │
    │  - Tempo trace blocks (compact traces)                   │
@@ -81,6 +83,7 @@ installs the `kube-state-metrics` and `grafana` charts.
 |  -> [Grafana](https://github.com/grafana/grafana)  | **v12.2.0**   | --- |
 | [Loki](https://github.com/grafana/loki)            | **v3.5.5**    |   *6.42.0*     |
 | [Tempo](https://github.com/grafana/tempo)          | **v2.9.0**    |   *1.38.2*     |
+| [Alloy](https://github.com/grafana/alloy)          | **v1.11.0*    |   *1.4.0*      |
 
 <br>
 
@@ -93,6 +96,8 @@ Refer to the official Grafana documentation for each component for details of th
 - [Grafana](https://grafana.com/docs/grafana/latest/fundamentals/)
 - [Tempo](https://grafana.com/docs/tempo/latest/introduction/architecture/)
 - [Mimir](https://grafana.com/docs/mimir/latest/get-started/about-grafana-mimir-architecture/)
+- [Alloy](https://grafana.com/docs/alloy/latest/)
+
 
 ## Requirements
 
@@ -100,6 +105,7 @@ Refer to the official Grafana documentation for each component for details of th
 - [helm](https://github.com/helm/helm) : v3.19.0
 - [yq](https://github.com/mikefarah/yq) : v4.47.2
 - [mc](https://github.com/minio/mc) : latest stable (if using MinIO)
+
 
 ## Pre-Deployment Secrets
 
@@ -152,7 +158,7 @@ kustomize build --enable-helm mimir/ | kubectl apply -f -
 
 ---
 
-# Prometheus Operator
+# Prometheus Operator and Grafana
 
 Note that the kustomize manifests make use of a *node-selector* for
 targeting *worker* nodes. Typically, *control-plane* nodes are already
