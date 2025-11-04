@@ -1,6 +1,6 @@
 Grafana - Prometheus Stack Deployments
 ======================================
-v25.11.03
+v25.11.04
 
 Steps for customizing and deploying the Grafana Ecosystem, consisting
 of Prometheus, Loki, Grafana, Tempo, and Mimir; the (LGTM) stack.
@@ -245,17 +245,21 @@ kustomize build --enable-helm loki/ | kubectl apply -f -
 ---
 
 <br>
-  
+
 # Notes
+
 ## Add node exporters
+
+Note that job names should be uniquie within prom scrap configs
 ```yaml
-      - job_name: 'node_exporter'
+      - job_name: 'node_exporter_host'
         static_configs:
           - targets: ['<NODE_EXPORTER_IP_OR_HOSTNAME>:9100']
             labels:
-              instance: '<NODE_EXPORTER_NAME>' 
+              instance: '<NODE_EXPORTER_NAME>'
 ```
 
+<br>
 
 ---
 ```
