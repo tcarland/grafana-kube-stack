@@ -5,6 +5,17 @@ namespace: monitoring
 
 resources: []
 
+secretGenerator:
+- name: loki-gateway-tls
+  behavior: create
+  type: "kubernetes.io/tls"
+  files:
+    - tls.crt=loki-gateway.crt
+    - tls.key=loki-gateway.key
+
+generatorOptions:
+  disableNameSuffixHash: true
+
 helmCharts:
 - name: loki
   includeCRDs: true

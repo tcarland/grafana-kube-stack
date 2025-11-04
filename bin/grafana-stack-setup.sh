@@ -110,6 +110,10 @@ if [[ "${LOKI_DISTRIBUTED,,}" == "true" ]]; then
 else
     cat loki/base/loki-values-ss.yaml | envsubst > loki/base/loki-values.yaml
 fi
+if [ -f env/${envname}/certs/loki-gateway.crt ]; then
+    echo " -> Copying Loki certificates "
+    cp env/${envname}/certs/loki* loki/base/
+fi
 
 echo " -> Creating secrets.env for Mimir"
 echo "$s3_secrets" | envsubst > mimir/base/secrets.env
@@ -123,8 +127,8 @@ if [ -n "$GRAFANA_DOMAINNAME" ]; then
     echo " -> Ingress controller type set to '$ingress'"
     cat prometheus/${ingress}/base/params.env.template | envsubst > prometheus/${ingress}/base/params.env
     if [ -d env/${envname}/certs ]; then
-        echo " -> Copy certs from 'env/$envname/certs/'"
-        cp env/${envname}/certs/* prometheus/${ingress}/base/
+        echo " -> Copy certs from 'env/$envname/certs/grafana.*'"
+        cp env/${envname}/certs/grafana.* prometheus/${ingress}/base/
     fi
 fi
 

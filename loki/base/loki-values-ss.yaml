@@ -44,7 +44,7 @@ loki:
       # Forces the path style for S3 (true/false)
       s3ForcePathStyle: true
       # Allows insecure (HTTP) connections (true/false)
-      insecure: false
+      insecure: true
       # HTTP configuration settings
       http_config: {}
 
@@ -60,3 +60,26 @@ write:
 # Disable minio storage
 minio:
   enabled: false
+
+gateway:
+  enabled: true
+  replicas: 1
+  service:
+    type: LoadBalancer
+    loadBalancerIP: ${LOKI_LOADBALANCER_IP}
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - host: ${LOKI_DOMAINNAME}
+        paths:
+        - path: /
+          pathType: Prefix
+    tls:
+      - secretName: loki-gateway-tls
+        hosts:
+          - ${LOKI_DOMAINNAME}
+  basicAuth:
+    enabled: false
+    username: null
+    password: null

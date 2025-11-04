@@ -92,3 +92,26 @@ write:
 
 singleBinary:
   replicas: 0
+
+gateway:
+  enabled: true
+  replicas: 1
+  service:
+    type: LoadBalancer
+    loadBalancerIP: ${LOKI_LOADBALANCER_IP}
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - host: ${LOKI_DOMAINNAME}
+        paths:
+        - path: /
+          pathType: Prefix
+    tls:
+      - secretName: loki-gateway-tls
+        hosts:
+          - ${LOKI_DOMAINNAME}
+  basicAuth:
+    enabled: false
+    username: null
+    password: null
