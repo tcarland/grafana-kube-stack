@@ -8,6 +8,12 @@ prometheusOperator:
   nodeSelector:
     node-role.kubernetes.io/worker: ""
 
+kubeStateMetrics:
+  enabled: true
+
+nodeExporter:
+  enabled: true
+
 prometheus:
   service:
     type: NodePort
