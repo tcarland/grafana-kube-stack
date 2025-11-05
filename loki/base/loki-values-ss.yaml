@@ -55,7 +55,15 @@ compactor:
   replicas: 1
 
 gateway:
-  enabled: false
+  enabled: true
+  replicas: 1
+  verboseLogging: false
+  ingress:
+    enabled: false
+  basicAuth:
+    enabled: false
+    username: null
+    password: null
 
 minio:
   enabled: false
