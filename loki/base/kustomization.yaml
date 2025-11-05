@@ -16,6 +16,5 @@ helmCharts:
   version: 6.44.0
   repo: https://grafana.github.io/helm-charts
   valuesFile: loki-values.yaml
-  additionalValuesFiles:
-    - loki-gateway-values.yaml
+  #additionalValuesFiles:
   #  - gel-values.yaml
