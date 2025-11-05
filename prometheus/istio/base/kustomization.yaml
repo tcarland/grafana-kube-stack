@@ -10,6 +10,7 @@ configMapGenerator:
   - name: grafana-istio-params
     envs:
       - params.env
+      
 secretGenerator:
   - name: grafana-tls
     namespace: istio-system
@@ -18,6 +19,7 @@ secretGenerator:
     files:
       - tls.crt=grafana.crt
       - tls.key=grafana.key
+      
 generatorOptions:
   disableNameSuffixHash: true
 
@@ -56,5 +58,5 @@ labels:
       app.kubernetes.io/component: grafana-ingress
       app.kubernetes.io/name: istio-ingress
       app.kubernetes.io/part-of: grafana-kube-stack
-      app.kubernetes.io/version: v25.11.03
+      app.kubernetes.io/version: v25.11.05
       kustomize.component: grafana-ingress

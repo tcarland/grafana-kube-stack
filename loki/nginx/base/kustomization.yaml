@@ -37,7 +37,7 @@ labels:
   - includeSelectors: true
     pairs:
       app.kubernetes.io/component: loki-ingress
-      app.kubernetes.io/name: nginx
+      app.kubernetes.io/name: loki-ingress
       app.kubernetes.io/part-of: grafana-kube-stack
       app.kubernetes.io/version: v25.11.05
       kustomize.component: loki-ingress

@@ -45,6 +45,8 @@ function create_s3_buckets()
 
 # ---------------------------------------
 
+echo "$PNAME $VERSION"
+
 # validation checks
 if ! which helm >/dev/null 2>&1; then
     echo "$PNAME Error, required binary 'helm' not found in PATH." >&2
@@ -56,7 +58,7 @@ if ! which yq >/dev/null 2>&1; then
 fi
 
 if [ -z "$envname" ]; then
-    echo "$PNAME ENV name not provided" >&2
+    echo "$PNAME Error, ENV name not provided" >&2
     exit 1
 fi
 
@@ -107,31 +109,33 @@ fi
 
 if [[ "$INGRESS_NAMESPACE" =~ "istio" ]]; then
     ingress="istio"
+    echo " -> Ingress controller type set to '$ingress'"
 fi
-
 
 echo " -> Creating Loki values from template"
 if [[ "${LOKI_DISTRIBUTED,,}" == "true" ]]; then
+    echo "   -> Using Loki distributed chart"
     cat loki/base/loki-values-distributed.yaml | envsubst > loki/base/loki-values.yaml
 else
+    echo "   -> Using Loki simple-scalable chart"
     cat loki/base/loki-values-ss.yaml | envsubst > loki/base/loki-values.yaml
 fi
 
-if [ -f env/${envname}/certs/loki.crt ]; then
-    echo " -> Copying Loki certificates "
-    cp env/${envname}/certs/loki* loki/${ingress}/base/
+if [ -n "$LOKI_DOMAINNAME" ]; then
     cat loki/${ingress}/base/params.env.template | envsubst > loki/${ingress}/base/params.env
+    if [ -f env/${envname}/certs/loki.crt ]; then
+        echo " -> Copying Loki ingress certificates "
+        cp env/${envname}/certs/loki* loki/${ingress}/base/
+    fi
 fi
 
-echo " -> Creating secrets.env for Mimir"
+echo " -> Creating s3 secrets.env for Mimir"
 echo "$s3_secrets" | envsubst > mimir/base/secrets.env
 
-
 if [ -n "$GRAFANA_DOMAINNAME" ]; then
-    echo " -> Ingress controller type set to '$ingress'"
     cat prometheus/${ingress}/base/params.env.template | envsubst > prometheus/${ingress}/base/params.env
     if [ -d env/${envname}/certs ]; then
-        echo " -> Copy certs from 'env/$envname/certs/grafana.*'"
+        echo " -> Copying Grafana ingress certs"
         cp env/${envname}/certs/grafana.* prometheus/${ingress}/base/
     fi
 fi
@@ -154,7 +158,7 @@ if [ -f env/${envname}/license.jwt ]; then
         mkdir -p loki/overlays/${envname}
         cp loki/overlays/example/kustomization.yaml loki/overlays/${envname}/
     fi
-    cp env/${envname}/license.jwt prometheus/overlays/${envname}/
+    cp env/${envname}/license.jwt prometheus/overlays/${envname}/ && \
     cp env/${envname}/license.jwt loki/overlays/${envname}/
     if [ $? -ne 0 ]; then
         echo "$PNAME Error copying license file" >&2
@@ -162,7 +166,7 @@ if [ -f env/${envname}/license.jwt ]; then
     fi
 fi
 
-echo " -> Creating S3 Buckets "
+echo " -> Needed S3 Buckets:"
 # mimir s3 bucket names
 buckets+=("$(yq e '.mimir.structuredConfig.alertmanager_storage.s3.bucket_name' mimir/base/mimir-structuredConfig.yaml | envsubst)")
 buckets+=("$(yq e '.mimir.structuredConfig.blocks_storage.s3.bucket_name' mimir/base/mimir-structuredConfig.yaml | envsubst)")
@@ -184,6 +188,6 @@ else
     create_s3_buckets "${buckets[@]}"
 fi
 
-echo " -> Finished."
+echo " -> $PNAME Finished."
 
 exit 0

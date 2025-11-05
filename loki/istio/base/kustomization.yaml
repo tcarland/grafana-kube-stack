@@ -10,6 +10,7 @@ configMapGenerator:
   - name: loki-istio-params
     envs:
       - params.env
+      
 secretGenerator:
   - name: loki-tls
     namespace: istio-system
@@ -18,6 +19,7 @@ secretGenerator:
     files:
       - tls.crt=loki.crt
       - tls.key=loki.key
+      
 generatorOptions:
   disableNameSuffixHash: true
 
