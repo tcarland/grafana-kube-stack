@@ -1,0 +1,25 @@
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: loki-vs
+  namespace: $(namespace)
+spec:
+  gateways:
+  - loki-gateway
+  hosts:
+  - "$LOKI_DOMAINNAME"
+  http:
+  - headers:
+      request:
+        set:
+          X-Forwarded-Proto: https
+    match:
+    - uri:
+        prefix: /
+    name: loki-gateway
+    route:
+    - destination:
+        host: loki-gateway.monitoring.svc.cluster.local
+        port:
+          number: 80

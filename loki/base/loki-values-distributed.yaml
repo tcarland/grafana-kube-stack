@@ -69,6 +69,19 @@ indexGateway:
   replicas: 2
   maxUnavailable: 1
 
+gateway:
+  enabled: true
+  replicas: 1
+  verboseLogging: false
+  ingress:
+    enabled: false
+  basicAuth:
+    enabled: false
+    username: null
+    password: null
+
+
+# experimental
 bloomPlanner:
   replicas: 0
 bloomBuilder:
@@ -76,6 +89,7 @@ bloomBuilder:
 bloomGateway:
   replicas: 0
 
+# Zero out replica counts of other deployment modes
 backend:
   replicas: 0
 read:

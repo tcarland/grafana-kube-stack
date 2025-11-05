@@ -104,6 +104,12 @@ fi
 
 # ---------------------------------------
 
+
+if [[ "$INGRESS_NAMESPACE" =~ "istio" ]]; then
+    ingress="istio"
+fi
+
+
 echo " -> Creating Loki values from template"
 if [[ "${LOKI_DISTRIBUTED,,}" == "true" ]]; then
     cat loki/base/loki-values-distributed.yaml | envsubst > loki/base/loki-values.yaml
@@ -111,22 +117,15 @@ else
     cat loki/base/loki-values-ss.yaml | envsubst > loki/base/loki-values.yaml
 fi
 
-# We'll use loki-gateway ingress because its partial to nginx
-# see https://grafana.com/docs/loki/latest/setup/install/istio/
-cat loki/base/gateway-values-template.yaml | envsubst > loki/base/loki-gateway-values.yaml
-
-if [ -f env/${envname}/certs/loki-gateway.crt ]; then
+if [ -f env/${envname}/certs/loki.crt ]; then
     echo " -> Copying Loki certificates "
-    cp env/${envname}/certs/loki* loki/base/
+    cp env/${envname}/certs/loki* loki/${ingress}/base/
+    cat loki/${ingress}/base/params.env.template | envsubst > loki/${ingress}/base/params.env
 fi
 
 echo " -> Creating secrets.env for Mimir"
 echo "$s3_secrets" | envsubst > mimir/base/secrets.env
 
-
-if [[ "$INGRESS_NAMESPACE" =~ "istio" ]]; then
-    ingress="istio"
-fi
 
 if [ -n "$GRAFANA_DOMAINNAME" ]; then
     echo " -> Ingress controller type set to '$ingress'"
@@ -137,7 +136,7 @@ if [ -n "$GRAFANA_DOMAINNAME" ]; then
     fi
 fi
 
-echo " -> Creating Helm Values and configs from templates"
+echo " -> Creating Helm Values and Configs from templates"
 cat prometheus/base/prom-values.template.yaml | envsubst > prometheus/base/prom-values.yaml
 cat prometheus/base/prom-addScrapeConfigs.template.yaml | envsubst > prometheus/base/prom-addScrapeConfigs.yaml
 cat tempo/base/tempo-values.template.yaml | envsubst > tempo/base/tempo-values.yaml
@@ -145,13 +144,18 @@ cat alloy/base/config-template.alloy | envsubst > alloy/base/config.alloy
 
 # license check
 if [ -f env/${envname}/license.jwt ]; then
-    echo " -> License file found, copying to overlay.."
+    echo " -> License file found, copying to overlays.."
     if [[ ! -d prometheus/overlays/${envname} ]]; then
         echo " -> Overlay directory for '${envname}' not found, creating.."
-        mkdir -p prometheus/overlays/${envname}  # ensure path
+        mkdir -p prometheus/overlays/${envname}
         cp prometheus/overlays/example/kustomization.yaml prometheus/overlays/${envname}/
     fi
+    if [[ ! -d loki/overlays/${envname} ]]; then
+        mkdir -p loki/overlays/${envname}
+        cp loki/overlays/example/kustomization.yaml loki/overlays/${envname}/
+    fi
     cp env/${envname}/license.jwt prometheus/overlays/${envname}/
+    cp env/${envname}/license.jwt loki/overlays/${envname}/
     if [ $? -ne 0 ]; then
         echo "$PNAME Error copying license file" >&2
         exit 2
