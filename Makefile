@@ -3,6 +3,7 @@ clean:
 	( rm -f mimir/base/secrets.env \
 	  alloy/base/config.alloy \
 	  loki/base/loki-values.yaml \
+	  loki/base/loki-gateway-values.yaml
 	  prometheus/base/prom-values.yaml \
 	  tempo/base/tempo-values.yaml \
 	  prometheus/istio/base/*.crt \

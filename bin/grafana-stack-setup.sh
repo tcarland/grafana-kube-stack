@@ -110,6 +110,11 @@ if [[ "${LOKI_DISTRIBUTED,,}" == "true" ]]; then
 else
     cat loki/base/loki-values-ss.yaml | envsubst > loki/base/loki-values.yaml
 fi
+
+# We'll use loki-gateway ingress because its partial to nginx
+# see https://grafana.com/docs/loki/latest/setup/install/istio/
+cat loki/base/gateway-values-template.yaml | envsubst > loki/base/loki-gateway-values.yaml
+
 if [ -f env/${envname}/certs/loki-gateway.crt ]; then
     echo " -> Copying Loki certificates "
     cp env/${envname}/certs/loki* loki/base/
