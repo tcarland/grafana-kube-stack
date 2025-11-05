@@ -234,7 +234,7 @@ Loki supports a few different deployment modes, *Simple-Scalable*
 and *Distributed*.  The *distributed* chart deploys all services
 as pods whereas *simple-scalable* focuses on scaling the main
 components. This is controlled by setting the LOKI_DISTRIBUTED
-variable
+variable.
 
 Fetch the chart first for validation.
 ```sh
@@ -245,6 +245,21 @@ Install the chart via *kustomize*
 ```sh
 kustomize build --enable-helm loki/ | kubectl apply -f -
 ```
+
+## Loki Document References
+
+A collection of some important documentation links from the main
+[Grafana Loki Documentation](https://grafana.com/docs/loki/latest/) repo.
+
+- Loki Configuration and API References: https://grafana.com/docs/loki/latest/reference/
+- Configuring Authentication: https://grafana.com/docs/loki/latest/operations/authentication/
+- Installing with Istio: https://grafana.com/docs/loki/latest/setup/install/istio/
+- Log Retention: https://grafana.com/docs/loki/latest/operations/storage/retention/
+- Grafana Enterprise Logs enablement:  https://grafana.com/docs/enterprise-logs/latest/setup/helm/#configure-your-gel-license
+
+Note that much of the Loki documentation for OSS overlaps with the 
+[Grafana Enterprise Logs](https://grafana.com/docs/enterprise-logs/latest)
+documentation.
 
 <br>
 

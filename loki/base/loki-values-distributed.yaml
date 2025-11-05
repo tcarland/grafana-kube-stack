@@ -80,6 +80,8 @@ gateway:
     username: null
     password: null
 
+test:
+  enabled: false
 
 # experimental
 bloomPlanner:
