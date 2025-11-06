@@ -2,7 +2,7 @@
 #
 # Timothy C. Arland <tcarland at gmail dot com>
 PNAME=${0##*\/}
-VERSION="v25.11.04"
+VERSION="v25.11.05"
 
 binpath=$(dirname "$0")
 project=$(dirname "$(realpath "$binpath")")
@@ -45,6 +45,8 @@ function create_s3_buckets()
 
 # ---------------------------------------
 
+echo "$PNAME $VERSION"
+
 # validation checks
 if ! which helm >/dev/null 2>&1; then
     echo "$PNAME Error, required binary 'helm' not found in PATH." >&2
@@ -56,7 +58,7 @@ if ! which yq >/dev/null 2>&1; then
 fi
 
 if [ -z "$envname" ]; then
-    echo "$PNAME ENV name not provided" >&2
+    echo "$PNAME Error, ENV name not provided" >&2
     exit 1
 fi
 
@@ -104,31 +106,41 @@ fi
 
 # ---------------------------------------
 
-echo " -> Creating Loki values from template"
-if [[ "${LOKI_DISTRIBUTED,,}" == "true" ]]; then
-    cat loki/base/loki-values-distributed.yaml | envsubst > loki/base/loki-values.yaml
-else
-    cat loki/base/loki-values-ss.yaml | envsubst > loki/base/loki-values.yaml
-fi
-
-echo " -> Creating secrets.env for Mimir"
-echo "$s3_secrets" | envsubst > mimir/base/secrets.env
-
 
 if [[ "$INGRESS_NAMESPACE" =~ "istio" ]]; then
     ingress="istio"
+    echo " -> Ingress controller type set to '$ingress'"
 fi
 
-if [ -n "$GRAFANA_DOMAINNAME" ]; then
-    echo " -> Ingress controller type set to '$ingress'"
-    cat prometheus/${ingress}/base/params.env.template | envsubst > prometheus/${ingress}/base/params.env
-    if [ -d env/${envname}/certs ]; then
-        echo " -> Copy certs from 'env/$envname/certs/'"
-        cp env/${envname}/certs/* prometheus/${ingress}/base/
+echo " -> Creating Loki values from template"
+if [[ "${LOKI_DISTRIBUTED,,}" == "true" ]]; then
+    echo "   -> Using Loki distributed chart"
+    cat loki/base/loki-values-distributed.yaml | envsubst > loki/base/loki-values.yaml
+else
+    echo "   -> Using Loki simple-scalable chart"
+    cat loki/base/loki-values-ss.yaml | envsubst > loki/base/loki-values.yaml
+fi
+
+if [ -n "$LOKI_DOMAINNAME" ]; then
+    cat loki/${ingress}/base/params.env.template | envsubst > loki/${ingress}/base/params.env
+    if [ -f env/${envname}/certs/loki.crt ]; then
+        echo " -> Copying Loki ingress certificates "
+        cp env/${envname}/certs/loki* loki/${ingress}/base/
     fi
 fi
 
-echo " -> Creating Helm Values and configs from templates"
+echo " -> Creating s3 secrets.env for Mimir"
+echo "$s3_secrets" | envsubst > mimir/base/secrets.env
+
+if [ -n "$GRAFANA_DOMAINNAME" ]; then
+    cat prometheus/${ingress}/base/params.env.template | envsubst > prometheus/${ingress}/base/params.env
+    if [ -d env/${envname}/certs ]; then
+        echo " -> Copying Grafana ingress certs"
+        cp env/${envname}/certs/grafana.* prometheus/${ingress}/base/
+    fi
+fi
+
+echo " -> Creating Helm Values and Configs from templates"
 cat prometheus/base/prom-values.template.yaml | envsubst > prometheus/base/prom-values.yaml
 cat prometheus/base/prom-addScrapeConfigs.template.yaml | envsubst > prometheus/base/prom-addScrapeConfigs.yaml
 cat tempo/base/tempo-values.template.yaml | envsubst > tempo/base/tempo-values.yaml
@@ -136,20 +148,25 @@ cat alloy/base/config-template.alloy | envsubst > alloy/base/config.alloy
 
 # license check
 if [ -f env/${envname}/license.jwt ]; then
-    echo " -> License file found, copying to overlay.."
+    echo " -> License file found, copying to overlays.."
     if [[ ! -d prometheus/overlays/${envname} ]]; then
         echo " -> Overlay directory for '${envname}' not found, creating.."
-        mkdir -p prometheus/overlays/${envname}  # ensure path
+        mkdir -p prometheus/overlays/${envname}
         cp prometheus/overlays/example/kustomization.yaml prometheus/overlays/${envname}/
     fi
-    cp env/${envname}/license.jwt prometheus/overlays/${envname}/
+    if [[ ! -d loki/overlays/${envname} ]]; then
+        mkdir -p loki/overlays/${envname}
+        cp loki/overlays/example/kustomization.yaml loki/overlays/${envname}/
+    fi
+    cp env/${envname}/license.jwt prometheus/overlays/${envname}/ && \
+    cp env/${envname}/license.jwt loki/overlays/${envname}/
     if [ $? -ne 0 ]; then
         echo "$PNAME Error copying license file" >&2
         exit 2
     fi
 fi
 
-echo " -> Creating S3 Buckets "
+echo " -> Needed S3 Buckets:"
 # mimir s3 bucket names
 buckets+=("$(yq e '.mimir.structuredConfig.alertmanager_storage.s3.bucket_name' mimir/base/mimir-structuredConfig.yaml | envsubst)")
 buckets+=("$(yq e '.mimir.structuredConfig.blocks_storage.s3.bucket_name' mimir/base/mimir-structuredConfig.yaml | envsubst)")
@@ -171,6 +188,6 @@ else
     create_s3_buckets "${buckets[@]}"
 fi
 
-echo " -> Finished."
+echo " -> $PNAME Finished."
 
 exit 0

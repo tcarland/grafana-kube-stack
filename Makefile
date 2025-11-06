@@ -5,6 +5,12 @@ clean:
 	  loki/base/loki-values.yaml \
 	  prometheus/base/prom-values.yaml \
 	  tempo/base/tempo-values.yaml \
+	  loki/istio/base/*.crt \
+	  loki/istio/base/*.key \
+	  loki/istio/base/params.env \
+	  loki/nginx/base/*.crt \
+	  loki/nginx/base/*.key \
+	  loki/nginx/base/params.env \
 	  prometheus/istio/base/*.crt \
 	  prometheus/istio/base/*.key \
 	  prometheus/istio/base/params.env \

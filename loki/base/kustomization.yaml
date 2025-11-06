@@ -5,6 +5,9 @@ namespace: monitoring
 
 resources: []
 
+generatorOptions:
+  disableNameSuffixHash: true
+
 helmCharts:
 - name: loki
   includeCRDs: true
@@ -13,3 +16,5 @@ helmCharts:
   version: 6.44.0
   repo: https://grafana.github.io/helm-charts
   valuesFile: loki-values.yaml
+  #additionalValuesFiles:
+  #  - gel-values.yaml

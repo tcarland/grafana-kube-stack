@@ -1,8 +1,16 @@
 enterprise:
   enabled: true
-  cluster_name: <cluster name>
+  # to match what is in the license
+  cluster_name: ${GRAFANA_ENV}
   # -- Use GEL gateway, if false will use the default nginx gateway
-  gelGateway: true
+  gelGateway: false
   useExternalLicense: true
   externalLicenseName: ge-logs-license
   #externalConfigName: <configName>
+  image:
+    registry: docker.io
+    repository: grafana/enterprise-logs
+    tag: 3.5.7
+    pullPolicy: IfNotPresent
+  provisioner:
+    enabled: false

@@ -1,0 +1,19 @@
+---
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: loki-gateway
+  namespace: $(namespace)
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      name: https
+      number: 443
+      protocol: HTTPS
+    hosts:
+    - "$(LOKI_DOMAINNAME)"
+    tls:
+      mode: SIMPLE
+      credentialName: loki-tls
