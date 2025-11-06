@@ -248,7 +248,7 @@ kustomize build --enable-helm loki/ | kubectl apply -f -
 
 ## Loki Document References
 
-A collection of some important documentation links 
+A collection of some important documentation links
 
 |    |    |
 | ---------------- | ------------------ |
@@ -262,6 +262,29 @@ A collection of some important documentation links
 Note that much of the Loki documentation for OSS overlaps with the
 [Grafana Enterprise Logs](https://grafana.com/docs/enterprise-logs/latest)
 documentation.
+
+<br>
+
+---
+
+# Alloy
+
+Hosts that are having `alloy` provisioned locally will need the `gnupg` package.
+
+Deploying as a service requires a service account or a local *alloy* user to allow
+a system service to operate. The deployed user should be added to any groups necessary
+to gather metrics and logs.
+```sh
+sudo useradd --no-create-home --groups "adm,syslog" --shell /bin/false alloy
+```
+
+A service can then be added to `/etc/systemd/system` to allow system to manage the service.
+One is provided as `resources/alloy.service`.
+```sh
+sudo systemctl enable alloy.service
+sudo journalctl -u alloy
+```
+
 
 <br>
 
