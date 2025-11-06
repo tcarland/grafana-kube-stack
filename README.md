@@ -248,8 +248,7 @@ kustomize build --enable-helm loki/ | kubectl apply -f -
 
 ## Loki Document References
 
-A collection of some important documentation links from the main
-[Grafana Loki Documentation](https://grafana.com/docs/loki/latest/) repo.
+A collection of some important documentation links 
 
 |    |    |
 | ---------------- | ------------------ |
