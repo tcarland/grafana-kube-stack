@@ -1,6 +1,6 @@
 Grafana Stack on Kubernetes
 ===========================
-v25.11.05
+v25.11.06
 
 Steps for customizing and deploying the [Grafana](https://grafana.com)
 Ecosystem, consisting of Loki, Grafana, Tempo, and Mimir; the (LGTM) stack.
@@ -248,16 +248,18 @@ kustomize build --enable-helm loki/ | kubectl apply -f -
 
 ## Loki Document References
 
-A collection of some important documentation links from the main
-[Grafana Loki Documentation](https://grafana.com/docs/loki/latest/) repo.
+A collection of some important documentation links 
 
-- Loki Configuration and API References: https://grafana.com/docs/loki/latest/reference/
-- Configuring Authentication: https://grafana.com/docs/loki/latest/operations/authentication/
-- Installing with Istio: https://grafana.com/docs/loki/latest/setup/install/istio/
-- Log Retention: https://grafana.com/docs/loki/latest/operations/storage/retention/
-- Grafana Enterprise Logs enablement:  https://grafana.com/docs/enterprise-logs/latest/setup/helm/#configure-your-gel-license
+|    |    |
+| ---------------- | ------------------ |
+| Loki Configuration and API References | https://grafana.com/docs/loki/latest/reference/ |
+| Configuring Authentication | https://grafana.com/docs/loki/latest/operations/authentication/ |
+| Installing with Istio | https://grafana.com/docs/loki/latest/setup/install/istio/ |
+| Log Retention | https://grafana.com/docs/loki/latest/operations/storage/retention/ |
+| Grafana Enterprise Logs enablement |  https://grafana.com/docs/enterprise-logs/latest/setup/helm/#configure-your-gel-license |
+| Grafana Alloy Config Scenarios | https://github.com/grafana/alloy-scenarios |
 
-Note that much of the Loki documentation for OSS overlaps with the 
+Note that much of the Loki documentation for OSS overlaps with the
 [Grafana Enterprise Logs](https://grafana.com/docs/enterprise-logs/latest)
 documentation.
 
