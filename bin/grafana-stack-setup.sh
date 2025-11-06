@@ -2,7 +2,7 @@
 #
 # Timothy C. Arland <tcarland at gmail dot com>
 PNAME=${0##*\/}
-VERSION="v25.11.05"
+VERSION="v25.11.06"
 
 binpath=$(dirname "$0")
 project=$(dirname "$(realpath "$binpath")")
@@ -10,10 +10,6 @@ envname="$1"
 ingress="nginx"
 s3cmd=
 buckets=()
-
-
-export S3_SKIP_VERIFY=${MINIO_TLS_INSECURE:-"true"}
-export GRAFANA_NAMESPACE="${GRAFANA_NAMESPACE:-monitoring}"
 
 
 s3_secrets="
@@ -25,6 +21,7 @@ S3_ACCESS_KEY=\${S3_ACCESS_KEY}
 S3_SECRET_KEY=\${S3_SECRET_KEY}
 S3_SKIP_VERIFY=\${S3_SKIP_VERIFY}
 "
+
 
 function create_s3_buckets()
 {
@@ -79,7 +76,7 @@ if [[ -z "$S3_ACCESS_KEY" || -z "$S3_SECRET_KEY" ]]; then
     exit 1
 fi
 
-# strip protocol from endpoint
+# strip protocol from endpoint if defined
 if [[ "$S3_ENDPOINT" =~ "http" ]]; then
     export S3_ENDPOINT=${S3_ENDPOINT#*//}
 fi
@@ -106,6 +103,8 @@ fi
 
 # ---------------------------------------
 
+export S3_SKIP_VERIFY=${S3_SKIP_VERIFY:-"false"}
+export GRAFANA_NAMESPACE="${GRAFANA_NAMESPACE:-monitoring}"
 
 if [[ "$INGRESS_NAMESPACE" =~ "istio" ]]; then
     ingress="istio"

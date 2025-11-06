@@ -41,7 +41,8 @@ loki:
       signatureVersion: v4
       s3ForcePathStyle: true
       insecure: false
-      http_config: {}
+      http_config: 
+        insecure_skip_verify: ${S3_SKIP_VERIFY}
 
 deploymentMode: Distributed
 
