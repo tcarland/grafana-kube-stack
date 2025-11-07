@@ -2,7 +2,7 @@
 #
 # Timothy C. Arland <tcarland at gmail dot com>
 PNAME=${0##*\/}
-VERSION="v25.11.06"
+VERSION="v25.11.07"
 
 binpath=$(dirname "$0")
 project=$(dirname "$(realpath "$binpath")")
@@ -132,10 +132,20 @@ echo " -> Creating s3 secrets.env for Mimir"
 echo "$s3_secrets" | envsubst > mimir/base/secrets.env
 
 if [ -n "$GRAFANA_DOMAINNAME" ]; then
-    cat prometheus/${ingress}/base/params.env.template | envsubst > prometheus/${ingress}/base/params.env
+    cat prometheus/ingress/grafana/${ingress}/base/params.env.template | envsubst > \
+        prometheus/ingress/grafana/${ingress}/base/params.env
     if [ -d env/${envname}/certs ]; then
         echo " -> Copying Grafana ingress certs"
-        cp env/${envname}/certs/grafana.* prometheus/${ingress}/base/
+        cp env/${envname}/certs/grafana.* prometheus/ingress/grafana/${ingress}/base/
+    fi
+fi
+
+if [ -n "$PROMETHEUS_DOMAINNAME" ]; then
+    cat prometheus/ingress/prom/${ingress}/base/params.env.template | envsubst > \
+        prometheus/ingress/prom/${ingress}/base/params.env
+    if [ -d env/${envname}/certs ]; then
+        echo " -> Copying Prometheus ingress certs"
+        cp env/${envname}/certs/prometheus.* prometheus/ingress/prom/${ingress}/base/
     fi
 fi
 

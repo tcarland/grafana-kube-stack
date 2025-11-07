@@ -25,4 +25,4 @@ clean-charts:
 	  tempo/base/charts \
 	  alloy/base/charts )
 
-distclean: clean-charts
+distclean: clean-charts clean

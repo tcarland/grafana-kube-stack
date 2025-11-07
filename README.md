@@ -1,11 +1,32 @@
 Grafana Stack on Kubernetes
 ===========================
-v25.11.06
+v25.11.07
 
 Steps for customizing and deploying the [Grafana](https://grafana.com)
 Ecosystem, consisting of Loki, Grafana, Tempo, and Mimir; the (LGTM) stack.
 This project also includes deploying the [Prometheus](https://prometheus.io)
 Community chart.
+
+
+# Table of Contents
+
+- [Grafana Stack on Kubernetes](#grafana-stack-on-kubernetes)
+  * [Overview](#overview)
+    + [Components Matrix](#components-matrix)
+    + [Architecture and Documentation](#architecture-and-documentations)
+    + [Requirements](#requirements)
+    + [Deployment Secrets](#deployment-secrets)
+    + [S3 Buckets](#s3-buckets)
+  * [Mimir](#mimir)
+  * [Prometheus Operator and Grafana](#prometheus-operator-and-grafana)
+    + [Ingress](#ingress)
+  * [Loki](#loki)
+  * [Tempo](#tempo)
+  * [Alloy](#alloy)
+    + [Standalone Deployment](#standalone-deployment)
+    + [Configuration Reference](#configuration-reference)
+  * [Additional Document References](#additional-document-references)
+  * [Additional Notes](#additional-notes)
 
 # Overview
 
@@ -107,7 +128,7 @@ Refer to the official Grafana documentation for each component for details of th
 - [mc](https://github.com/minio/mc) : latest stable (if using MinIO)
 
 
-## Pre-Deployment Secrets
+## Deployment Secrets
 
 Create and/or source the appropriate environment variables for S3 credentials.
 ```sh
@@ -201,11 +222,43 @@ kustomize build --enable-helm prometheus/ | kubectl apply -f -
 
 Ingress resources are provided for *Istio* or *Nginx* and are
 configured when the environment configuration includes
-settings for `GRAFANA_DOMAINNAME` and `INGRESS_NAMESPACE`.
-
+settings for `GRAFANA_DOMAINNAME`, `PROMETHEUS_DOMAINNAME` and
+`INGRESS_NAMESPACE`. This will also look for certificates in the
+*env/$envname/certs/* path and copy them accordingly. Note the
+setup scripts specifically look for filenames of `grafana.crt`
+and `grafana.key` or `prometheus.*` accordingly.
+```sh
+kustomize build prometheus/ingress/grafana/nginx/ | kubectl apply -f -
+kustomize build prometheus/ingress/prom/nginx/ | kubectl apply -f -
+```
 <br>
 
 ---
+
+<br>
+
+# Loki
+
+Loki supports a few different deployment modes, *Simple-Scalable*
+and *Distributed*.  The *distributed* chart deploys all services
+as pods whereas *simple-scalable* focuses on scaling the main
+components. This is controlled by setting the LOKI_DISTRIBUTED
+variable.
+
+Fetch the chart first for validation.
+```sh
+kustomize build --enable-helm loki | less
+```
+
+Install the chart via *kustomize*
+```sh
+kustomize build --enable-helm loki/ | kubectl apply -f -
+```
+<br>
+
+---
+
+<br>
 
 # Tempo
 
@@ -228,27 +281,47 @@ kustomize build --enable-helm tempo/ | kubectl apply -f -
 
 ---
 
-# Loki
+<br>
 
-Loki supports a few different deployment modes, *Simple-Scalable*
-and *Distributed*.  The *distributed* chart deploys all services
-as pods whereas *simple-scalable* focuses on scaling the main
-components. This is controlled by setting the LOKI_DISTRIBUTED
-variable.
+# Alloy
 
-Fetch the chart first for validation.
+Hosts that are having `alloy` provisioned locally will need the `gnupg` package.
+
+The *Alloy* binary can be installed via RHEL or Debian repositories or as a standalone binary.
+Better yet, Grafana has an [Ansible](https://grafana.com/docs/alloy/latest/set-up/install/ansible/)
+Collection that can be used to manage Alloy deployments.
+
+
+## Standalone Deployment
+
+Deploying as a service requires a service account or a local *alloy* user to allow
+the system service to function. The deployed user should be added to any groups necessary
+to gather metrics and read logs.
 ```sh
-kustomize build --enable-helm loki | less
+sudo useradd --no-create-home --groups "adm,syslog" --shell /bin/false alloy
 ```
 
-Install the chart via *kustomize*
+A service can then be added to `/etc/systemd/system` to allow system to manage the service.
+One is provided as `resources/alloy.service`.
 ```sh
-kustomize build --enable-helm loki/ | kubectl apply -f -
+sudo cp resources/alloy.service /etc/systemd/system/
+sudo systemctl enable alloy.service
+sudo journalctl -u alloy
 ```
 
-## Loki Document References
+## Configuration Reference
 
-A collection of some important documentation links 
+Alloy has an extensive configuration reference [here](https://grafana.com/docs/alloy/latest/reference/)
+
+<br>
+
+---
+
+<br>
+
+# Additional Document References
+
+A collection of some important documentation links
 
 |    |    |
 | ---------------- | ------------------ |
@@ -258,6 +331,7 @@ A collection of some important documentation links
 | Log Retention | https://grafana.com/docs/loki/latest/operations/storage/retention/ |
 | Grafana Enterprise Logs enablement |  https://grafana.com/docs/enterprise-logs/latest/setup/helm/#configure-your-gel-license |
 | Grafana Alloy Config Scenarios | https://github.com/grafana/alloy-scenarios |
+| Prometheus Feature Flags | https://prometheus.io/docs/prometheus/latest/feature_flags/ |
 
 Note that much of the Loki documentation for OSS overlaps with the
 [Grafana Enterprise Logs](https://grafana.com/docs/enterprise-logs/latest)
@@ -269,11 +343,12 @@ documentation.
 
 <br>
 
-# Notes
+# Additional Notes
 
 ## Add node exporters
 
-Note that job names should be uniquie within prom scrap configs
+Note that job names should be unique within Prometheus
+additionalScrapeConfigs:
 ```yaml
       - job_name: 'node_exporter_host'
         static_configs:
@@ -282,6 +357,9 @@ Note that job names should be uniquie within prom scrap configs
               instance: '<NODE_EXPORTER_NAME>'
 ```
 
+## Loki Notes
+
+Some additional notes regarding [Loki](#resources/loki-nodes.md)
 <br>
 
 ---

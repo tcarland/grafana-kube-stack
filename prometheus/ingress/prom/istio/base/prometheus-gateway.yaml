@@ -1,0 +1,19 @@
+---
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: prometheus-gateway
+  namespace: $(namespace)
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      name: https
+      number: 443
+      protocol: HTTPS
+    hosts:
+    - "$(PROMETHEUS_DOMAINNAME)"
+    tls:
+      mode: SIMPLE
+      credentialName: prometheus-tls

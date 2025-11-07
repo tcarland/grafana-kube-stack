@@ -3,7 +3,7 @@
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
     echo "$0  is being executed directly."
     echo " It is intended to be sourced by the shell"
-    echo "source kustom.sh"
+    echo " eg. \$ source kustom.sh"
     exit 1
 fi
 

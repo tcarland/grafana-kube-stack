@@ -3,51 +3,51 @@ kind: Kustomization
 namespace: monitoring
 
 resources:
-  - grafana-virtualservice.yaml
-  - grafana-gateway.yaml
+  - prometheus-virtualservice.yaml
+  - prometheus-gateway.yaml
 
 configMapGenerator:
-  - name: grafana-istio-params
+  - name: prometheus-istio-params
     envs:
       - params.env
-      
+
 secretGenerator:
-  - name: grafana-tls
+  - name: prometheus-tls
     namespace: istio-system
     behavior: create
     type: "kubernetes.io/tls"
     files:
-      - tls.crt=grafana.crt
-      - tls.key=grafana.key
-      
+      - tls.crt=prometheus.crt
+      - tls.key=prometheus.key
+
 generatorOptions:
   disableNameSuffixHash: true
 
 replacements:
   - source:
-      fieldPath: data.GRAFANA_DOMAINNAME
+      fieldPath: data.PROMETHEUS_DOMAINNAME
       kind: ConfigMap
-      name: grafana-istio-params
+      name: prometheus-istio-params
       version: v1
     targets:
       - select:
-          name: grafana-gateway
+          name: prometheus-gateway
           kind: Gateway
         fieldPaths:
           - spec.servers.*.hosts.0
       - select:
-          name: grafana-vs
+          name: prometheus-vs
           kind: VirtualService
         fieldPaths:
           - spec.hosts.0
   - source:
       fieldPath: data.ingress_namespace
       kind: ConfigMap
-      name: grafana-istio-params
+      name: prometheus-istio-params
       version: v1
     targets:
       - select:
-          name: grafana-tls
+          name: prometheus-tls
           kind: Secret
         fieldPaths:
           - metadata.namespace
@@ -55,8 +55,8 @@ replacements:
 labels:
   - includeSelectors: true
     pairs:
-      app.kubernetes.io/component: grafana-ingress
+      app.kubernetes.io/component: prometheus-ingress
       app.kubernetes.io/name: istio-ingress
       app.kubernetes.io/part-of: grafana-kube-stack
-      app.kubernetes.io/version: v25.11.05
-      kustomize.component: grafana-ingress
+      app.kubernetes.io/version: v25.11.07
+      kustomize.component: prometheus-ingress
