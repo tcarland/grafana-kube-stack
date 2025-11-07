@@ -7,6 +7,27 @@ Ecosystem, consisting of Loki, Grafana, Tempo, and Mimir; the (LGTM) stack.
 This project also includes deploying the [Prometheus](https://prometheus.io)
 Community chart.
 
+
+# Table of Contents
+
+- [Grafana Stack on Kubernetes](#grafana-stack-on-kubernetes)
+  * [Overview](#overview)
+    + [Components Matrix](#components-matrix)
+    + [Architecture and Documentation](#architecture-and-documentations)
+    + [Requirements](#requirements)
+    + [Deployment Secrets](#deployment-secrets)
+    + [S3 Buckets](#s3-buckets)
+  * [Mimir](#mimir)
+  * [Prometheus Operator and Grafana](#prometheus-operator-and-grafana)
+    + [Ingress](#ingress)
+  * [Loki](#loki)
+  * [Tempo](#tempo)
+  * [Alloy](#alloy)
+    + [Standalone Deployment](#standalone-deployment)
+    + [Configuration Reference](#configuration-reference)
+  * [Additional Document References](#additional-document-references)
+  * [Additional Notes](#additional-notes)
+
 # Overview
 
 This repository serves as a means for cleaner handling of secrets and
@@ -107,7 +128,7 @@ Refer to the official Grafana documentation for each component for details of th
 - [mc](https://github.com/minio/mc) : latest stable (if using MinIO)
 
 
-## Pre-Deployment Secrets
+## Deployment Secrets
 
 Create and/or source the appropriate environment variables for S3 credentials.
 ```sh
@@ -201,11 +222,43 @@ kustomize build --enable-helm prometheus/ | kubectl apply -f -
 
 Ingress resources are provided for *Istio* or *Nginx* and are
 configured when the environment configuration includes
-settings for `GRAFANA_DOMAINNAME` and `INGRESS_NAMESPACE`.
-
+settings for `GRAFANA_DOMAINNAME`, `PROMETHEUS_DOMAINNAME` and
+`INGRESS_NAMESPACE`. This will also look for certificates in the
+*env/$envname/certs/* path and copy them accordingly. Note the
+setup scripts specifically look for filenames of `grafana.crt`
+and `grafana.key` or `prometheus.*` accordingly.
+```sh
+kustomize build prometheus/ingress/grafana/nginx/ | kubectl apply -f -
+kustomize build prometheus/ingress/prom/nginx/ | kubectl apply -f -
+```
 <br>
 
 ---
+
+<br>
+
+# Loki
+
+Loki supports a few different deployment modes, *Simple-Scalable*
+and *Distributed*.  The *distributed* chart deploys all services
+as pods whereas *simple-scalable* focuses on scaling the main
+components. This is controlled by setting the LOKI_DISTRIBUTED
+variable.
+
+Fetch the chart first for validation.
+```sh
+kustomize build --enable-helm loki | less
+```
+
+Install the chart via *kustomize*
+```sh
+kustomize build --enable-helm loki/ | kubectl apply -f -
+```
+<br>
+
+---
+
+<br>
 
 # Tempo
 
@@ -228,44 +281,7 @@ kustomize build --enable-helm tempo/ | kubectl apply -f -
 
 ---
 
-# Loki
-
-Loki supports a few different deployment modes, *Simple-Scalable*
-and *Distributed*.  The *distributed* chart deploys all services
-as pods whereas *simple-scalable* focuses on scaling the main
-components. This is controlled by setting the LOKI_DISTRIBUTED
-variable.
-
-Fetch the chart first for validation.
-```sh
-kustomize build --enable-helm loki | less
-```
-
-Install the chart via *kustomize*
-```sh
-kustomize build --enable-helm loki/ | kubectl apply -f -
-```
-
-## Loki Document References
-
-A collection of some important documentation links
-
-|    |    |
-| ---------------- | ------------------ |
-| Loki Configuration and API References | https://grafana.com/docs/loki/latest/reference/ |
-| Configuring Authentication | https://grafana.com/docs/loki/latest/operations/authentication/ |
-| Installing with Istio | https://grafana.com/docs/loki/latest/setup/install/istio/ |
-| Log Retention | https://grafana.com/docs/loki/latest/operations/storage/retention/ |
-| Grafana Enterprise Logs enablement |  https://grafana.com/docs/enterprise-logs/latest/setup/helm/#configure-your-gel-license |
-| Grafana Alloy Config Scenarios | https://github.com/grafana/alloy-scenarios |
-
-Note that much of the Loki documentation for OSS overlaps with the
-[Grafana Enterprise Logs](https://grafana.com/docs/enterprise-logs/latest)
-documentation.
-
 <br>
-
----
 
 # Alloy
 
@@ -303,7 +319,31 @@ Alloy has an extensive configuration reference [here](https://grafana.com/docs/a
 
 <br>
 
-# Notes
+# Additional Document References
+
+A collection of some important documentation links
+
+|    |    |
+| ---------------- | ------------------ |
+| Loki Configuration and API References | https://grafana.com/docs/loki/latest/reference/ |
+| Configuring Authentication | https://grafana.com/docs/loki/latest/operations/authentication/ |
+| Installing with Istio | https://grafana.com/docs/loki/latest/setup/install/istio/ |
+| Log Retention | https://grafana.com/docs/loki/latest/operations/storage/retention/ |
+| Grafana Enterprise Logs enablement |  https://grafana.com/docs/enterprise-logs/latest/setup/helm/#configure-your-gel-license |
+| Grafana Alloy Config Scenarios | https://github.com/grafana/alloy-scenarios |
+| Prometheus Feature Flags | https://prometheus.io/docs/prometheus/latest/feature_flags/ |
+
+Note that much of the Loki documentation for OSS overlaps with the
+[Grafana Enterprise Logs](https://grafana.com/docs/enterprise-logs/latest)
+documentation.
+
+<br>
+
+---
+
+<br>
+
+# Additional Notes
 
 ## Add node exporters
 
@@ -317,6 +357,9 @@ additionalScrapeConfigs:
               instance: '<NODE_EXPORTER_NAME>'
 ```
 
+## Loki Notes
+
+Some additional notes regarding [Loki](#resources/loki-nodes.md)
 <br>
 
 ---
