@@ -25,7 +25,7 @@ generatorOptions:
 
 replacements:
   - source:
-      fieldPath: data.GRAFANA_DOMAINNAME
+      fieldPath: data.PROMETHEUS_DOMAINNAME
       kind: ConfigMap
       name: prometheus-istio-params
       version: v1
