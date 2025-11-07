@@ -15,9 +15,9 @@ nodeExporter:
   enabled: true
 
 prometheus:
-  service:
-    type: NodePort
-    nodePort: 30500
+  #service:
+    #type: NodePort
+    #nodePort: 30500
   prometheusSpec:
     remoteWrite:
     - url: http://mimir-distributor.monitoring.svc.cluster.local:8080/api/v1/push
@@ -28,17 +28,17 @@ alertmanager:
   alertmanagerSpec:
     nodeSelector:
       node-role.kubernetes.io/worker: ""
-  service:
-    type: NodePort
-    nodePort: 30400
+  #service:
+    #type: NodePort
+    #nodePort: 30400
 
 grafana:
   adminPassword: admin
   nodeSelector:
     node-role.kubernetes.io/worker: ""
-  service:
-    type: NodePort
-    nodePort: 30200
+  #service:
+    #type: NodePort
+    #nodePort: 30200
   persistence:
     enabled: true
     size: 4Gi

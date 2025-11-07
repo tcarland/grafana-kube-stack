@@ -132,10 +132,20 @@ echo " -> Creating s3 secrets.env for Mimir"
 echo "$s3_secrets" | envsubst > mimir/base/secrets.env
 
 if [ -n "$GRAFANA_DOMAINNAME" ]; then
-    cat prometheus/${ingress}/base/params.env.template | envsubst > prometheus/${ingress}/base/params.env
+    cat prometheus/ingress/grafana/${ingress}/base/params.env.template | envsubst > \
+        prometheus/ingress/grafana/${ingress}/base/params.env
     if [ -d env/${envname}/certs ]; then
         echo " -> Copying Grafana ingress certs"
-        cp env/${envname}/certs/grafana.* prometheus/${ingress}/base/
+        cp env/${envname}/certs/grafana.* prometheus/ingress/grafana/${ingress}/base/
+    fi
+fi
+
+if [ -n "$PROMETHEUS_DOMAINNAME" ]; then
+    cat prometheus/ingress/prometheus/${ingress}/base/params.env.template | envsubst > \
+        prometheus/ingress/prometheus/${ingress}/base/params.env
+    if [ -d env/${envname}/certs ]; then
+        echo " -> Copying Prometheus ingress certs"
+        cp env/${envname}/certs/prometheus.* prometheus/ingress/prometheus/${ingress}/base/
     fi
 fi
 

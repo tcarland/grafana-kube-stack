@@ -1,0 +1,23 @@
+- name: Install Alloy
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Install Alloy
+      ansible.builtin.include_role:
+        name: grafana.grafana.alloy
+      vars:
+        alloy_user_groups:
+          - "systemd-journal"
+        alloy_env_file_vars:
+          CUSTOM_ARGS: "--disable-reporting --server.http-listen-addr=127.0.0.1:12345"
+        alloy_config: |
+          prometheus.scrape "default" {
+            targets = [{"__address__" = "localhost:12345"}]
+            forward_to = [prometheus.remote_write.prom.receiver]
+          }
+          prometheus.remote_write "prom" {
+            endpoint {
+                url = "https://prometheus/api/v1/push"
+            }
+          }
