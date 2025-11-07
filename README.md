@@ -271,9 +271,16 @@ documentation.
 
 Hosts that are having `alloy` provisioned locally will need the `gnupg` package.
 
+The *Alloy* binary can be installed via RHEL or Debian repositories or as a standalone binary.
+Better yet, Grafana has an [Ansible](https://grafana.com/docs/alloy/latest/set-up/install/ansible/)
+Collection that can be used to manage Alloy deployments.
+
+
+## Standalone Deployment
+
 Deploying as a service requires a service account or a local *alloy* user to allow
-a system service to operate. The deployed user should be added to any groups necessary
-to gather metrics and logs.
+the system service to function. The deployed user should be added to any groups necessary
+to gather metrics and read logs.
 ```sh
 sudo useradd --no-create-home --groups "adm,syslog" --shell /bin/false alloy
 ```
@@ -281,10 +288,14 @@ sudo useradd --no-create-home --groups "adm,syslog" --shell /bin/false alloy
 A service can then be added to `/etc/systemd/system` to allow system to manage the service.
 One is provided as `resources/alloy.service`.
 ```sh
+sudo cp resources/alloy.service /etc/systemd/system/
 sudo systemctl enable alloy.service
 sudo journalctl -u alloy
 ```
 
+## Configuration Reference
+
+Alloy has an extensive configuration reference [here](https://grafana.com/docs/alloy/latest/reference/)
 
 <br>
 
@@ -296,7 +307,8 @@ sudo journalctl -u alloy
 
 ## Add node exporters
 
-Note that job names should be uniquie within prom scrap configs
+Note that job names should be unique within Prometheus
+additionalScrapeConfigs:
 ```yaml
       - job_name: 'node_exporter_host'
         static_configs:
