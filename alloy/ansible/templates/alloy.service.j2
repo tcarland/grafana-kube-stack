@@ -9,7 +9,7 @@ Restart=always
 User=alloy
 Environment=HOSTNAME=%H
 EnvironmentFile=/etc/default/alloy
-WorkingDirectory={{ alloy_home }}/alloy
+WorkingDirectory={{ alloy_home }}
 ExecStart=/usr/local/bin/alloy run $CUSTOM_ARGS --storage.path={{ alloy_home }} $CONFIG_FILE
 ExecReload=/usr/bin/env kill -HUP $MAINPID
 TimeoutStopSec=20s
