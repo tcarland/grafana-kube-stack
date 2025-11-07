@@ -1,0 +1,107 @@
+---
+- name: Create service account
+  hosts: all
+  become: true
+  vars:
+    alloy_user: 'alloy'
+    alloy_group: 'alloy'
+    alloy_shell: '/bin/false'
+    alloy_home: '/var/lib/{{ alloy_user }}'
+    alloy_groups:
+      - systemd-journal
+    alloy_version: 'v1.11.3'
+    alloy_config: 'config.alloy.j2'
+    alloy_url: 'https://github.com/grafana/alloy/releases/download'
+    alloy_archive: 'alloy-linux-amd64.zip'
+    alloy_sha256: '200774e0fbe0c897b18c83ac69a59773a39d006d4f20deb14813fad617558444'
+    alloy_config_template: 'templates/config.alloy.j2'
+    alloy_env_template: 'templates/alloy-env.j2'
+    alloy_service_template: 'templates/alloy.service.j2'
+    alloy_listen_ip: '127.0.0.1'
+    alloy_listen_port: '12345'
+    prometheus_endpoint: 'http://prometheus:9090'
+    loki_endpoint: 'http://loki:3100'
+    tenant_org_id: 'fake'
+
+  tasks:
+    - name: Ensure primary group exists
+      ansible.builtin.group:
+        name: '{{ alloy_group }}'
+        state: present
+
+    - name: Ensure service user exists
+      ansible.builtin.user:
+        name: '{{ alloy_user }}'
+        group: '{{ alloy_group }}'
+        groups: "{{ alloy_groups | join(',') }}"
+        append: true
+        shell: '{{ alloy_shell }}'
+        home: '{{ alloy_home }}'
+        create_home: true
+        state: present
+
+    - name: Ensure home directory permissions are correct
+      ansible.builtin.file:
+        path: '{{ alloy_home }}'
+        owner: '{{ alloy_user }}'
+        group: '{{ alloy_group }}'
+        mode: "0750"
+        state: directory
+
+    - name: Download Alloy Archive
+      ansible.builtin.get_url:
+        url: '{{ alloy_url }}/{{ alloy_version }}/{{ alloy_archive }}'
+        dest: '/tmp/{{ alloy_archive }}'
+        checksum: 'sha256:{{ alloy_sha256 }}'
+        mode: '0444'
+
+    - name: Extract Alloy Archive
+      ansible.builtin.unarchive:
+        src: '/tmp/{{ alloy_archive }}'
+        dest: '/tmp'
+        remote_src: true
+
+    - name: Copy Alloy Binary
+      ansible.builtin.copy:
+        src: '/tmp/alloy-linux-amd64'
+        dest: '/usr/local/bin/alloy'
+        owner: '{{ alloy_user }}'
+        group: '{{ alloy_group }}'
+        mode: '0755'
+        remote_src: true
+
+    - name: Cleanup Archive
+      ansible.builtin.file:
+        path: '/tmp/{{ alloy_archive }}'
+        state: absent
+
+    - name: Deploy Configuration
+      ansible.builtin.template:
+        src: '{{ alloy_config_template }}'
+        dest: '{{ alloy_home }}/config.alloy'
+        owner: '{{ alloy_user }}'
+        group: '{{ alloy_group }}'
+        mode: '0640'
+
+    - name: Deploy Environment file
+      ansible.builtin.template:
+        src: '{{ alloy_env_template }}'
+        dest: '/etc/default/alloy'
+        owner: 'root'
+        group: 'root'
+        mode: '0644'
+
+    - name: Deploy Systemd Service
+      ansible.builtin.template:
+        src: '{{ alloy_service_template }}'
+        dest: '/etc/systemd/system/alloy.service'
+        owner: 'root'
+        group: 'root'
+        mode: '0644'
+
+    - name: Enable System Service
+      ansible.builtin.systemd:
+        name: 'alloy'
+        daemon_reload: true
+        enabled: true
+        state: started

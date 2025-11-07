@@ -46,7 +46,7 @@ scrape_interval = "15s"
 // Define where to send the metrics for storage
 prometheus.remote_write "local" {
   endpoint {
-    url = "http://{{ prometheus_endpoint }}:9090/api/v1/write"
+    url = "http://{{ prometheus_endpoint }}/api/v1/write"
   }
 }
 
