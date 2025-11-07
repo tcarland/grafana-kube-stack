@@ -6,7 +6,7 @@ After=network-online.target
 
 [Service]
 Restart=always
-User=alloy
+User={{ alloy_user }}
 Environment=HOSTNAME=%H
 EnvironmentFile=/etc/default/alloy
 WorkingDirectory={{ alloy_home }}
