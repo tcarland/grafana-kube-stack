@@ -141,11 +141,11 @@ if [ -n "$GRAFANA_DOMAINNAME" ]; then
 fi
 
 if [ -n "$PROMETHEUS_DOMAINNAME" ]; then
-    cat prometheus/ingress/prometheus/${ingress}/base/params.env.template | envsubst > \
-        prometheus/ingress/prometheus/${ingress}/base/params.env
+    cat prometheus/ingress/prom/${ingress}/base/params.env.template | envsubst > \
+        prometheus/ingress/prom/${ingress}/base/params.env
     if [ -d env/${envname}/certs ]; then
         echo " -> Copying Prometheus ingress certs"
-        cp env/${envname}/certs/prometheus.* prometheus/ingress/prometheus/${ingress}/base/
+        cp env/${envname}/certs/prometheus.* prometheus/ingress/prom/${ingress}/base/
     fi
 fi
 
