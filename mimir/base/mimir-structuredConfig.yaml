@@ -7,7 +7,7 @@ mimir:
         access_key_id: ${S3_ACCESS_KEY}
         secret_access_key: ${S3_SECRET_KEY}
         http:
-          insecure_skip_verify: true
+          insecure_skip_verify: ${S3_SKIP_VERIFY}
     blocks_storage:
       backend: s3
       s3:
@@ -16,7 +16,7 @@ mimir:
         access_key_id: ${S3_ACCESS_KEY}
         secret_access_key: ${S3_SECRET_KEY}
         http:
-          insecure_skip_verify: true
+          insecure_skip_verify: ${S3_SKIP_VERIFY}
     ruler_storage:
       s3:
         bucket_name: mimir-${GRAFANA_ENV}-ruler
