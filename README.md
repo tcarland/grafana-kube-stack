@@ -1,6 +1,6 @@
 Grafana Stack on Kubernetes
 ===========================
-v25.11.07
+v25.11.08
 
 Steps for customizing and deploying the [Grafana](https://grafana.com)
 Ecosystem, consisting of Loki, Grafana, Tempo, and Mimir; the (LGTM) stack.
@@ -139,7 +139,7 @@ Refer to the official Grafana documentation for each component for details of th
 Create and/or source the appropriate environment variables for S3 credentials.
 ```sh
 mkdir ./env/myenvname/
-cp ./env/env.template !$/myenvname.env
+cp ./env/env.template !$/myenvname/myenvname.env
 # set secrets in myenvname.env
 ```
 
