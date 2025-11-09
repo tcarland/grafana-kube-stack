@@ -2,7 +2,7 @@
 #
 # Timothy C. Arland <tcarland at gmail dot com>
 PNAME=${0##*\/}
-VERSION="v25.11.07"
+VERSION="v25.11.08"
 
 binpath=$(dirname "$0")
 project=$(dirname "$(realpath "$binpath")")
@@ -143,6 +143,7 @@ fi
 if [ -n "$PROMETHEUS_DOMAINNAME" ]; then
     cat prometheus/ingress/prom/${ingress}/base/params.env.template | envsubst > \
         prometheus/ingress/prom/${ingress}/base/params.env
+    ( echo "${LGTM_AGENT_PASSWORD}" | htpasswd -c -i prometheus/ingress/prom/$ingress/base/auth "${LGTM_AGENT_USERNAME}" )
     if [ -d env/${envname}/certs ]; then
         echo " -> Copying Prometheus ingress certs"
         cp env/${envname}/certs/prometheus.* prometheus/ingress/prom/${ingress}/base/
@@ -189,8 +190,7 @@ buckets+=("$(yq -e '.storage.trace.s3.bucket' tempo/base/tempo-values.yaml)")
 
 if [ -z "$s3cmd" ]; then
     echo " -> No S3 CLI detected, not creating buckets"
-    echo "S3 Buckets needed:"
-    for b in ${ary[@]}; do
+    for b in ${buckets[@]}; do
         echo "$b"
     done
 else

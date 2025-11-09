@@ -23,6 +23,8 @@
     prometheus_endpoint: 'http://prometheus:9090'
     loki_endpoint: 'http://loki:3100'
     tenant_org_id: 'fake'
+    agent_username: 'lgtmagent'
+    agent_password: ''
 
   tasks:
     - name: Ensure primary group exists

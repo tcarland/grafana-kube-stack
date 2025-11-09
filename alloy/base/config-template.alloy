@@ -3,6 +3,10 @@
 loki.write "${GRAFANA_ENV}" {
   endpoint {
     url = "loki-distributor.${GRAFANA_NAMESPACE}.svc.cluster.local:3100/loki/api/v1/push"
+    basic_auth {
+      username = "${LGTM_AGENT_USERNAME}"
+      password = "${LGTM_AGENT_PASSWORD}"
+    }
   }
 }
 

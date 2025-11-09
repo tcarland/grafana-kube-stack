@@ -11,6 +11,9 @@ configMapGenerator:
       - params.env
 
 secretGenerator:
+  - name: prometheus-auth
+    files:
+      - auth
   - name: prometheus-tls
     behavior: create
     type: "kubernetes.io/tls"

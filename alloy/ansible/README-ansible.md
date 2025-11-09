@@ -1,4 +1,5 @@
-
+Alloy Ansible Playbook
+======================
 
 Grafana does provide an Ansible Collection, but installs alloy as root.
 The provided playbook creates an *alloy* user and attaches it to the
@@ -9,6 +10,9 @@ accordingly or provided at playbook execution.
 ```sh
 ansible-playbook -i "hostA,hostB,host[10:15]," \
   -e "loki_endpoint=https://loki.domain.com \
-  prometheus_endpoint=https://prometheus.domain.com
-  tenant_org_id=${GRAFANA_ENV}" alloy.yml
+      prometheus_endpoint=https://prometheus.domain.com \
+      tenant_org_id=${GRAFANA_ENV} \
+      agent_username=${LGTM_AGENT_USERNAME} \
+      agent_password=${LGTM_AGENT_PASSWORD}" \
+  alloy.yml
 ```

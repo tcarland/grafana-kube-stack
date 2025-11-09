@@ -11,12 +11,19 @@ clean:
 	  loki/nginx/base/*.crt \
 	  loki/nginx/base/*.key \
 	  loki/nginx/base/params.env \
-	  prometheus/istio/base/*.crt \
-	  prometheus/istio/base/*.key \
-	  prometheus/istio/base/params.env \
-	  prometheus/nginx/base/*.crt \
-	  prometheus/nginx/base/*.key \
-	  prometheus/nginx/base/params.env )
+	  prometheus/ingress/grafana/istio/base/*.crt \
+	  prometheus/ingress/grafana/istio/base/*.key \
+	  prometheus/ingress/grafana/istio/base/params.env \
+	  prometheus/ingress/grafana/nginx/base/*.crt \
+	  prometheus/ingress/grafana/nginx/base/*.key \
+	  prometheus/ingress/grafana/nginx/base/params.env \
+	  prometheus/ingress/prom/istio/base/*.crt \
+	  prometheus/ingress/prom/istio/base/*.key \
+	  prometheus/ingress/prom/istio/base/params.env \
+	  prometheus/ingress/prom/nginx/base/*.crt \
+	  prometheus/ingress/prom/nginx/base/*.key \
+	  prometheus/ingress/prom/nginx/base/params.env \
+	  prometheus/ingress/prom/nginx/base/auth )
 
 clean-charts:
 	( rm -rf mimir/base/charts \
