@@ -77,9 +77,9 @@ gateway:
   ingress:
     enabled: false
   basicAuth:
-    enabled: false
-    username: null
-    password: null
+    enabled: true
+    username: ${LGTM_AGENT_USERNAME}
+    password: ${LGTM_AGENT_PASSWORD}
 
 test:
   enabled: false

@@ -12,6 +12,7 @@ env/*
 **/base/charts
 **/secrets.env
 **/base/params.env
+**/base/auth
 
 alloy/base/config.alloy
 loki/base/loki-values.yaml
