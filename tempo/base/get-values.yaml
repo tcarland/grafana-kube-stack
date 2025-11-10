@@ -1,0 +1,10 @@
+enterprise:
+  enabled: true
+  image:
+    tag: v2.0.1
+enterpriseGateway:
+  enabled: true
+gateway:
+  enabled: false
+license:
+  external: true

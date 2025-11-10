@@ -1,0 +1,15 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: monitoring
+
+resources:
+  - ../../base
+ 
+secretGenerator:
+  - name: tempo-license
+    files:
+      - license.jwt=license.jwt
+
+generatorOptions:
+  disableNameSuffixHash: true

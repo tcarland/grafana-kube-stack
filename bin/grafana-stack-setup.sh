@@ -156,11 +156,23 @@ if [ -n "$PROMETHEUS_DOMAINNAME" ]; then
 fi
 
 
-echo " -> Creating Helm Values and Configs from templates"
+echo " -> Creating Prom/Grafana Helm values and configs from templates"
 
 cat prometheus/base/prom-values.template.yaml | envsubst > prometheus/base/prom-values.yaml
 cat prometheus/base/prom-addScrapeConfigs.template.yaml | envsubst > prometheus/base/prom-addScrapeConfigs.yaml
+
+echo " -> Creating Tempo values from template"
 cat tempo/base/tempo-values.template.yaml | envsubst > tempo/base/tempo-values.yaml
+
+if [ -n "$TEMPO_DOMAINNAME" ]; then
+    cat tempo/${ingress}/base/params.env.template | envsubst > tempo/${ingress}/base/params.env
+    if [ -d env/${envname}/certs ]; then
+        echo " -> Copying Tempo ingress certs"
+        cp env/${envname}/certs/tempo.* tempo/${ingress}/base/
+    fi
+fi
+
+echo " -> Alloy config from template "
 cat alloy/base/config-template.alloy | envsubst > alloy/base/config.alloy
 
 # license check
