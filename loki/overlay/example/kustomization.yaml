@@ -5,6 +5,7 @@ namespace: monitoring
 
 resources:
   - ../../base
+  
 secretGenerator:
   - name: ge-logs-license
     files:
