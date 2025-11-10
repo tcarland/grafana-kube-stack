@@ -5,9 +5,9 @@ namespace: monitoring
 
 resources:
   - ../../base
-  
+ 
 secretGenerator:
-  - name: ge-logs-license
+  - name: tempo-license
     files:
       - license.jwt=license.jwt
 

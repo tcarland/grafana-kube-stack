@@ -1,6 +1,7 @@
 ---
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+namespace: monitoring
 
 resources:
   - loki-ingress.yaml
@@ -9,6 +10,7 @@ configMapGenerator:
   - name: loki-nginx-params
     envs:
       - params.env
+
 secretGenerator:
   - name: loki-tls
     behavior: create
@@ -16,6 +18,7 @@ secretGenerator:
     files:
       - tls.crt=loki.crt
       - tls.key=loki.key
+
 generatorOptions:
   disableNameSuffixHash: true
 
@@ -32,6 +35,17 @@ replacements:
         fieldPaths:
           - spec.tls.*.hosts.0
           - spec.rules.0.host
+  - source:
+      fieldPath: data.namespace
+      kind: ConfigMap
+      name: loki-nginx-params
+      version: v1
+    targets:
+      - select:
+          name: loki-ingress
+          kind: ingress
+        fieldPaths:
+          - metadata.namespace
 
 labels:
   - includeSelectors: true
@@ -39,5 +53,5 @@ labels:
       app.kubernetes.io/component: loki-ingress
       app.kubernetes.io/name: loki-ingress
       app.kubernetes.io/part-of: grafana-kube-stack
-      app.kubernetes.io/version: v25.11.05
+      app.kubernetes.io/version: v25.11.09
       kustomize.component: loki-ingress

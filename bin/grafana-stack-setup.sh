@@ -2,7 +2,7 @@
 #
 # Timothy C. Arland <tcarland at gmail dot com>
 PNAME=${0##*\/}
-VERSION="v25.11.08"
+VERSION="v25.11.09"
 
 binpath=$(dirname "$0")
 project=$(dirname "$(realpath "$binpath")")
@@ -41,6 +41,7 @@ function create_s3_buckets()
 }
 
 # ---------------------------------------
+# Validation 
 
 echo "$PNAME $VERSION"
 
@@ -111,7 +112,9 @@ if [[ "$INGRESS_NAMESPACE" =~ "istio" ]]; then
     echo " -> Ingress controller type set to '$ingress'"
 fi
 
+# Loki
 echo " -> Creating Loki values from template"
+
 if [[ "${LOKI_DISTRIBUTED,,}" == "true" ]]; then
     echo "   -> Using Loki distributed chart"
     cat loki/base/loki-values-distributed.yaml | envsubst > loki/base/loki-values.yaml
@@ -128,9 +131,11 @@ if [ -n "$LOKI_DOMAINNAME" ]; then
     fi
 fi
 
+# Mimir
 echo " -> Creating s3 secrets.env for Mimir"
 echo "$s3_secrets" | envsubst > mimir/base/secrets.env
 
+# Grafana / Prometheus Ingress
 if [ -n "$GRAFANA_DOMAINNAME" ]; then
     cat prometheus/ingress/grafana/${ingress}/base/params.env.template | envsubst > \
         prometheus/ingress/grafana/${ingress}/base/params.env
@@ -150,10 +155,24 @@ if [ -n "$PROMETHEUS_DOMAINNAME" ]; then
     fi
 fi
 
-echo " -> Creating Helm Values and Configs from templates"
+
+echo " -> Creating Prom/Grafana Helm values and configs from templates"
+
 cat prometheus/base/prom-values.template.yaml | envsubst > prometheus/base/prom-values.yaml
 cat prometheus/base/prom-addScrapeConfigs.template.yaml | envsubst > prometheus/base/prom-addScrapeConfigs.yaml
+
+echo " -> Creating Tempo values from template"
 cat tempo/base/tempo-values.template.yaml | envsubst > tempo/base/tempo-values.yaml
+
+if [ -n "$TEMPO_DOMAINNAME" ]; then
+    cat tempo/${ingress}/base/params.env.template | envsubst > tempo/${ingress}/base/params.env
+    if [ -d env/${envname}/certs ]; then
+        echo " -> Copying Tempo ingress certs"
+        cp env/${envname}/certs/tempo.* tempo/${ingress}/base/
+    fi
+fi
+
+echo " -> Alloy config from template "
 cat alloy/base/config-template.alloy | envsubst > alloy/base/config.alloy
 
 # license check
@@ -177,14 +196,17 @@ if [ -f env/${envname}/license.jwt ]; then
 fi
 
 echo " -> Needed S3 Buckets:"
+
 # mimir s3 bucket names
 buckets+=("$(yq e '.mimir.structuredConfig.alertmanager_storage.s3.bucket_name' mimir/base/mimir-structuredConfig.yaml | envsubst)")
 buckets+=("$(yq e '.mimir.structuredConfig.blocks_storage.s3.bucket_name' mimir/base/mimir-structuredConfig.yaml | envsubst)")
 buckets+=("$(yq e '.mimir.structuredConfig.ruler_storage.s3.bucket_name' mimir/base/mimir-structuredConfig.yaml | envsubst)")
+
 # loki s3 bucket names
 buckets+=("$(yq e '.loki.storage.bucketNames.chunks' loki/base/loki-values.yaml)")
 buckets+=("$(yq e '.loki.storage.bucketNames.ruler' loki/base/loki-values.yaml)")
 buckets+=("$(yq e '.loki.storage.bucketNames.admin' loki/base/loki-values.yaml)")
+
 # tempo s3 bucket
 buckets+=("$(yq -e '.storage.trace.s3.bucket' tempo/base/tempo-values.yaml)")
 

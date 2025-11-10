@@ -47,10 +47,12 @@ scrape_interval = "15s"
 prometheus.remote_write "local" {
   endpoint {
     url = "http://{{ prometheus_endpoint }}/api/v1/write"
-    tenant_id = "{{ tenant_org_id }}"
     basic_auth {
       username = "{{ agent_username }}"
       password = "{{ agent_password }}"
+    }
+    headers = {
+      "X-Scope-OrgID" = "titan",
     }
   }
 }
@@ -126,4 +128,4 @@ loki.write "local" {
 }
 
 // Enable live debugging features (empty config means use defaults)
-livedebugging{}
+//livedebugging{}

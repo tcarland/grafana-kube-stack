@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: loki-ingress
+  name: tempo-ingress
   namespace: $(namespace)
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
@@ -13,16 +13,16 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-      - $(LOKI_DOMAINNAME)
-    secretName: loki-tls
+      - $(TEMPO_DOMAINNAME)
+    secretName: tempo-tls
   rules:
-  - host: $(LOKI_DOMAINNAME)
+  - host: $(TEMPO_DOMAINNAME)
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: loki-gateway
+            name: tempo-gateway
             port:
-              number: 80
+              number: 8080

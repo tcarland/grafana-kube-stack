@@ -4,36 +4,33 @@ kind: Kustomization
 namespace: monitoring
 
 resources:
-  - prometheus-ingress.yaml
+  - tempo-ingress.yaml
 
 configMapGenerator:
-  - name: prometheus-nginx-params
+  - name: tempo-nginx-params
     envs:
       - params.env
 
 secretGenerator:
-  - name: prometheus-auth
-    files:
-      - auth
-  - name: prometheus-tls
+  - name: tempo-tls
     behavior: create
     type: "kubernetes.io/tls"
     files:
-      - tls.crt=prometheus.crt
-      - tls.key=prometheus.key
+      - tls.crt=tempo.crt
+      - tls.key=tempo.key
 
 generatorOptions:
   disableNameSuffixHash: true
 
 replacements:
   - source:
-      fieldPath: data.PROMETHEUS_DOMAINNAME
+      fieldPath: data.TEMPO_DOMAINNAME
       kind: ConfigMap
-      name: prometheus-nginx-params
+      name: tempo-nginx-params
       version: v1
     targets:
       - select:
-          name: prometheus-ingress
+          name: tempo-ingress
           kind: Ingress
         fieldPaths:
           - spec.tls.*.hosts.0
@@ -41,21 +38,20 @@ replacements:
   - source:
       fieldPath: data.namespace
       kind: ConfigMap
-      name: prometheus-nginx-params
+      name: tempo-nginx-params
       version: v1
     targets:
       - select:
-          name: prometheus-ingress
+          name: tempo-ingress
           kind: ingress
         fieldPaths:
           - metadata.namespace
 
-
 labels:
   - includeSelectors: true
     pairs:
-      app.kubernetes.io/component: prometheus-ingress
-      app.kubernetes.io/name: nginx
+      app.kubernetes.io/component: tempo-ingress
+      app.kubernetes.io/name: tempo-ingress
       app.kubernetes.io/part-of: grafana-kube-stack
       app.kubernetes.io/version: v25.11.09
-      kustomize.component: prometheus-ingress
+      kustomize.component: tempo-ingress

@@ -1,6 +1,6 @@
 Grafana Stack on Kubernetes
 ===========================
-v25.11.08
+v25.11.09
 
 Steps for customizing and deploying the [Grafana](https://grafana.com)
 Ecosystem, consisting of Loki, Grafana, Tempo, and Mimir; the (LGTM) stack.
@@ -15,7 +15,7 @@ Community chart.
     + [Components Matrix](#components-matrix)
     + [Architecture and Documentation](#architecture-and-documentations)
     + [Requirements](#requirements)
-    + [Deployment Secrets](#deployment-secrets)
+    + [Deployment Configuration](#deployment-configuration)
     + [S3 Buckets](#s3-buckets)
   * [Mimir](#mimir)
   * [Prometheus Operator and Grafana](#prometheus-operator-and-grafana)
@@ -134,18 +134,26 @@ Refer to the official Grafana documentation for each component for details of th
 
 <br>
 
-## Deployment Secrets
+## Deployment Configuration
 
-Create and/or source the appropriate environment variables for S3 credentials.
+The project makes use of an Environment configuration for defining 
+various parameters and secrets used by the various components.
+
+Each environment defines it's own configuration under a directory 
+in `env`.  The project will ignore all configuration from being 
+checked in, so the overlay of those secrets should be managed 
+outside of this project.
+
+Create an Environment Configuration from the template.
 ```sh
 mkdir ./env/myenvname/
 cp ./env/env.template !$/myenvname/myenvname.env
-# set secrets in myenvname.env
+# set configuration and secrets in myenvname.env
 ```
 
 The default namespace for the stack is `monitoring`. If a different
 namespace is desired, update the *base/kustomization.yaml* files
-or create overlays accordingly.
+or create overlays as needed.
 
 <br>
 

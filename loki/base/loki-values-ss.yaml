@@ -55,6 +55,9 @@ write:
 compactor:
   replicas: 1
 
+lokiCanary:
+  enabled: false
+  
 gateway:
   enabled: true
   replicas: 1

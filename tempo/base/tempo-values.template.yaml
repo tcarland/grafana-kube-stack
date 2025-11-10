@@ -1,6 +1,6 @@
 global:
-  image:
-    registry: ""
+  multitenancyEnabled: true
+  
 storage:
   trace:
     backend: s3
@@ -10,6 +10,7 @@ storage:
       access_key: ${S3_ACCESS_KEY}
       secret_key: ${S3_SECRET_KEY}
       insecure: ${S3_SKIP_VERIFY}
+
 minio:
   enabled: false
 
@@ -22,12 +23,14 @@ ingester:
     inMemory: false
     size: 2Gi
     #storageClass: standard
+
 metricsGenerator:
   enabled: false
   replicas: 1
   walEmptyDir:
     medium: "Memory"
     sizeLimit: 1Gi
+
 traces:
   otlp:
     grpc:
@@ -41,12 +44,19 @@ traces:
     enabled: false
   zipkin:
     enabled: false
+
 distributor:
   replicas: 1
   config:
     log_received_spans:
       enabled: true
+
 compactor:
   replicas: 1
   config:
     block_retention: 48h
+
+gateway:
+  enabled: true
+  ingress:
+    enabled: false
