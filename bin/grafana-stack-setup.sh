@@ -2,7 +2,7 @@
 #
 # Timothy C. Arland <tcarland at gmail dot com>
 PNAME=${0##*\/}
-VERSION="v25.11.09"
+VERSION="v25.11.11"
 
 binpath=$(dirname "$0")
 project=$(dirname "$(realpath "$binpath")")
@@ -42,7 +42,6 @@ function create_s3_buckets()
 
 # ---------------------------------------
 # Validation 
-
 echo "$PNAME $VERSION"
 
 # validation checks
@@ -187,13 +186,16 @@ if [ -f env/${envname}/license.jwt ]; then
         mkdir -p loki/overlays/${envname}
         cp loki/overlays/example/kustomization.yaml loki/overlays/${envname}/
     fi
+
     cp env/${envname}/license.jwt prometheus/overlays/${envname}/ && \
     cp env/${envname}/license.jwt loki/overlays/${envname}/
+
     if [ $? -ne 0 ]; then
         echo "$PNAME Error copying license file" >&2
         exit 2
     fi
 fi
+
 
 echo " -> Needed S3 Buckets:"
 
@@ -210,12 +212,12 @@ buckets+=("$(yq e '.loki.storage.bucketNames.admin' loki/base/loki-values.yaml)"
 # tempo s3 bucket
 buckets+=("$(yq -e '.storage.trace.s3.bucket' tempo/base/tempo-values.yaml)")
 
-if [ -z "$s3cmd" ]; then
-    echo " -> No S3 CLI detected, not creating buckets"
-    for b in ${buckets[@]}; do
-        echo "$b"
-    done
-else
+for b in ${buckets[@]}; do
+    echo "$b"
+done
+echo ""
+
+if [ -n "$s3cmd" ]; then
     create_s3_buckets "${buckets[@]}"
 fi
 

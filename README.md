@@ -1,6 +1,6 @@
 Grafana Stack on Kubernetes
 ===========================
-v25.11.09
+v25.11.11
 
 Steps for customizing and deploying the [Grafana](https://grafana.com)
 Ecosystem, consisting of Loki, Grafana, Tempo, and Mimir; the (LGTM) stack.
@@ -114,8 +114,9 @@ installs the `kube-state-metrics` and `grafana` charts.
 
 ## Architecture and Documentation
 
-Each component in the stack uses a distributed set of microservices running as pods in Kubernetes.
-Refer to the official Grafana documentation for each component for details of the internal architecture.
+Each component in the stack uses a distributed set of microservices running as pods 
+in Kubernetes. Refer to the official Grafana documentation for each component for 
+details of the internal architecture.
 
 - [Loki](https://grafana.com/docs/loki/latest/get-started/architecture/)
 - [Grafana](https://grafana.com/docs/grafana/latest/fundamentals/)
@@ -131,6 +132,7 @@ Refer to the official Grafana documentation for each component for details of th
 - [helm](https://github.com/helm/helm) : v3.19.0
 - [yq](https://github.com/mikefarah/yq) : v4.47.2
 - [mc](https://github.com/minio/mc) : latest stable (if using MinIO)
+- httpd-tools : system package
 
 <br>
 
@@ -331,7 +333,7 @@ Grafana has an [Ansible](https://grafana.com/docs/alloy/latest/set-up/install/an
 Collection that can be used to manage Alloy deployments, however it deploys it as the 
 `root` user. 
 
-A playbook is provided as `alloy/anisble` that  it avoids running the *Alloy* binary 
+A playbook is provided as `alloy/ansible` that  it avoids running the *Alloy* binary 
 as the `root` user and provisions a local service account instead. Refer to the
 Alloy Ansible [Readme](alloy/ansible/README-ansible.md)
 
