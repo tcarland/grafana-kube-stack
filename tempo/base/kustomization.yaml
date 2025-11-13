@@ -3,6 +3,13 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: monitoring
 
+secretGenerator:
+  - name: tempo-tls
+    behavior: create
+    type: "kubernetes.io/tls"
+    files:
+      - tls.crt=tempo.crt
+      - tls.key=tempo.key
 
 helmCharts:
 - name: tempo-distributed
