@@ -58,5 +58,5 @@ labels:
       app.kubernetes.io/component: loki-ingress
       app.kubernetes.io/name: loki-ingress
       app.kubernetes.io/part-of: grafana-kube-stack
-      app.kubernetes.io/version: v25.11.09
+      app.kubernetes.io/version: v25.11.12
       kustomize.component: loki-ingress
