@@ -84,9 +84,9 @@ fi
 # prefer minio client
 if which mc >/dev/null 2>&1; then
     if [ -z "${MINIO_ALIAS}" ]; then
-        echo "> MINIO_ALIAS is not set, configure it to use 'mc'"
+        echo " -> MINIO_ALIAS is not set, configure it to use 'mc'"
     else
-        echo "> Found Minio Client first, using 'mc mb ${MINIO_ALIAS}/'..."
+        echo " -> Found Minio Client first, using 'mc mb ${MINIO_ALIAS}/'..."
         s3cmd="mc mb ${MINIO_ALIAS}/"
     fi
 fi
@@ -108,8 +108,10 @@ export GRAFANA_NAMESPACE="${GRAFANA_NAMESPACE:-monitoring}"
 
 if [[ "$INGRESS_NAMESPACE" =~ "istio" ]]; then
     ingress="istio"
-    echo " -> Ingress controller type set to '$ingress'"
+else
+    cat ingress/nginx/base/nginx-values-template.yaml | envsubst > ingress/nginx/base/nginx-values.yaml
 fi
+echo " -> Ingress controller type set to '$ingress'"
 
 # Loki
 echo " -> Creating Loki values from template"
@@ -218,6 +220,7 @@ done
 echo ""
 
 if [ -n "$s3cmd" ]; then
+    echo " -> create_s3_buckets()"
     create_s3_buckets "${buckets[@]}"
 fi
 
