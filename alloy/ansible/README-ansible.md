@@ -11,7 +11,8 @@ accordingly or provided at playbook execution.
 ansible-playbook -i "hostA,hostB,host[10:15]," \
   -e "loki_endpoint=https://loki.domain.com \
       prometheus_endpoint=https://prometheus.domain.com \
-      tempo_endpoint=https://tempo.domain.com:4137 \
+      tempo_http_endpoint=https://tempo.domain.com:3200 \
+      tempo_otlp_endpoint=https://tempo.domain.com:4137 \
       tenant_org_id=${GRAFANA_ENV} \
       agent_username=${LGTM_AGENT_USERNAME} \
       agent_password=${LGTM_AGENT_PASSWORD}" \

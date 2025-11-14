@@ -15,15 +15,19 @@
     alloy_url: 'https://github.com/grafana/alloy/releases/download'
     alloy_archive: 'alloy-linux-amd64.zip'
     alloy_sha256: '200774e0fbe0c897b18c83ac69a59773a39d006d4f20deb14813fad617558444'
+    # Alloy Config
     alloy_config_template: 'templates/config.alloy.j2'
     alloy_env_template: 'templates/alloy-env.j2'
     alloy_service_template: 'templates/alloy.service.j2'
     alloy_listen_ip: '127.0.0.1'
     alloy_listen_port: '12345'
+    # Endpoints
     prometheus_endpoint: 'http://prometheus:9090'
     loki_endpoint: 'http://loki:3100'
-    tempo_endpoint: 'http://tempo:4137'
+    tempo_http_endpoint: 'http://tempo:3200'
+    tempo_otlp_endpoint: 'http://tempo:4137'
     tenant_org_id: 'fake'
+    # Auth Secrets 
     agent_username: 'lgtmagent'
     agent_password: ''
 
