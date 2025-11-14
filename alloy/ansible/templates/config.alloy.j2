@@ -132,7 +132,7 @@ loki.write "loki" {
 //  reference at: https://grafana.com/docs/alloy/latest/reference/components/
 otelcol.receiver.otlp "otlp_receiver" {
     grpc {
-        endpoint = "{{ listen_ip }}:4317"
+        endpoint = "{{ alloy_listen_ip }}:4317"
     }
 
     output {
