@@ -5,7 +5,6 @@ namespace: monitoring
 resources:
   - prometheus-virtualservice.yaml
   - prometheus-gateway.yaml
-  - prometheus-envoyfilter.yaml
 
 configMapGenerator:
   - name: prometheus-istio-params
@@ -45,11 +44,6 @@ replacements:
           kind: VirtualService
         fieldPaths:
           - spec.hosts.0
-      - select:
-          name: prom-auth-filter
-          kind: EnvoyFilter
-        fieldPaths:
-          - spec.configPatches.*.match.routeConfiguration.vhost.name
   - source:
       fieldPath: data.ingress_namespace
       kind: ConfigMap

@@ -150,13 +150,20 @@ fi
 if [ -n "$PROMETHEUS_DOMAINNAME" ]; then
     cat prometheus/ingress/prom/${ingress}/base/params.env.template | envsubst > \
         prometheus/ingress/prom/${ingress}/base/params.env
-    ( echo "${LGTM_AGENT_PASSWORD}" | htpasswd -c -i prometheus/ingress/prom/$ingress/base/auth "${LGTM_AGENT_USERNAME}" )
+        
+    if [[ "$ingress" == "nginx" ]]; then  # nginx uses bcrypt pw
+        ( echo "${LGTM_AGENT_PASSWORD}" | \
+          htpasswd -c -i prometheus/ingress/prom/$ingress/base/auth "${LGTM_AGENT_USERNAME}" )
+    else  # create base64 auth str for istio VS
+        export LGTMAUTHSTR=$(echo "${LGTM_AGENT_USERNAME}:${LGTM_AGENT_PASSWORD}" | base64 -w0)
+        cat prometheus/ingress/prom/${ingress}/base/prometheus-virtualservice-template.yaml | envsubst > \
+            prometheus/ingress/prom/${ingress}/base/prometheus-virtualservice.yaml
+    fi
     if [ -d env/${envname}/certs ]; then
         echo " -> Copying Prometheus ingress certs"
         cp env/${envname}/certs/prometheus.* prometheus/ingress/prom/${ingress}/base/
     fi
 fi
-
 
 echo " -> Creating Prom/Grafana Helm values and configs from templates"
 

@@ -22,7 +22,7 @@ clean:
 	  prometheus/ingress/prom/istio/base/*.crt \
 	  prometheus/ingress/prom/istio/base/*.key \
 	  prometheus/ingress/prom/istio/base/params.env \
-	  prometheus/ingress/prom/istio/base/auth \
+	  prometheus/ingress/prom/istio/base/prometheus-virtualservice.yaml \
 	  prometheus/ingress/prom/nginx/base/*.crt \
 	  prometheus/ingress/prom/nginx/base/*.key \
 	  prometheus/ingress/prom/nginx/base/params.env \
