@@ -57,5 +57,5 @@ labels:
       app.kubernetes.io/component: prometheus-ingress
       app.kubernetes.io/name: nginx
       app.kubernetes.io/part-of: grafana-kube-stack
-      app.kubernetes.io/version: v25.11.12
+      app.kubernetes.io/version: v25.11.13
       kustomize.component: prometheus-ingress

@@ -2,7 +2,7 @@
 #
 # Timothy C. Arland <tcarland at gmail dot com>
 PNAME=${0##*\/}
-VERSION="v25.11.12"
+VERSION="v25.11.13"
 
 binpath=$(dirname "$0")
 project=$(dirname "$(realpath "$binpath")")
@@ -108,6 +108,7 @@ export GRAFANA_NAMESPACE="${GRAFANA_NAMESPACE:-monitoring}"
 
 if [[ "$INGRESS_NAMESPACE" =~ "istio" ]]; then
     ingress="istio"
+    cat ingress/istio/istio-operator-template.yaml | envsubst > ingress/istio/istio-operator.yaml
 else
     cat ingress/nginx/base/nginx-values-template.yaml | envsubst > ingress/nginx/base/nginx-values.yaml
 fi

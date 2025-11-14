@@ -5,6 +5,7 @@ namespace: monitoring
 resources:
   - prometheus-virtualservice.yaml
   - prometheus-gateway.yaml
+  - prometheus-envoyfilter.yaml
 
 configMapGenerator:
   - name: prometheus-istio-params
@@ -19,6 +20,10 @@ secretGenerator:
     files:
       - tls.crt=prometheus.crt
       - tls.key=prometheus.key
+  - name: prom-auth
+    namespace: istio-system
+    files:
+      - auth
 
 generatorOptions:
   disableNameSuffixHash: true
@@ -40,6 +45,11 @@ replacements:
           kind: VirtualService
         fieldPaths:
           - spec.hosts.0
+      - select:
+          name: prom-auth-filter
+          kind: EnvoyFilter
+        fieldPaths:
+          - spec.configPatches.*.match.routeConfiguration.vhost.name
   - source:
       fieldPath: data.ingress_namespace
       kind: ConfigMap
@@ -58,5 +68,5 @@ labels:
       app.kubernetes.io/component: prometheus-ingress
       app.kubernetes.io/name: istio-ingress
       app.kubernetes.io/part-of: grafana-kube-stack
-      app.kubernetes.io/version: v25.11.12
+      app.kubernetes.io/version: v25.11.13
       kustomize.component: prometheus-ingress

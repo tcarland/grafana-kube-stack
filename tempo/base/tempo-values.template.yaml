@@ -58,9 +58,9 @@ compactor:
     block_retention: 48h
 
 gateway:
-  enabled: true
+  enabled: false
   ingress:
-    enabled: true
+    enabled: false
     ingressClassName: nginx
     hosts:
       - host: ${TEMPO_DOMAINNAME}

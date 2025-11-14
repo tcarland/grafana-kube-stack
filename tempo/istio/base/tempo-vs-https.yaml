@@ -2,13 +2,13 @@
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: loki-vs
+  name: tempo-vs-https
   namespace: $(namespace)
 spec:
   gateways:
-  - loki-gateway
+  - tempo-gateway
   hosts:
-  - "$(LOKI_DOMAINNAME)"
+  - "$(TEMPO_DOMAINNAME)"
   http:
   - headers:
       request:
@@ -17,9 +17,9 @@ spec:
     match:
     - uri:
         prefix: /
-    name: loki-gateway
+    name: tempo-gateway
     route:
     - destination:
-        host: loki-gateway.monitoring.svc.cluster.local
+        host: tempo-distributor.monitoring.svc.cluster.local
         port:
           number: 80

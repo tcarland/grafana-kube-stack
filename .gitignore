@@ -18,6 +18,7 @@ alloy/base/config.alloy
 loki/base/loki-values.yaml
 loki/base/loki-gateway-values.yaml
 ingress/nginx/base/nginx-values.yaml
+ingress/istio/istio-operator.yaml
 tempo/base/tempo-values.yaml
 prometheus/base/prom-values.yaml
 prometheus/base/prom-addScrapeConfigs.yaml
