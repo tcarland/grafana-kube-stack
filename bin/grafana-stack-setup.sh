@@ -11,7 +11,6 @@ ingress="nginx"
 s3cmd=
 buckets=()
 
-
 s3_secrets="
 GRAFANA_ENV=\${GRAFANA_ENV}
 S3_REGION=\${S3_REGION}
@@ -40,6 +39,8 @@ function create_s3_buckets()
     return $rt
 }
 
+
+#  MAIN
 # ---------------------------------------
 # Validation 
 echo "$PNAME $VERSION"
@@ -76,7 +77,7 @@ if [[ -z "$S3_ACCESS_KEY" || -z "$S3_SECRET_KEY" ]]; then
     exit 1
 fi
 
-# strip protocol from endpoint if defined
+# strip protocol prefix from endpoint if defined
 if [[ "$S3_ENDPOINT" =~ "http" ]]; then
     export S3_ENDPOINT=${S3_ENDPOINT#*//}
 fi
@@ -106,6 +107,7 @@ fi
 export S3_SKIP_VERIFY=${S3_SKIP_VERIFY:-"false"}
 export GRAFANA_NAMESPACE="${GRAFANA_NAMESPACE:-monitoring}"
 
+# Ingress config
 if [[ "$INGRESS_NAMESPACE" =~ "istio" ]]; then
     ingress="istio"
     cat ingress/istio/istio-operator-template.yaml | envsubst > ingress/istio/istio-operator.yaml
@@ -114,9 +116,10 @@ else
 fi
 echo " -> Ingress controller type set to '$ingress'"
 
+
+# -----------------
 # Loki
 echo " -> Creating Loki values from template"
-
 if [[ "${LOKI_DISTRIBUTED,,}" == "true" ]]; then
     echo "   -> Using Loki distributed chart"
     cat loki/base/loki-values-distributed.yaml | envsubst > loki/base/loki-values.yaml
@@ -125,6 +128,7 @@ else
     cat loki/base/loki-values-ss.yaml | envsubst > loki/base/loki-values.yaml
 fi
 
+# Loki Ingress
 if [ -n "$LOKI_DOMAINNAME" ]; then
     cat loki/${ingress}/base/params.env.template | envsubst > loki/${ingress}/base/params.env
     if [ -f env/${envname}/certs/loki.crt ]; then
@@ -133,11 +137,19 @@ if [ -n "$LOKI_DOMAINNAME" ]; then
     fi
 fi
 
+
 # Mimir
 echo " -> Creating s3 secrets.env for Mimir"
 echo "$s3_secrets" | envsubst > mimir/base/secrets.env
 
-# Grafana / Prometheus Ingress
+
+# -----------------
+# Grafana / Prometheus
+echo " -> Creating Prom/Grafana Helm values and configs from templates"
+cat prometheus/base/prom-values.template.yaml | envsubst > prometheus/base/prom-values.yaml
+cat prometheus/base/prom-addScrapeConfigs.template.yaml | envsubst > prometheus/base/prom-addScrapeConfigs.yaml
+
+# Grafana Ingress
 if [ -n "$GRAFANA_DOMAINNAME" ]; then
     cat prometheus/ingress/grafana/${ingress}/base/params.env.template | envsubst > \
         prometheus/ingress/grafana/${ingress}/base/params.env
@@ -147,6 +159,7 @@ if [ -n "$GRAFANA_DOMAINNAME" ]; then
     fi
 fi
 
+# Prometheus Ingress
 if [ -n "$PROMETHEUS_DOMAINNAME" ]; then
     cat prometheus/ingress/prom/${ingress}/base/params.env.template | envsubst > \
         prometheus/ingress/prom/${ingress}/base/params.env
@@ -165,11 +178,9 @@ if [ -n "$PROMETHEUS_DOMAINNAME" ]; then
     fi
 fi
 
-echo " -> Creating Prom/Grafana Helm values and configs from templates"
 
-cat prometheus/base/prom-values.template.yaml | envsubst > prometheus/base/prom-values.yaml
-cat prometheus/base/prom-addScrapeConfigs.template.yaml | envsubst > prometheus/base/prom-addScrapeConfigs.yaml
-
+# -----------------
+# Tempo
 echo " -> Creating Tempo values from template"
 cat tempo/base/tempo-values.template.yaml | envsubst > tempo/base/tempo-values.yaml
 
@@ -181,9 +192,14 @@ if [ -n "$TEMPO_DOMAINNAME" ]; then
     fi
 fi
 
+
+# -----------------
+# Alloy
 echo " -> Alloy config from template "
 cat alloy/base/config-template.alloy | envsubst > alloy/base/config.alloy
 
+
+# -----------------
 # license check
 if [ -f env/${envname}/license.jwt ]; then
     echo " -> License file found, copying to overlays.."
@@ -207,6 +223,7 @@ if [ -f env/${envname}/license.jwt ]; then
 fi
 
 
+# -----------------
 echo " -> Needed S3 Buckets:"
 
 # mimir s3 bucket names
