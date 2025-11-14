@@ -22,4 +22,4 @@ spec:
     - destination:
         host: tempo-distributor.monitoring.svc.cluster.local
         port:
-          number: 80
+          number: 3200

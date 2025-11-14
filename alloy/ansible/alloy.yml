@@ -22,6 +22,7 @@
     alloy_listen_port: '12345'
     prometheus_endpoint: 'http://prometheus:9090'
     loki_endpoint: 'http://loki:3100'
+    tempo_endpoint: 'http://tempo:4137'
     tenant_org_id: 'fake'
     agent_username: 'lgtmagent'
     agent_password: ''

@@ -72,6 +72,6 @@ gateway:
         hosts:
           - ${TEMPO_DOMAINNAME}
   basicAuth:
-    enabled: true
+    enabled: false
     username: ${LGTM_AGENT_USERNAME}
     password: ${LGTM_AGENT_PASSWORD}

@@ -4,10 +4,12 @@ kind: Kustomization
 namespace: monitoring
 
 resources:
-  - tempo-ingress.yaml
+  - tempo-gateway.yaml
+  - tempo-vs-https.yaml
+  - tempo-vs-grpc.yaml
 
 configMapGenerator:
-  - name: tempo-nginx-params
+  - name: tempo-istio-params
     envs:
       - params.env
 
@@ -26,24 +28,33 @@ replacements:
   - source:
       fieldPath: data.TEMPO_DOMAINNAME
       kind: ConfigMap
-      name: tempo-nginx-params
+      name: tempo-istio-params
       version: v1
     targets:
       - select:
-          name: tempo-ingress
-          kind: Ingress
+          name: tempo-gateway
+          kind: Gateway
         fieldPaths:
-          - spec.tls.*.hosts.0
-          - spec.rules.0.host
+          - spec.servers.*.hosts.0
+      - select:
+          name: tempo-vs-https
+          kind: VirtualService
+        fieldPaths:
+          - spec.hosts.0
+      - select:
+          name: tempo-vs-grpc
+          kind: VirtualService
+        fieldPaths:
+          - spec.hosts.0
   - source:
-      fieldPath: data.namespace
+      fieldPath: data.ingress_namespace
       kind: ConfigMap
-      name: tempo-nginx-params
+      name: tempo-istio-params
       version: v1
     targets:
       - select:
-          name: tempo-ingress
-          kind: ingress
+          name: tempo-tls
+          kind: Secret
         fieldPaths:
           - metadata.namespace
 
