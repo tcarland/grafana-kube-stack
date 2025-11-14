@@ -66,8 +66,8 @@ gateway:
     enabled: false
   basicAuth:
     enabled: true
-    username: ${LGTM_AGENT_USERNAME}
-    password: ${LGTM_AGENT_PASSWORD}
+    username: ${AGENT_USERNAME}
+    password: ${AGENT_PASSWORD}
 
 minio:
   enabled: false

@@ -366,21 +366,19 @@ Alloy has an extensive configuration [reference](https://grafana.com/docs/alloy/
 
 # Additional Document References
 
-A collection of some important documentation links
-
-|    |    |
-| ---------------- | ------------------ |
-| Loki Configuration and API References | https://grafana.com/docs/loki/latest/reference/ |
-| Configuring Authentication | https://grafana.com/docs/loki/latest/operations/authentication/ |
-| Installing with Istio | https://grafana.com/docs/loki/latest/setup/install/istio/ |
-| Log Retention | https://grafana.com/docs/loki/latest/operations/storage/retention/ |
-| Grafana Enterprise Logs enablement |  https://grafana.com/docs/enterprise-logs/latest/setup/helm/#configure-your-gel-license |
-| Grafana Alloy Config Scenarios | https://github.com/grafana/alloy-scenarios |
-| Prometheus Feature Flags | https://prometheus.io/docs/prometheus/latest/feature_flags/ |
+|                            |                              |
+| -------------------------- | ---------------------------- |
+| Loki API Reference         | https://grafana.com/docs/loki/latest/reference/ |
+| Installing with Istio      | https://grafana.com/docs/loki/latest/setup/install/istio/ |
+| Log Retention              | https://grafana.com/docs/loki/latest/operations/storage/retention/ |
+| Enterprise Logs enablement | https://grafana.com/docs/enterprise-logs/latest/setup/helm/#configure-your-gel-license |
+| Alloy Config Scenarios     | https://github.com/grafana/alloy-scenarios |
+| Prometheus Feature Flags   | https://prometheus.io/docs/prometheus/latest/feature_flags/ |
+| Tempo CLI                  | https://grafana.com/docs/tempo/latest/operations/tempo_cli/ |
 
 Note that much of the Loki documentation for OSS overlaps with the
-[Grafana Enterprise Logs](https://grafana.com/docs/enterprise-logs/latest)
-documentation.
+Grafana Enterprise Logs, Metrics, Traces documentation for installation, but does have its own 
+document overlay of enterprise enablement details.
 
 <br>
 

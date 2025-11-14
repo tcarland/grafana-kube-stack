@@ -53,5 +53,5 @@ labels:
       app.kubernetes.io/component: grafana-ingress
       app.kubernetes.io/name: nginx
       app.kubernetes.io/part-of: grafana-kube-stack
-      app.kubernetes.io/version: v25.11.13
+      app.kubernetes.io/version: v25.11.14
       kustomize.component: grafana-ingress

@@ -3,6 +3,7 @@
   hosts: all
   become: true
   vars:
+    # System Install 
     alloy_user: 'alloy'
     alloy_group: 'alloy'
     alloy_shell: '/bin/false'
@@ -20,7 +21,7 @@
     alloy_env_template: 'templates/alloy-env.j2'
     alloy_service_template: 'templates/alloy.service.j2'
     alloy_listen_ip: '127.0.0.1'
-    alloy_listen_port: '12345'
+    alloy_listen_port: '12380'
     # Endpoints
     prometheus_endpoint: 'http://prometheus:9090'
     loki_endpoint: 'http://loki:3100'

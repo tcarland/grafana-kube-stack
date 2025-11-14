@@ -2,7 +2,7 @@
 #
 # Timothy C. Arland <tcarland at gmail dot com>
 PNAME=${0##*\/}
-VERSION="v25.11.13"
+VERSION="v25.11.14"
 
 binpath=$(dirname "$0")
 project=$(dirname "$(realpath "$binpath")")
@@ -165,10 +165,10 @@ if [ -n "$PROMETHEUS_DOMAINNAME" ]; then
         prometheus/ingress/prom/${ingress}/base/params.env
         
     if [[ "$ingress" == "nginx" ]]; then  # nginx uses bcrypt pw
-        ( echo "${LGTM_AGENT_PASSWORD}" | \
-          htpasswd -c -i prometheus/ingress/prom/$ingress/base/auth "${LGTM_AGENT_USERNAME}" )
+        ( echo "${AGENT_PASSWORD}" | \
+          htpasswd -c -i prometheus/ingress/prom/$ingress/base/auth "${AGENT_USERNAME}" )
     else  # create base64 auth str for istio VS
-        export LGTMAUTHSTR=$(echo "${LGTM_AGENT_USERNAME}:${LGTM_AGENT_PASSWORD}" | base64 -w0)
+        export AGENTAUTHSTR=$(echo "${AGENT_USERNAME}:${AGENT_PASSWORD}" | base64 -w0)
         cat prometheus/ingress/prom/${ingress}/base/prometheus-virtualservice-template.yaml | envsubst > \
             prometheus/ingress/prom/${ingress}/base/prometheus-virtualservice.yaml
     fi
