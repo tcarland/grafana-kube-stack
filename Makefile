@@ -4,6 +4,7 @@ clean:
 	  alloy/base/config.alloy \
 	  loki/base/loki-values.yaml \
 	  ingress/nginx/base/nginx-values.yaml \
+	  ingress/istio/istio-operator.yaml \
 	  prometheus/base/prom-values.yaml \
 	  tempo/base/tempo-values.yaml \
 	  loki/istio/base/*.crt \
@@ -21,6 +22,7 @@ clean:
 	  prometheus/ingress/prom/istio/base/*.crt \
 	  prometheus/ingress/prom/istio/base/*.key \
 	  prometheus/ingress/prom/istio/base/params.env \
+	  prometheus/ingress/prom/istio/base/prometheus-virtualservice.yaml \
 	  prometheus/ingress/prom/nginx/base/*.crt \
 	  prometheus/ingress/prom/nginx/base/*.key \
 	  prometheus/ingress/prom/nginx/base/params.env \

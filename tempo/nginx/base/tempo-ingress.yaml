@@ -25,4 +25,4 @@ spec:
           service:
             name: tempo-gateway
             port:
-              number: 8080
+              number: 80

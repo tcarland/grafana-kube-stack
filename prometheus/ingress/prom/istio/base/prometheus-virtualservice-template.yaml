@@ -1,0 +1,33 @@
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: prometheus-vs
+  namespace: $(namespace)
+spec:
+  gateways:
+  - prometheus-gateway
+  hosts:
+  - "$PROMETHEUS_DOMAINNAME"
+  http:
+    - match:
+      - uri:
+          prefix: "/"
+        headers:
+          Authorization:
+            exact: "Basic ${LGTMAUTHSTR}"
+      route:
+        - destination:
+            host: prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local
+            port:
+              number: 9090
+      timeout: 5s
+    - match:
+      - uri:
+          prefix: "/"
+      directResponse:
+        status: 401
+      headers:
+        response:
+          set:
+            Www-Authenticate: 'Basic realm="Authentication Required"'
