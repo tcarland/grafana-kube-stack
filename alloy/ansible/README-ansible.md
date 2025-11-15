@@ -23,6 +23,8 @@ as json making an inventory file more effective and maintainable.
 Running the playbook without creating an inventory would require 
 providing the endpoints, tenant id, and agent credentials.
 ```sh
+envname=dev
+source ../../env/${envname}/${envname}.env
 ansible-playbook -i "hostA,hostB,host[10:15]," \
   -e "loki_endpoint=https://loki.domain.com \
       prometheus_endpoint=https://prometheus.domain.com \
