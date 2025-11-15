@@ -15,7 +15,7 @@ spec:
           prefix: "/"
         headers:
           Authorization:
-            exact: "Basic ${LGTMAUTHSTR}"
+            exact: "Basic ${AGENTAUTHSTR}"
       route:
         - destination:
             host: prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local

@@ -63,7 +63,7 @@ prometheus.remote_write "prom" {
 loki.source.journal "logs_integrations_integrations_node_exporter_journal_scrape" {
     max_age       = "24h0m0s"
     relabel_rules = discovery.relabel.logs_integrations_integrations_node_exporter_journal_scrape.rules
-    forward_to    = [loki.write.local.receiver]
+    forward_to    = [loki.write.loki.receiver]
 }
 
 // Define which log files to collect for node_exporter
@@ -132,7 +132,7 @@ loki.write "loki" {
 //  reference at: https://grafana.com/docs/alloy/latest/reference/components/
 otelcol.receiver.otlp "otlp_receiver" {
     grpc {
-        endpoint = "0.0.0.0:4317"
+        endpoint = "{{ alloy_listen_ip }}:4317"
     }
 
     output {
@@ -144,7 +144,7 @@ otelcol.receiver.otlp "otlp_receiver" {
 
 otelcol.exporter.otlp "tempo" {
     client {
-        endpoint = "http://{{ tempo_endpoint }}:4317"
+        endpoint = "http://{{ tempo_otlp_endpoint }}"
         tls {
             insecure = false
             insecure_skip_verify = true

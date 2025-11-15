@@ -1,6 +1,6 @@
 Grafana Stack on Kubernetes
 ===========================
-v25.11.13
+v25.11.14
 
 Steps for customizing and deploying the [Grafana](https://grafana.com)
 Ecosystem, consisting of Loki, Grafana, Tempo, and Mimir; the (LGTM) stack.
@@ -24,7 +24,7 @@ Community chart.
     + [Loki Ingress](#loki-ingress)
   * [Tempo](#tempo)
   * [Alloy](#alloy)
-    + [Standalone Deployment](#standalone-deployment)
+    + [Ansible Deployment](#ansible-deployment)
   * [Additional Document References](#additional-document-references)
   * [Additional Notes](#additional-notes)
 
@@ -329,35 +329,35 @@ Hosts that are having *Alloy* provisioned locally will need the `gnupg` package.
 The *Alloy* binary can be installed via RHEL or Debian package repositories or as a 
 standalone binary.
 
-Grafana has an [Ansible](https://grafana.com/docs/alloy/latest/set-up/install/ansible/)
-Collection that can be used to manage Alloy deployments, however it deploys it as the 
-`root` user. 
+*Grafana* has an [Ansible Collection](https://grafana.com/docs/alloy/latest/set-up/install/ansible/) 
+that can be used to manage Alloy deployments, however it deploys the binary
+as the  `root` user. 
 
-A playbook is provided as `alloy/ansible` that  it avoids running the *Alloy* binary 
-as the `root` user and provisions a local service account instead. Refer to the
-Alloy Ansible [Readme](alloy/ansible/README-ansible.md)
+A playbook is provided as `alloy/ansible` that installs the *Alloy* binary 
+as a service account user and group instead. Refer to the Alloy Ansible [Readme](alloy/ansible/README-ansible.md)
 
 
-## Standalone Deployment
+## Ansible Deployment
 
-The steps provided by the Ansible Playbook essentially perform the following steps.
+The *Ansible Playbook* performs the following steps:
 
-A service account or a local *alloy* user is created to allow the system service to 
-run as non-root. The deployed user should be added to any groups necessary
-to gather metrics and read logs.
-```sh
-sudo useradd --no-create-home --groups "adm,systemd-journal" --shell /bin/false alloy
-```
+- A service account or a local *alloy* user is created to allow the 
+  system service to run as non-root. The deployed user should be added 
+  to any groups necessary to gather metrics and read logs.
+  ```sh
+  sudo useradd --no-create-home --groups "adm,systemd-journal" --shell /bin/false alloy
+  ```
 
-A default environment file is created to define the *Alloy* command options
-as `/etc/default/alloy`.
+- A default environment file is created to define the *Alloy* command 
+  options as `/etc/default/alloy`.
 
-A configuration file is provided to capture logs and record system metrics.
+- A configuration file is provided to capture logs and record system metrics.
+  The default install dir is `/var/lib/alloy`.
 
-A *service* file is then added to `/etc/systemd/system` to allow *systemd* to manage 
-the *Alloy* service.
+- A *service* file is then added to `/etc/systemd/system` to allow 
+  *systemd* to manage  the *Alloy* service.
 
-Alloy has an extensive configuration [reference](https://grafana.com/docs/alloy/latest/reference/)
+- Alloy has a configuration reference [here](https://grafana.com/docs/alloy/latest/reference/)
 
 <br>
 
@@ -366,21 +366,19 @@ Alloy has an extensive configuration [reference](https://grafana.com/docs/alloy/
 
 # Additional Document References
 
-A collection of some important documentation links
-
-|    |    |
-| ---------------- | ------------------ |
-| Loki Configuration and API References | https://grafana.com/docs/loki/latest/reference/ |
-| Configuring Authentication | https://grafana.com/docs/loki/latest/operations/authentication/ |
-| Installing with Istio | https://grafana.com/docs/loki/latest/setup/install/istio/ |
-| Log Retention | https://grafana.com/docs/loki/latest/operations/storage/retention/ |
-| Grafana Enterprise Logs enablement |  https://grafana.com/docs/enterprise-logs/latest/setup/helm/#configure-your-gel-license |
-| Grafana Alloy Config Scenarios | https://github.com/grafana/alloy-scenarios |
-| Prometheus Feature Flags | https://prometheus.io/docs/prometheus/latest/feature_flags/ |
+|                            |                              |
+| -------------------------- | ---------------------------- |
+| Loki API Reference         | https://grafana.com/docs/loki/latest/reference/ |
+| Installing with Istio      | https://grafana.com/docs/loki/latest/setup/install/istio/ |
+| Log Retention              | https://grafana.com/docs/loki/latest/operations/storage/retention/ |
+| Enterprise Logs enablement | https://grafana.com/docs/enterprise-logs/latest/setup/helm/#configure-your-gel-license |
+| Alloy Config Scenarios     | https://github.com/grafana/alloy-scenarios |
+| Prometheus Feature Flags   | https://prometheus.io/docs/prometheus/latest/feature_flags/ |
+| Tempo CLI                  | https://grafana.com/docs/tempo/latest/operations/tempo_cli/ |
 
 Note that much of the Loki documentation for OSS overlaps with the
-[Grafana Enterprise Logs](https://grafana.com/docs/enterprise-logs/latest)
-documentation.
+Grafana Enterprise Logs, Metrics, Traces documentation for installation, but does have its own 
+document overlay of enterprise enablement details.
 
 <br>
 
