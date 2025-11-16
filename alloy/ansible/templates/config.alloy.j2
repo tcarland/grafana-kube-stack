@@ -46,7 +46,7 @@ prometheus.scrape "integrations_node_exporter" {
 // Define where to send the metrics for storage
 prometheus.remote_write "prom" {
     endpoint {
-        url = "http://{{ prometheus_endpoint }}/api/v1/write"
+        url = "{{ prometheus_endpoint }}/api/v1/write"
         basic_auth {
             username = "{{ agent_username }}"
             password = "{{ agent_password }}"
@@ -115,7 +115,7 @@ loki.source.file "logs_integrations_integrations_node_exporter_direct_scrape" {
 
 loki.write "loki" {
     endpoint {
-        url = "https://{{ loki_endpoint }}/loki/api/v1/push"
+        url = "{{ loki_endpoint }}/loki/api/v1/push"
         batch_size = "1MiB"
         batch_wait = "1s"
         follow_redirects = true
@@ -144,7 +144,7 @@ otelcol.receiver.otlp "otlp_receiver" {
 
 otelcol.exporter.otlp "tempo" {
     client {
-        endpoint = "http://{{ tempo_otlp_endpoint }}"
+        endpoint = "{{ tempo_otlp_endpoint }}"
         tls {
             insecure = false
             insecure_skip_verify = true

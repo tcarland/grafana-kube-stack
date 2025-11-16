@@ -1,6 +1,6 @@
 Grafana Stack on Kubernetes
 ===========================
-v25.11.14
+v25.11.15
 
 Steps for customizing and deploying the [Grafana](https://grafana.com)
 Ecosystem, consisting of Loki, Grafana, Tempo, and Mimir; the (LGTM) stack.
