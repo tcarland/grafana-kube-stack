@@ -19,10 +19,6 @@ secretGenerator:
     files:
       - tls.crt=prometheus.crt
       - tls.key=prometheus.key
-  - name: prom-auth
-    namespace: istio-system
-    files:
-      - auth
 
 generatorOptions:
   disableNameSuffixHash: true

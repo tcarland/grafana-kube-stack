@@ -3,9 +3,7 @@ Alloy Ansible Playbook
 
 Grafana does provide an Ansible Collection, but installs *Alloy* as root.
 The provided playbook creates an *alloy* user/group and attaches it to a
-set of required groups. 
-
-Typical groups provide access to logs such as:
+set of defined/provided groups to join for controlling permissions. 
 ```yaml
 vars:
   alloy_groups:
@@ -18,10 +16,10 @@ Ansible *inventory* to define the groups as well as the typical
 variables described below.
 
 Passing lists via `--extra-vars` requires passing all the vars 
-as json making an inventory file more effective and maintainable.
+as *json* making an inventory file more effective and maintainable.
 
 Running the playbook without creating an inventory would require 
-providing the endpoints, tenant id, and agent credentials.
+providing the service endpoints, tenant id, and agent credentials.
 ```sh
 envname=dev
 source ../../env/${envname}/${envname}.env

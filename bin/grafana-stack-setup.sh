@@ -168,7 +168,7 @@ if [ -n "$PROMETHEUS_DOMAINNAME" ]; then
         ( echo "${AGENT_PASSWORD}" | \
           htpasswd -c -i prometheus/ingress/prom/$ingress/base/auth "${AGENT_USERNAME}" )
     else  # create base64 auth str for istio VS
-        export AGENTAUTHSTR=$(echo "${AGENT_USERNAME}:${AGENT_PASSWORD}" | base64 -w0)
+        export AGENTAUTHSTR=$(printf "%s" "${AGENT_USERNAME}:${AGENT_PASSWORD}" | base64 -w0)
         cat prometheus/ingress/prom/${ingress}/base/prometheus-virtualservice-template.yaml | envsubst > \
             prometheus/ingress/prom/${ingress}/base/prometheus-virtualservice.yaml
     fi
