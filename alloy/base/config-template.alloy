@@ -1,118 +1,154 @@
+// Kubernetes based Alloy instance
 
-
-loki.write "${GRAFANA_ENV}" {
-  endpoint {
-    url = "loki-distributor.${GRAFANA_NAMESPACE}.svc.cluster.local:3100/loki/api/v1/push"
-    basic_auth {
-      username = "${LGTM_AGENT_USERNAME}"
-      password = "${LGTM_AGENT_PASSWORD}"
-    }
-  }
-}
-
+// Loki ----------------------------------------------
 
 // discovery.kubernetes allows you to find scrape targets from Kubernetes resources.
 // It watches cluster state and ensures targets are continually synced with what is currently running in your cluster.
 discovery.kubernetes "pod" {
-  role = "pod"
-  // Restrict to pods on the node to reduce cpu & memory usage
-  selectors {
     role = "pod"
-    field = "spec.nodeName=" + coalesce(sys.env("HOSTNAME"), constants.hostname)
-  }
+    // Restrict to pods on the node to reduce cpu & memory usage
+    selectors {
+        role = "pod"
+        field = "spec.nodeName=" + coalesce(sys.env("HOSTNAME"), constants.hostname)
+    }
 }
-
 
 // discovery.relabel rewrites the label set of the input targets by applying one or more relabeling rules.
 // If no rules are defined, then the input targets are exported as-is.
 discovery.relabel "pod_logs" {
-  targets = discovery.kubernetes.pod.targets
+    targets = discovery.kubernetes.pod.targets
 
-  rule {
-    source_labels = ["__meta_kubernetes_namespace"]
-    action = "replace"
-    target_label = "namespace"
-  }
-  rule {
-    source_labels = ["__meta_kubernetes_pod_name"]
-    action = "replace"
-    target_label = "pod"
-  }
-  rule {
-    source_labels = ["__meta_kubernetes_pod_container_name"]
-    action = "replace"
-    target_label = "container"
-  }
-  rule {
-    source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_name"]
-    action = "replace"
-    target_label = "app"
-  }
-  rule {
-    source_labels = ["__meta_kubernetes_namespace", "__meta_kubernetes_pod_container_name"]
-    action = "replace"
-    target_label = "job"
-    separator = "/"
-    replacement = "$1"
-  }
-  rule {
-    source_labels = ["__meta_kubernetes_pod_uid", "__meta_kubernetes_pod_container_name"]
-    action = "replace"
-    target_label = "__path__"
-    separator = "/"
-    replacement = "/var/log/pods/*$1/*.log"
-  }
-  rule {
-    source_labels = ["__meta_kubernetes_pod_container_id"]
-    action = "replace"
-    target_label = "container_runtime"
-    regex = "^(\\S+):\\/\\/.+$"
-    replacement = "$1"
-  }
+    rule {
+        source_labels = ["__meta_kubernetes_namespace"]
+        action = "replace"
+        target_label = "namespace"
+    }
+    rule {
+        source_labels = ["__meta_kubernetes_pod_name"]
+        action = "replace"
+        target_label = "pod"
+    }
+    rule {
+        source_labels = ["__meta_kubernetes_pod_container_name"]
+        action = "replace"
+        target_label = "container"
+    }
+    rule {
+        source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_name"]
+        action = "replace"
+        target_label = "app"
+    }
+    rule {
+        source_labels = ["__meta_kubernetes_namespace", "__meta_kubernetes_pod_container_name"]
+        action = "replace"
+        target_label = "job"
+        separator = "/"
+        replacement = "$1"
+    }
+    rule {
+        source_labels = ["__meta_kubernetes_pod_uid", "__meta_kubernetes_pod_container_name"]
+        action = "replace"
+        target_label = "__path__"
+        separator = "/"
+        replacement = "/var/log/pods/*$1/*.log"
+    }
+    rule {
+        source_labels = ["__meta_kubernetes_pod_container_id"]
+        action = "replace"
+        target_label = "container_runtime"
+        regex = "^(\\S+):\\/\\/.+$"
+        replacement = "$1"
+    }
 }
 
 loki.source.kubernetes "pod_logs" {
-  targets    = discovery.relabel.pod_logs.output
-  forward_to = [loki.process.pod_logs.receiver]
+    targets    = discovery.relabel.pod_logs.output
+    forward_to = [loki.process.pod_logs.receiver]
 }
 
 // loki.process receives log entries from other Loki components, applies one or more processing stages,
 // and forwards the results to the list of receivers in the component's arguments.
 loki.process "pod_logs" {
-  stage.static_labels {
-      values = {
-        cluster = "${GRAFANA_ENV}",
-      }
-  }
+    stage.static_labels {
+        values = {
+            cluster = "${GRAFANA_ENV}",
+        }
+    }
 
-  forward_to = [loki.write.${GRAFANA_ENV}.receiver]
+    forward_to = [loki.write.${GRAFANA_ENV}.receiver]
 }
 
 
 // loki.source.kubernetes_events tails events from the Kubernetes API and converts them
 // into log lines to forward to other Loki components.
 loki.source.kubernetes_events "cluster_events" {
-  job_name   = "integrations/kubernetes/eventhandler"
-  log_format = "logfmt"
-  forward_to = [
-    loki.process.cluster_events.receiver,
-  ]
+    job_name   = "integrations/kubernetes/eventhandler"
+    log_format = "logfmt"
+    forward_to = [
+        loki.process.cluster_events.receiver,
+    ]
 }
 
 // loki.process receives log entries from other loki components, applies one or more processing stages,
 // and forwards the results to the list of receivers in the component's arguments.
 loki.process "cluster_events" {
-  forward_to = [loki.write.${GRAFANA_ENV}.receiver]
+    forward_to = [loki.write.${GRAFANA_ENV}.receiver]
 
-  stage.static_labels {
-    values = {
-      cluster = "${GRAFANA_ENV}",
+    stage.static_labels {
+        values = {
+            cluster = "${GRAFANA_ENV}",
+        }
     }
-  }
 
-  stage.labels {
-    values = {
-      kubernetes_cluster_events = "job",
+    stage.labels {
+        values = {
+            kubernetes_cluster_events = "job",
+        }
     }
-  }
+}
+
+
+loki.write "${GRAFANA_ENV}" {
+    endpoint {
+        url = "http://loki-distributor.${GRAFANA_NAMESPACE}.svc.cluster.local:3100/loki/api/v1/push"
+        batch_size = "1MiB"
+        batch_wait = "2s"
+        follow_redirects = true
+        tenant_id = "${GRAFANA_ENV}"
+    }
+}
+
+
+// Tempo -----------------------------------------
+
+
+// Creates a receiver for OTLP gRPC.
+// You can easily add receivers for other protocols by using the correct component
+// from the reference list at: https://grafana.com/docs/alloy/latest/reference/components/
+otelcol.receiver.otlp "otlp_receiver" {
+    grpc {
+        endpoint = "0.0.0.0:4317"
+    }
+
+    // Output straight to the OTLP gRPC exporter. We would usually do some processing
+    // first, most likely batch processing, but for this example we pass it straight
+    // through.
+    output {
+        traces = [
+            otelcol.exporter.otlp.tempo.input,
+        ]
+    }
+}
+
+// Send to the locally running Tempo instance, on port 4317 (OTLP gRPC).
+otelcol.exporter.otlp "tempo" {
+    // Define the client for exporting.
+    client {
+        endpoint = "tempo-cluster-distributor.tempo.svc.cluster.local:4317"
+        headers = {
+            "X-Scope-OrgID" = "${GRAFANA_ENV}"
+        tls {
+            insecure = true
+        }
+    }
 }

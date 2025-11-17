@@ -13,6 +13,8 @@ env/*
 **/secrets.env
 **/base/params.env
 **/base/auth
+**/overlays/*
+!**/overlays/example
 
 alloy/base/config.alloy
 loki/base/loki-values.yaml

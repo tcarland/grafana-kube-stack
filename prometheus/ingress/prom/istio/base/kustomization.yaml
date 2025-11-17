@@ -19,10 +19,6 @@ secretGenerator:
     files:
       - tls.crt=prometheus.crt
       - tls.key=prometheus.key
-  - name: prom-auth
-    namespace: istio-system
-    files:
-      - auth
 
 generatorOptions:
   disableNameSuffixHash: true
@@ -62,5 +58,5 @@ labels:
       app.kubernetes.io/component: prometheus-ingress
       app.kubernetes.io/name: istio-ingress
       app.kubernetes.io/part-of: grafana-kube-stack
-      app.kubernetes.io/version: v25.11.14
+      app.kubernetes.io/version: v25.11.15
       kustomize.component: prometheus-ingress
