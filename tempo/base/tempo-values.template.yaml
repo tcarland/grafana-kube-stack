@@ -61,16 +61,6 @@ gateway:
   enabled: false
   ingress:
     enabled: false
-    ingressClassName: nginx
-    hosts:
-      - host: ${TEMPO_DOMAINNAME}
-        paths:
-          - path: /
-            pathType: Prefix
-    tls:
-      - secretName: tempo-tls
-        hosts:
-          - ${TEMPO_DOMAINNAME}
   basicAuth:
     enabled: false
     username: ${AGENT_USERNAME}
