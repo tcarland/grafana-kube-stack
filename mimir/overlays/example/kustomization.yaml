@@ -11,7 +11,7 @@ patches:
     apiVersion: v1
     kind: ConfigMap
     metadata:
-      name: runtime-config
+      name: mimir-runtime
       namespace: $(namespace)
     data:
       runtime.yaml: |2

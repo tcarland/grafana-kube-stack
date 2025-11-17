@@ -8,3 +8,4 @@ gateway:
   enabled: false
 license:
   external: true
+  secretName: tempo-license
