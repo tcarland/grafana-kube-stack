@@ -6,7 +6,7 @@ namespace: monitoring
 resources: []
 
 secretGenerator:
-  - name: grafana-admin-credentials
+  - name: grafana-admin
     envs:
       - secrets.env
 
