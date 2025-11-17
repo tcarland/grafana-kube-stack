@@ -106,6 +106,8 @@ fi
 
 export S3_SKIP_VERIFY=${S3_SKIP_VERIFY:-"false"}
 export GRAFANA_NAMESPACE="${GRAFANA_NAMESPACE:-monitoring}"
+export GRAFANA_ADMIN_USER="${GRAFANA_ADMIN_USER:-admin}"
+export GRAFANA_ADMIN_PASSWORD="${GRAFANA_ADMIN_PASSWORD:-admin}"
 
 # Ingress config
 if [[ "$INGRESS_NAMESPACE" =~ "istio" ]]; then
@@ -146,6 +148,7 @@ echo "$s3_secrets" | envsubst > mimir/base/secrets.env
 # -----------------
 # Grafana / Prometheus
 echo " -> Creating Prom/Grafana Helm values and configs from templates"
+cat prometheus/base/secrets.template.env | envsubst > prometheus/base/secrets.env
 cat prometheus/base/prom-values.template.yaml | envsubst > prometheus/base/prom-values.yaml
 cat prometheus/base/prom-addScrapeConfigs.template.yaml | envsubst > prometheus/base/prom-addScrapeConfigs.yaml
 

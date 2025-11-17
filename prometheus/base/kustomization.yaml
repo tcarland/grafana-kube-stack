@@ -3,13 +3,24 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: monitoring
 
+resources: []
+
+secretGenerator:
+  - name: grafana-admin-credentials
+    envs:
+      - secrets.env
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+  
 helmCharts:
-- name: kube-prometheus-stack
-  includeCRDs: false
-  releaseName: prometheus
-  namespace: monitoring
-  version: 78.5.0
-  repo: https://prometheus-community.github.io/helm-charts
-  valuesFile: prom-values.yaml
-  additionalValuesFiles:
-  - prom-addScrapeConfigs.yaml
+  - name: kube-prometheus-stack
+    includeCRDs: false
+    releaseName: prometheus
+    namespace: monitoring
+    version: 78.5.0
+    repo: https://prometheus-community.github.io/helm-charts
+    valuesFile: prom-values.yaml
+    additionalValuesFiles:
+      - prom-addScrapeConfigs.yaml

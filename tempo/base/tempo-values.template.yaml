@@ -1,6 +1,8 @@
 global:
   multitenancyEnabled: true
-  
+ 
+reportingEnabled: false
+
 storage:
   trace:
     backend: s3

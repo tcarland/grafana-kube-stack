@@ -37,7 +37,12 @@ alertmanager:
     #nodePort: 30400
 
 grafana:
-  adminPassword: admin
+  #adminUser: admin
+  #adminPassword: admin
+  admin:
+    existingSecret: "grafana-admin-credentials"
+    userKey: admin-user
+    passwordKey: admin-password
   nodeSelector:
     node-role.kubernetes.io/worker: ""
   #service:

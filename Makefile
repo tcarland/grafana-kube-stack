@@ -6,6 +6,7 @@ clean:
 	  ingress/nginx/base/nginx-values.yaml \
 	  ingress/istio/istio-operator.yaml \
 	  prometheus/base/prom-values.yaml \
+	  prometheus/base/secrets.env \
 	  tempo/base/tempo-values.yaml \
 	  loki/istio/base/*.crt \
 	  loki/istio/base/*.key \
