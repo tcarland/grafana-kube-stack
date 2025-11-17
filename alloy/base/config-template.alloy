@@ -110,7 +110,7 @@ loki.process "cluster_events" {
 
 loki.write "${GRAFANA_ENV}" {
     endpoint {
-        url = "loki-distributor.${GRAFANA_NAMESPACE}.svc.cluster.local:3100/loki/api/v1/push"
+        url = "http://loki-distributor.${GRAFANA_NAMESPACE}.svc.cluster.local:3100/loki/api/v1/push"
         batch_size = "1MiB"
         batch_wait = "2s"
         follow_redirects = true
@@ -149,7 +149,6 @@ otelcol.exporter.otlp "tempo" {
             "X-Scope-OrgID" = "${GRAFANA_ENV}"
         tls {
             insecure = true
-            //insecure_skip_verify = ${S3_SKIP_VERIFY}
         }
     }
 }
