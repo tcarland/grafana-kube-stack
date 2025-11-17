@@ -1,9 +1,9 @@
 enterprise:
   enabled: true
   image:
-    tag: v2.0.1
+    tag: v2.8.1
 enterpriseGateway:
-  enabled: true
+  enabled: false
 gateway:
   enabled: false
 license:

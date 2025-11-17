@@ -1,6 +1,6 @@
 Grafana Stack on Kubernetes
 ===========================
-v25.11.17
+v25.11.18
 
 Steps for customizing and deploying the [Grafana](https://grafana.com)
 Ecosystem, consisting of Loki, Grafana, Tempo, and Mimir; the (LGTM) stack.
@@ -305,7 +305,8 @@ kustomize build loki/ningx/ | kubectl apply -f -
 
 The current *Tempo* chart does not take S3 credentials from a secret
 like Mimir, so a *values.template* is used to generate the input
-for the Tempo chart.
+for the Tempo chart. The setup script creates the *values* from the 
+environment configuration.
 
 Fetch the chart first for validation.
 ```sh
@@ -316,6 +317,14 @@ Install the chart via *kustomize*
 ```sh
 kustomize build --enable-helm tempo/ | kubectl apply -f -
 ```
+
+# Tempo Ingress
+
+Tempo primarily needs two ports ingressed, both http/2 based, though
+both are intended to have TLS, first for standard *https* and the 
+other port, 4317, for *grpc-otlp*. The ingress controller can forward 
+these either directly to the *distributor* service, or use the 
+*tempo-gateway*. 
 
 <br>
 
@@ -335,6 +344,9 @@ as the  `root` user.
 
 A playbook is provided as `alloy/ansible` that installs the *Alloy* binary 
 as a service account user and group instead. Refer to the Alloy Ansible [Readme](alloy/ansible/README-ansible.md)
+
+Note that the configured endpoints for Alloy all use a protocol designation (eg. https://)
+except for tempo, whose endpoints are only <SERVICE:PORT>.
 
 
 ## Ansible Deployment

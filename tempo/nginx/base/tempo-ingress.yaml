@@ -6,7 +6,7 @@ metadata:
   namespace: $(namespace)
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/ssl-passthrough: "false"
 spec:
@@ -23,6 +23,13 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: tempo-gateway
+            name: tempo-distributor.monitoring.svc
             port:
-              number: 80
+              number: 3200
+      - path: /opentelemetry.proto.collector.metrics.v1.MetricsService/
+        pathType: prefix
+        backend:
+          service:
+            name: tempo-distributor.monitoring.svc
+            port:
+              number: 4317
