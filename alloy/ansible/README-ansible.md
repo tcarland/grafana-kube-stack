@@ -27,7 +27,7 @@ ansible-playbook -i "hostA,hostB,host[10:15]," \
   -e "loki_endpoint=https://loki.domain.com \
       prometheus_endpoint=https://prometheus.domain.com \
       tempo_http_endpoint=https://tempo.domain.com:3200 \
-      tempo_otlp_endpoint=https://tempo.domain.com:4137 \
+      tempo_otlp_endpoint=https://tempo.domain.com:4317 \
       tenant_org_id=${GRAFANA_ENV} \
       agent_username=${AGENT_USERNAME} \
       agent_password=${AGENT_PASSWORD}" \

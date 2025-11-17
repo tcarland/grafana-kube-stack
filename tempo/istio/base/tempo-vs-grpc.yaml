@@ -10,11 +10,7 @@ spec:
   hosts:
   - "$(TEMPO_DOMAINNAME)"
   http:
-  - headers:
-      request:
-        set:
-          X-Forwarded-Proto: https
-    match:
+  - match:
     - port: 4317
     route:
     - destination:

@@ -17,7 +17,7 @@ spec:
     match:
     - uri:
         prefix: /
-    name: tempo-gateway
+    name: tempo-distributor
     route:
     - destination:
         host: tempo-distributor.monitoring.svc.cluster.local
