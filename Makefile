@@ -6,6 +6,7 @@ clean:
 	  ingress/nginx/base/nginx-values.yaml \
 	  ingress/istio/istio-operator.yaml \
 	  prometheus/base/prom-values.yaml \
+	  prometheus/base/secrets.env \
 	  tempo/base/tempo-values.yaml \
 	  loki/istio/base/*.crt \
 	  loki/istio/base/*.key \
@@ -13,6 +14,12 @@ clean:
 	  loki/nginx/base/*.crt \
 	  loki/nginx/base/*.key \
 	  loki/nginx/base/params.env \
+	  tempo/istio/base/*.crt \
+	  tempo/istio/base/*.key \
+	  tempo/istio/base/params.env \
+	  tempo/nginx/base/*.crt \
+	  tempo/nginx/base/*.key \
+	  tempo/nginx/base/params.env \
 	  prometheus/ingress/grafana/istio/base/*.crt \
 	  prometheus/ingress/grafana/istio/base/*.key \
 	  prometheus/ingress/grafana/istio/base/params.env \
@@ -27,6 +34,7 @@ clean:
 	  prometheus/ingress/prom/nginx/base/*.key \
 	  prometheus/ingress/prom/nginx/base/params.env \
 	  prometheus/ingress/prom/nginx/base/auth )
+
 
 clean-charts:
 	( rm -rf mimir/base/charts \

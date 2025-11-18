@@ -326,3 +326,21 @@ query_scheduler:
     max_recv_msg_size: 15728640 # 15MB
     max_send_msg_size: 15728640 # 15MB
 ```
+
+Nginx controller would need to have GRPC support added to the Service
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: ingress-nginx-controller
+  namespace: ingress-nginx
+spec:
+  type: LoadBalancer
+  ports:
+    - name: https
+      port: 443
+      targetPort: 443
+    - name: grpc
+      port: 4317
+      targetPort: 443 
+```

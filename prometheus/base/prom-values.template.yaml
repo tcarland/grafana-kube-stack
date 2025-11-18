@@ -15,9 +15,6 @@ nodeExporter:
   enabled: true
 
 prometheus:
-  #service:
-    #type: NodePort
-    #nodePort: 30500
   prometheusSpec:
     enableRemoteWriteReceiver: true
     enableFeatures:
@@ -32,17 +29,14 @@ alertmanager:
   alertmanagerSpec:
     nodeSelector:
       node-role.kubernetes.io/worker: ""
-  #service:
-    #type: NodePort
-    #nodePort: 30400
 
 grafana:
-  adminPassword: admin
+  admin:
+    existingSecret: "grafana-admin"
+    userKey: admin-user
+    passwordKey: admin-password
   nodeSelector:
     node-role.kubernetes.io/worker: ""
-  #service:
-    #type: NodePort
-    #nodePort: 30200
   persistence:
     enabled: true
     size: 4Gi
