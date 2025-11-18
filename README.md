@@ -1,6 +1,6 @@
 Grafana Stack on Kubernetes
 ===========================
-v25.11.18
+v25.11.19
 
 Steps for customizing and deploying the [Grafana](https://grafana.com)
 Ecosystem, consisting of Loki, Grafana, Tempo, and Mimir; the (LGTM) stack.
@@ -128,7 +128,7 @@ details of the internal architecture.
 
 ## Requirements
 
-- [kustomize](https://github.com/kubernetes-sigs/kustomize) : v5.7.1
+- [kustomize](https://github.com/kubernetes-sigs/kustomize) : v5.8.0
 - [helm](https://github.com/helm/helm) : v3.19.0
 - [yq](https://github.com/mikefarah/yq) : v4.47.2
 - [mc](https://github.com/minio/mc) : latest stable (if using MinIO)

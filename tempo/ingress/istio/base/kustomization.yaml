@@ -1,53 +1,59 @@
+---
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: monitoring
 
 resources:
-  - loki-virtualservice.yaml
-  - loki-gateway.yaml
+  - tempo-gateway.yaml
+  - tempo-vs-https.yaml
+  - tempo-vs-grpc.yaml
 
 configMapGenerator:
-  - name: loki-istio-params
+  - name: tempo-istio-params
     envs:
       - params.env
-      
+
 secretGenerator:
-  - name: loki-tls
-    namespace: istio-system
+  - name: tempo-tls
     behavior: create
     type: "kubernetes.io/tls"
     files:
-      - tls.crt=loki.crt
-      - tls.key=loki.key
-      
+      - tls.crt=tempo.crt
+      - tls.key=tempo.key
+
 generatorOptions:
   disableNameSuffixHash: true
 
 replacements:
   - source:
-      fieldPath: data.LOKI_DOMAINNAME
+      fieldPath: data.TEMPO_DOMAINNAME
       kind: ConfigMap
-      name: loki-istio-params
+      name: tempo-istio-params
       version: v1
     targets:
       - select:
-          name: loki-gateway
+          name: tempo-gateway
           kind: Gateway
         fieldPaths:
           - spec.servers.*.hosts.0
       - select:
-          name: loki-vs
+          name: tempo-vs-https
+          kind: VirtualService
+        fieldPaths:
+          - spec.hosts.0
+      - select:
+          name: tempo-vs-grpc
           kind: VirtualService
         fieldPaths:
           - spec.hosts.0
   - source:
       fieldPath: data.ingress_namespace
       kind: ConfigMap
-      name: loki-istio-params
+      name: tempo-istio-params
       version: v1
     targets:
       - select:
-          name: loki-tls
+          name: tempo-tls
           kind: Secret
         fieldPaths:
           - metadata.namespace
@@ -55,8 +61,8 @@ replacements:
 labels:
   - includeSelectors: true
     pairs:
-      app.kubernetes.io/component: loki-ingress
-      app.kubernetes.io/name: loki-ingress
+      app.kubernetes.io/component: tempo-ingress
+      app.kubernetes.io/name: tempo-ingress
       app.kubernetes.io/part-of: grafana-kube-stack
-      app.kubernetes.io/version: v25.11.18
-      kustomize.component: loki-ingress
+      app.kubernetes.io/version: v25.11.19
+      kustomize.component: tempo-ingress

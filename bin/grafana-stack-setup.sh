@@ -2,7 +2,7 @@
 #
 # Timothy C. Arland <tcarland at gmail dot com>
 PNAME=${0##*\/}
-VERSION="v25.11.18"
+VERSION="v25.11.19"
 
 binpath=$(dirname "$0")
 project=$(dirname "$(realpath "$binpath")")
@@ -132,10 +132,10 @@ fi
 
 # Loki Ingress
 if [ -n "$LOKI_DOMAINNAME" ]; then
-    cat loki/${ingress}/base/params.env.template | envsubst > loki/${ingress}/base/params.env
+    cat loki/ingress/${ingress}/base/params.env.template | envsubst > loki/ingress/${ingress}/base/params.env
     if [ -f env/${envname}/certs/loki.crt ]; then
         echo " -> Copying Loki ingress certificates "
-        cp env/${envname}/certs/loki* loki/${ingress}/base/
+        cp env/${envname}/certs/loki* loki/ingress/${ingress}/base/
     fi
 fi
 
@@ -188,10 +188,10 @@ echo " -> Creating Tempo values from template"
 cat tempo/base/tempo-values.template.yaml | envsubst > tempo/base/tempo-values.yaml
 
 if [ -n "$TEMPO_DOMAINNAME" ]; then
-    cat tempo/${ingress}/base/params.env.template | envsubst > tempo/${ingress}/base/params.env
+    cat tempo/ingress/${ingress}/base/params.env.template | envsubst > tempo/ingress/${ingress}/base/params.env
     if [ -d env/${envname}/certs ]; then
         echo " -> Copying Tempo ingress certs"
-        cp env/${envname}/certs/tempo.* tempo/${ingress}/base/
+        cp env/${envname}/certs/tempo.* tempo/ingress/${ingress}/base/
     fi
 fi
 
