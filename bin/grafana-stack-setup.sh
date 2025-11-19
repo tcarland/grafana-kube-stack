@@ -122,13 +122,7 @@ echo " -> Ingress controller type set to '$ingress'"
 # -----------------
 # Loki
 echo " -> Creating Loki values from template"
-if [[ "${LOKI_DISTRIBUTED,,}" == "true" ]]; then
-    echo "   -> Using Loki distributed chart"
-    cat loki/base/loki-values-distributed.yaml | envsubst > loki/base/loki-values.yaml
-else
-    echo "   -> Using Loki simple-scalable chart"
-    cat loki/base/loki-values-ss.yaml | envsubst > loki/base/loki-values.yaml
-fi
+cat loki/base/loki-values.template.yaml | envsubst > loki/base/loki-values.yaml
 
 # Loki Ingress
 if [ -n "$LOKI_DOMAINNAME" ]; then
@@ -227,7 +221,7 @@ fi
 
 
 # -----------------
-echo " -> Needed S3 Buckets:"
+printf "\n -> Needed S3 Buckets: \n"
 
 # mimir s3 bucket names
 buckets+=("$(yq e '.mimir.structuredConfig.alertmanager_storage.s3.bucket_name' mimir/base/mimir-structuredConfig.yaml | envsubst)")
@@ -252,6 +246,6 @@ if [ -n "$s3cmd" ]; then
     create_s3_buckets "${buckets[@]}"
 fi
 
-echo " -> $PNAME Finished."
+echo "$PNAME finished."
 
 exit 0

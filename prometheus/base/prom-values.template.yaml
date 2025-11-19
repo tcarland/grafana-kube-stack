@@ -9,10 +9,36 @@ prometheusOperator:
     node-role.kubernetes.io/worker: ""
 
 kubeStateMetrics:
-  enabled: true
+  enabled: false
+  
+kubernetesServiceMonitors:
+  enabled: false
+  
+kubeApiServer:
+  enabled: false
 
+kubelet:
+  enabled: false
+  
+kubeControllerManager:
+  enabled: false
+  
+coreDns:
+  enabled: false
+kubeDns:
+  enabled: false
+  
+kubeEtcd:
+  enabled: false
+  
+kubeScheduler:
+  enabled: false
+  
+kubeProxy:
+  enabled: false
+  
 nodeExporter:
-  enabled: true
+  enabled: false
 
 prometheus:
   prometheusSpec:
