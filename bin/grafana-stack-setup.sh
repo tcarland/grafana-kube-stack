@@ -134,7 +134,7 @@ fi
 if [ -n "$LOKI_DOMAINNAME" ]; then
     cat loki/ingress/${ingress}/base/params.env.template | envsubst > loki/ingress/${ingress}/base/params.env
     if [ -f env/${envname}/certs/loki.crt ]; then
-        echo " -> Copying Loki ingress certificates "
+        echo "   -> Copying Loki ingress certificates "
         cp env/${envname}/certs/loki* loki/ingress/${ingress}/base/
     fi
 fi
@@ -147,7 +147,7 @@ echo "$s3_secrets" | envsubst > mimir/base/secrets.env
 
 # -----------------
 # Grafana / Prometheus
-echo " -> Creating Prom/Grafana Helm values and configs from templates"
+echo " -> Creating Prom/Grafana values from templates"
 cat prometheus/base/secrets.template.env | envsubst > prometheus/base/secrets.env
 cat prometheus/base/prom-values.template.yaml | envsubst > prometheus/base/prom-values.yaml
 cat prometheus/base/prom-addScrapeConfigs.template.yaml | envsubst > prometheus/base/prom-addScrapeConfigs.yaml
@@ -157,7 +157,7 @@ if [ -n "$GRAFANA_DOMAINNAME" ]; then
     cat prometheus/ingress/grafana/${ingress}/base/params.env.template | envsubst > \
         prometheus/ingress/grafana/${ingress}/base/params.env
     if [ -d env/${envname}/certs ]; then
-        echo " -> Copying Grafana ingress certs"
+        echo "   -> Copying Grafana ingress certs"
         cp env/${envname}/certs/grafana.* prometheus/ingress/grafana/${ingress}/base/
     fi
 fi
@@ -176,7 +176,7 @@ if [ -n "$PROMETHEUS_DOMAINNAME" ]; then
             prometheus/ingress/prom/${ingress}/base/prometheus-virtualservice.yaml
     fi
     if [ -d env/${envname}/certs ]; then
-        echo " -> Copying Prometheus ingress certs"
+        echo "   -> Copying Prometheus ingress certs"
         cp env/${envname}/certs/prometheus.* prometheus/ingress/prom/${ingress}/base/
     fi
 fi
@@ -190,7 +190,7 @@ cat tempo/base/tempo-values.template.yaml | envsubst > tempo/base/tempo-values.y
 if [ -n "$TEMPO_DOMAINNAME" ]; then
     cat tempo/ingress/${ingress}/base/params.env.template | envsubst > tempo/ingress/${ingress}/base/params.env
     if [ -d env/${envname}/certs ]; then
-        echo " -> Copying Tempo ingress certs"
+        echo "   -> Copying Tempo ingress certs"
         cp env/${envname}/certs/tempo.* tempo/ingress/${ingress}/base/
     fi
 fi
@@ -198,7 +198,7 @@ fi
 
 # -----------------
 # Alloy
-echo " -> Alloy config from template "
+echo " -> Alloy configs from template "
 cat alloy/base/config-template.alloy | envsubst > alloy/base/config.alloy
 
 

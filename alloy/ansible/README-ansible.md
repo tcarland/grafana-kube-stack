@@ -11,18 +11,20 @@ vars:
     - systemd-journal
 ```
 
-Update the playbook *alloy.yaml* accordingly, or create a proper 
-Ansible *inventory* to define the groups as well as the typical 
-variables described below.
+Update the provided playbook *alloy.yaml* accordingly, or create 
+a proper  Ansible *inventory* to define the groups as well as the typical 
+variables described below. The playbook has been tested against 
+*Ansible v5.3.0*
 
-Passing lists via `--extra-vars` requires passing all the vars 
+Passing lists via *extra-vars* requires passing all the vars 
 as *json* making an inventory file more effective and maintainable.
 
 Running the playbook without creating an inventory would require 
 providing the service endpoints, tenant id, and agent credentials, 
-though we can use our environment config to achieve this. The 
-following assumes TLS is enabled for all exposed endpoints. Note 
-that tempo does not use a protocol designation for its endpoints.
+though we can use our environment config to achieve this. 
+
+The following assumes TLS is enabled for all exposed endpoints. Note 
+that *Tempo* does not use a protocol designation for its endpoints.
 ```sh
 envname=dev
 source ../../env/${envname}/${envname}.env

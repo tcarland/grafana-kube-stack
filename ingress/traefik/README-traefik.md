@@ -1,7 +1,7 @@
 Notes for using Traefik Ingress
 ===============================
 
-Traefik must be told to listen on port 4317 for Tempo grpc-otlp
+Traefik must be told to listen on port 4317 for grpc-otlp (eg. Tempo)
 ```
 valuesContent: |-
   additionalArguments:
@@ -11,7 +11,8 @@ valuesContent: |-
 ```
 
 Those arguments should be added to the Traefik *Deployment* `command:`
-Additionally the Traefix *Service* should be updated for the ports
+Additionally the Traefix *Service* should be updated for the ports needed 
+beyond https. The following adds the *grpcsecure* port to the controller.
 ```yaml
 apiVersion: v1
 kind: Service

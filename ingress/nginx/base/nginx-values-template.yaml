@@ -3,7 +3,7 @@ controller:
   containerPort:
     http: 80
     https: 443
-    gprc: 4137
+    grpc: 4137
   service:
     type: LoadBalancer
     loadBalancerIP: ${INGRESS_LOADBALANCER_IP}

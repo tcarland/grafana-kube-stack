@@ -60,10 +60,10 @@ compactor:
     block_retention: 48h
 
 gateway:
-  enabled: false
+  enabled: true
   ingress:
     enabled: false
   basicAuth:
-    enabled: false
+    enabled: true
     username: ${AGENT_USERNAME}
     password: ${AGENT_PASSWORD}

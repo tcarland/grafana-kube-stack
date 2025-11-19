@@ -153,9 +153,38 @@ cp ./env/env.template !$/myenvname/myenvname.env
 # set configuration and secrets in myenvname.env
 ```
 
+### Namespace
 The default namespace for the stack is `monitoring`. If a different
 namespace is desired, update the *base/kustomization.yaml* files
 or create overlays as needed.
+
+### Node labels
+The *Prometheus Community Chart* includes *kube-state-metrics* and other 
+k8s ecosystem components, and some *DaemonSets* or others are configured 
+to run on worker nodes and contain a `node-selector` stanza.  Ensure the 
+worker nodes are labeled accordingly.
+```sh
+$ k get nodes
+NAME                   STATUS   ROLES           AGE    VERSION
+dev-control-plane      Ready    control-plane   3d4h   v1.32.5
+dev-control-plane2     Ready    control-plane   3d4h   v1.32.5
+dev-control-plane3     Ready    control-plane   3d4h   v1.32.5
+dev-worker             Ready    worker          3d4h   v1.32.5
+dev-worker2            Ready    worker          3d4h   v1.32.5
+dev-worker3            Ready    worker          3d4h   v1.32.5
+dev-worker4            Ready    worker          3d4h   v1.32.5
+dev-worker5            Ready    worker          3d4h   v1.32.5
+dev-worker6            Ready    worker          3d4h   v1.32.5
+```
+
+Label cluster 'worker' nodes:
+```sh
+nodes=$(kubectl get nodes --no-headers | \
+        awk '{ if($2 == "Ready" && $3 !~ /control/) { print $1 } }')
+for n in $nodes; do
+    kubectl label node $n node-role.kubernetes.io/worker=;
+done
+```
 
 <br>
 
@@ -165,6 +194,29 @@ The necessary buckets are scraped from the generated helm *values* files and
 created via `mc mb` or alternatively `aws s3`. If neither tool is available,
 the buckets needed are displayed and must be manually created prior to applying
 manifests.
+```sh
+./bin/grafana-stack-setup.sh dev
+-> Found Minio Client first, using 'mc mb dev/'...
+ -> Ingress controller type set to 'istio'
+ -> Creating Loki values from template
+   -> Using Loki distributed chart
+   -> Copying Loki ingress certificates
+ -> Creating s3 secrets.env for Mimir
+ -> Creating Prom/Grafana values from templates
+   -> Copying Grafana ingress certs
+   -> Copying Prometheus ingress certs
+ -> Creating Tempo values from template
+   -> Copying Tempo ingress certs
+ -> Alloy config from template
+ -> Needed S3 Buckets:
+mimir-dev-alertmanager
+mimir-dev-blocks
+mimir-dev-ruler
+loki-dev-chunk
+loki-dev-ruler
+loki-dev-admin
+tempo-dev-traces
+```
 
 <br>
 
