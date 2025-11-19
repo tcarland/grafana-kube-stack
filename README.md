@@ -400,6 +400,16 @@ as a service account user and group instead. Refer to the Alloy Ansible [Readme]
 Note that the configured endpoints for Alloy all use a protocol designation (eg. https://)
 except for tempo, whose endpoints are only <SERVICE:PORT>.
 
+When collecting metrics, we can choose to route them to either *Prometheus* 
+or directly to *Mimir*. Currently, this project has configured *Prometheus* to 
+be exposed external to the cluster with Authentication for the Alloy agents, so 
+we route metrics to the `prometheus.remote_write` endpoint. Internal to the cluster
+we can route either way, but note that the endpoints have a different API path
+respectively.
+
+- Prometheus  :  http://prometheus/api/v1/write
+- Mimir       :  http://mimir-distributor/api/v1/push
+
 
 ## Ansible Deployment
 
