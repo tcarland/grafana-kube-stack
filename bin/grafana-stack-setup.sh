@@ -2,7 +2,7 @@
 #
 # Timothy C. Arland <tcarland at gmail dot com>
 PNAME=${0##*\/}
-VERSION="v25.11.18"
+VERSION="v25.11.19"
 
 binpath=$(dirname "$0")
 project=$(dirname "$(realpath "$binpath")")
@@ -122,20 +122,14 @@ echo " -> Ingress controller type set to '$ingress'"
 # -----------------
 # Loki
 echo " -> Creating Loki values from template"
-if [[ "${LOKI_DISTRIBUTED,,}" == "true" ]]; then
-    echo "   -> Using Loki distributed chart"
-    cat loki/base/loki-values-distributed.yaml | envsubst > loki/base/loki-values.yaml
-else
-    echo "   -> Using Loki simple-scalable chart"
-    cat loki/base/loki-values-ss.yaml | envsubst > loki/base/loki-values.yaml
-fi
+cat loki/base/loki-values.template.yaml | envsubst > loki/base/loki-values.yaml
 
 # Loki Ingress
 if [ -n "$LOKI_DOMAINNAME" ]; then
-    cat loki/${ingress}/base/params.env.template | envsubst > loki/${ingress}/base/params.env
+    cat loki/ingress/${ingress}/base/params.env.template | envsubst > loki/ingress/${ingress}/base/params.env
     if [ -f env/${envname}/certs/loki.crt ]; then
-        echo " -> Copying Loki ingress certificates "
-        cp env/${envname}/certs/loki* loki/${ingress}/base/
+        echo "   -> Copying Loki ingress certificates "
+        cp env/${envname}/certs/loki* loki/ingress/${ingress}/base/
     fi
 fi
 
@@ -147,7 +141,7 @@ echo "$s3_secrets" | envsubst > mimir/base/secrets.env
 
 # -----------------
 # Grafana / Prometheus
-echo " -> Creating Prom/Grafana Helm values and configs from templates"
+echo " -> Creating Prom/Grafana values from templates"
 cat prometheus/base/secrets.template.env | envsubst > prometheus/base/secrets.env
 cat prometheus/base/prom-values.template.yaml | envsubst > prometheus/base/prom-values.yaml
 cat prometheus/base/prom-addScrapeConfigs.template.yaml | envsubst > prometheus/base/prom-addScrapeConfigs.yaml
@@ -157,7 +151,7 @@ if [ -n "$GRAFANA_DOMAINNAME" ]; then
     cat prometheus/ingress/grafana/${ingress}/base/params.env.template | envsubst > \
         prometheus/ingress/grafana/${ingress}/base/params.env
     if [ -d env/${envname}/certs ]; then
-        echo " -> Copying Grafana ingress certs"
+        echo "   -> Copying Grafana ingress certs"
         cp env/${envname}/certs/grafana.* prometheus/ingress/grafana/${ingress}/base/
     fi
 fi
@@ -176,7 +170,7 @@ if [ -n "$PROMETHEUS_DOMAINNAME" ]; then
             prometheus/ingress/prom/${ingress}/base/prometheus-virtualservice.yaml
     fi
     if [ -d env/${envname}/certs ]; then
-        echo " -> Copying Prometheus ingress certs"
+        echo "   -> Copying Prometheus ingress certs"
         cp env/${envname}/certs/prometheus.* prometheus/ingress/prom/${ingress}/base/
     fi
 fi
@@ -188,17 +182,17 @@ echo " -> Creating Tempo values from template"
 cat tempo/base/tempo-values.template.yaml | envsubst > tempo/base/tempo-values.yaml
 
 if [ -n "$TEMPO_DOMAINNAME" ]; then
-    cat tempo/${ingress}/base/params.env.template | envsubst > tempo/${ingress}/base/params.env
+    cat tempo/ingress/${ingress}/base/params.env.template | envsubst > tempo/ingress/${ingress}/base/params.env
     if [ -d env/${envname}/certs ]; then
-        echo " -> Copying Tempo ingress certs"
-        cp env/${envname}/certs/tempo.* tempo/${ingress}/base/
+        echo "   -> Copying Tempo ingress certs"
+        cp env/${envname}/certs/tempo.* tempo/ingress/${ingress}/base/
     fi
 fi
 
 
 # -----------------
 # Alloy
-echo " -> Alloy config from template "
+echo " -> Alloy configs from template "
 cat alloy/base/config-template.alloy | envsubst > alloy/base/config.alloy
 
 
@@ -227,7 +221,7 @@ fi
 
 
 # -----------------
-echo " -> Needed S3 Buckets:"
+printf "\n -> Needed S3 Buckets: \n"
 
 # mimir s3 bucket names
 buckets+=("$(yq e '.mimir.structuredConfig.alertmanager_storage.s3.bucket_name' mimir/base/mimir-structuredConfig.yaml | envsubst)")
@@ -252,6 +246,6 @@ if [ -n "$s3cmd" ]; then
     create_s3_buckets "${buckets[@]}"
 fi
 
-echo " -> $PNAME Finished."
+echo "$PNAME finished."
 
 exit 0

@@ -119,6 +119,42 @@ loki.write "${GRAFANA_ENV}" {
 }
 
 
+// Metrics --------------------------------
+
+
+discovery.kubernetes "pods" {
+    role = "pod"
+    namespaces {
+        own_namespace = false
+        names         = [ "kube-system", "kafka", "spark", "trino" ]
+    }
+}
+
+discovery.kubernetes "services" {
+    role = "service"
+    namespaces {
+        own_namespace = false
+        names         = [ "kube-system", "kafka", "spark", "trino" ]
+    }
+}
+
+prometheus.scrape "pods" {
+    targets    = discovery.kubernetes.pods.targets
+    forward_to = [prometheus.remote_write.${GRAFANA_ENV}.receiver]
+}
+
+prometheus.scrape "services" {
+    targets    = discovery.kubernetes.services.targets
+    forward_to = [prometheus.remote_write.${GRAFANA_ENV}.receiver]
+}
+
+prometheus.remote_write "${GRAFANA_ENV}" {
+    endpoint {
+        url = "http://prometheus-kube-prometheus-prometheus.monitoring.svc:9090/api/v1/write"
+    }
+}
+
+
 // Tempo -----------------------------------------
 
 

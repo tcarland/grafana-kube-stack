@@ -30,6 +30,6 @@ spec:
         pathType: prefix
         backend:
           service:
-            name: tempo-distributor.monitoring.svc
+            name: tempo-gateway.monitoring.svc
             port:
               number: 4317

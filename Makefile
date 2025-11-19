@@ -8,18 +8,18 @@ clean:
 	  prometheus/base/prom-values.yaml \
 	  prometheus/base/secrets.env \
 	  tempo/base/tempo-values.yaml \
-	  loki/istio/base/*.crt \
-	  loki/istio/base/*.key \
-	  loki/istio/base/params.env \
-	  loki/nginx/base/*.crt \
-	  loki/nginx/base/*.key \
-	  loki/nginx/base/params.env \
-	  tempo/istio/base/*.crt \
-	  tempo/istio/base/*.key \
-	  tempo/istio/base/params.env \
-	  tempo/nginx/base/*.crt \
-	  tempo/nginx/base/*.key \
-	  tempo/nginx/base/params.env \
+	  loki/ingress/istio/base/*.crt \
+	  loki/ingress/istio/base/*.key \
+	  loki/ingress/istio/base/params.env \
+	  loki/ingress/nginx/base/*.crt \
+	  loki/ingress/nginx/base/*.key \
+	  loki/ingress/nginx/base/params.env \
+	  tempo/ingress/istio/base/*.crt \
+	  tempo/ingress/istio/base/*.key \
+	  tempo/ingress/istio/base/params.env \
+	  tempo/ingress/nginx/base/*.crt \
+	  tempo/ingress/nginx/base/*.key \
+	  tempo/ingress/nginx/base/params.env \
 	  prometheus/ingress/grafana/istio/base/*.crt \
 	  prometheus/ingress/grafana/istio/base/*.key \
 	  prometheus/ingress/grafana/istio/base/params.env \

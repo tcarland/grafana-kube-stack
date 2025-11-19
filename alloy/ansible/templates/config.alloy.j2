@@ -150,9 +150,15 @@ otelcol.receiver.otlp "otlp_receiver" {
     }
 }
 
+otelcol.auth.basic "auth" {
+    username = "{{ agent_username }}"
+    password = "{{ agent_password }}"
+}
+
 otelcol.exporter.otlp "tempo" {
     client {
         endpoint = "{{ tempo_otlp_endpoint }}"
+        auth     = otelcol.auth.basic.auth.handler
         tls {
             insecure = false
             insecure_skip_verify = true

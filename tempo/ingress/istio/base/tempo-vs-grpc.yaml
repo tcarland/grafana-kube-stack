@@ -1,0 +1,19 @@
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: tempo-vs-grpc
+  namespace: $(namespace)
+spec:
+  gateways:
+  - tempo-gateway
+  hosts:
+  - "$(TEMPO_DOMAINNAME)"
+  http:
+  - match:
+    - port: 4317
+    route:
+    - destination:
+        host: tempo-gateway.monitoring.svc
+        port:
+          number: 4317

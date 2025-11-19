@@ -9,10 +9,36 @@ prometheusOperator:
     node-role.kubernetes.io/worker: ""
 
 kubeStateMetrics:
-  enabled: true
+  enabled: false
+  
+kubernetesServiceMonitors:
+  enabled: false
+  
+kubeApiServer:
+  enabled: false
 
+kubelet:
+  enabled: false
+  
+kubeControllerManager:
+  enabled: false
+  
+coreDns:
+  enabled: false
+kubeDns:
+  enabled: false
+  
+kubeEtcd:
+  enabled: false
+  
+kubeScheduler:
+  enabled: false
+  
+kubeProxy:
+  enabled: false
+  
 nodeExporter:
-  enabled: true
+  enabled: false
 
 prometheus:
   prometheusSpec:
@@ -24,11 +50,14 @@ prometheus:
       - url: http://mimir-distributor.monitoring.svc.cluster.local:8080/api/v1/push
         headers:
           X-Scope-OrgID: ${GRAFANA_ENV}
-
+  service:
+    sessionAffinity: ClientIP
 alertmanager:
   alertmanagerSpec:
     nodeSelector:
       node-role.kubernetes.io/worker: ""
+  service:
+    sessionAffinity: ClientIP
 
 grafana:
   admin:
