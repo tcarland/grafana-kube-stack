@@ -29,6 +29,8 @@ function kustom()
 
     if [ -r $target/base/kustomization.yaml ]; then
         yml=$target/base/kustomization.yaml
+    elif [ -r $target/../../base/kustomization.yaml ]; then
+        yml=$target/../../base/kustomization.yaml
     elif [ -r $target/kustomization.yaml ]; then
         yml=$target/kustomization.yaml
     fi
