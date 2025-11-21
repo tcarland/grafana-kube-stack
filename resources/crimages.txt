@@ -25,4 +25,5 @@ busybox:1.31.1
 memcached:1.6.33-alpine
 memcached:1.6.39-alpine
 prom/memcached-exporter:v0.15.3
+nginxinc/nginx-unprivileged:1.27-alpine
 nginxinc/nginx-unprivileged:1.29-alpine

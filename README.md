@@ -1,6 +1,6 @@
 Grafana Stack on Kubernetes
 ===========================
-v25.11.19
+v25.11.20
 
 Steps for customizing and deploying the [Grafana](https://grafana.com)
 Ecosystem, consisting of Loki, Grafana, Tempo, and Mimir; the (LGTM) stack.
@@ -92,6 +92,7 @@ installs the `kube-state-metrics` and `grafana` charts.
                     │ • Alerting and data queries    │
                     └────────────────────────────────┘
 ```
+
 <br>
 
 ---
@@ -135,6 +136,10 @@ details of the internal architecture.
 - httpd-tools : system package
 
 <br>
+
+---
+
+<br> 
 
 ## Deployment Configuration
 
@@ -194,7 +199,10 @@ The necessary buckets are scraped from the generated helm *values* files and
 created via `mc mb` or alternatively `aws s3`. If neither tool is available,
 the buckets needed are displayed and must be manually created prior to applying
 manifests.
-```sh
+```s
+* sync
+
+* synch
 ./bin/grafana-stack-setup.sh dev
 -> Found Minio Client first, using 'mc mb dev/'...
  -> Ingress controller type set to 'istio'
@@ -212,7 +220,10 @@ manifests.
 mimir-dev-alertmanager
 mimir-dev-blocks
 mimir-dev-ruler
-loki-dev-chunk
+loki-dev-chun
+* sync
+
+* synck
 loki-dev-ruler
 loki-dev-admin
 tempo-dev-traces
@@ -285,6 +296,9 @@ kubectl apply -f kube-prometheus-stack/charts/crds/crds/ \
   --server-side=true
 ```
 
+* sync
+
+* sync
 With CRDs applied, now install prometheus
 ```sh
 kustomize build --enable-helm prometheus/ | kubectl apply -f -
@@ -309,6 +323,9 @@ kustomize build prometheus/ingress/prom/$ingress/ | kubectl apply -f -
 ---
 
 
+* sync
+
+* sync
 # Loki
 
 Loki supports a few different deployment modes, *Simple-Scalable*
