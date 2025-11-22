@@ -15,7 +15,7 @@ patches:
     apiVersion: v1
     kind: ConfigMap
     metadata:
-      name: prometheus-grafana
+      name: grafana
       namespace: $(namespace)
     data:
       grafana.ini: |
@@ -39,7 +39,7 @@ patches:
     apiVersion: apps/v1
     kind: Deployment
     metadata:
-      name: prometheus-grafana
+      name: grafana
       namespace: $(namespace)
     spec:
       template:

@@ -8,7 +8,6 @@ resources: []
 generatorOptions:
   disableNameSuffixHash: true
 
-  
 helmCharts:
   - name: kube-prometheus-stack
     includeCRDs: false
