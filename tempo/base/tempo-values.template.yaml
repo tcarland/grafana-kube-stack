@@ -72,7 +72,7 @@ memcached:
     registry: null
     pullSecrets: []
     repository: memcached
-    tag: 1.6.33-alpine
+    tag: 1.6.39-alpine
     
 gateway:
   enabled: true
