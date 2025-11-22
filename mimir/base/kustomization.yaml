@@ -7,7 +7,7 @@ resources:
 - namespace.yaml
 
 secretGenerator:
-- name: s3-secret
+- name: mimir-s3-credentials
   envs:
   - secrets.env
 
@@ -22,4 +22,3 @@ helmCharts:
   additionalValuesFiles:
     - mimir-structuredConfig.yaml
     - mimir-runtimeConfig.yaml
-    
