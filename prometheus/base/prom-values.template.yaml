@@ -52,6 +52,7 @@ prometheus:
           X-Scope-OrgID: ${GRAFANA_ENV}
   service:
     sessionAffinity: ClientIP
+
 alertmanager:
   alertmanagerSpec:
     nodeSelector:
@@ -60,12 +61,4 @@ alertmanager:
     sessionAffinity: ClientIP
 
 grafana:
-  admin:
-    existingSecret: "grafana-admin"
-    userKey: admin-user
-    passwordKey: admin-password
-  nodeSelector:
-    node-role.kubernetes.io/worker: ""
-  persistence:
-    enabled: true
-    size: 4Gi
+  enabled: false

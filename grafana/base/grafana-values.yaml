@@ -1,0 +1,26 @@
+grafana:
+  image:
+    registry: docker.io
+    repository: grafana/grafana
+    #tag: 
+  admin:
+    existingSecret: "grafana-admin"
+    userKey: admin-user
+    passwordKey: admin-password
+  nodeSelector:
+    node-role.kubernetes.io/worker: ""
+  persistence:
+    enabled: true
+    size: 4Gi
+    
+grafana.ini:
+  analytics:
+    reporting_enabled: false
+    check_for_updates: false
+    
+initChownData:
+  enabled: true
+  image:
+    registry: docker.io
+    repository: library/busybox
+    tag: "1.31.1"

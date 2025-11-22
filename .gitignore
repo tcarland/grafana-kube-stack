@@ -24,4 +24,4 @@ ingress/istio/istio-operator.yaml
 tempo/base/tempo-values.yaml
 prometheus/base/prom-values.yaml
 prometheus/base/prom-addScrapeConfigs.yaml
-prometheus/ingress/prom/istio/base/prometheus-virtualservice.yaml
+prometheus/ingress/istio/base/prometheus-virtualservice.yaml

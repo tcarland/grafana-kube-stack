@@ -142,36 +142,36 @@ echo "$s3_secrets" | envsubst > mimir/base/secrets.env
 # -----------------
 # Grafana / Prometheus
 echo " -> Creating Prom/Grafana values from templates"
-cat prometheus/base/secrets.template.env | envsubst > prometheus/base/secrets.env
+cat grafana/base/secrets.template.env | envsubst > grafana/base/secrets.env
 cat prometheus/base/prom-values.template.yaml | envsubst > prometheus/base/prom-values.yaml
 cat prometheus/base/prom-addScrapeConfigs.template.yaml | envsubst > prometheus/base/prom-addScrapeConfigs.yaml
 
 # Grafana Ingress
 if [ -n "$GRAFANA_DOMAINNAME" ]; then
-    cat prometheus/ingress/grafana/${ingress}/base/params.env.template | envsubst > \
-        prometheus/ingress/grafana/${ingress}/base/params.env
+    cat grafana/ingress/${ingress}/base/params.env.template | envsubst > \
+        grafana/ingress/${ingress}/base/params.env
     if [ -d env/${envname}/certs ]; then
         echo "   -> Copying Grafana ingress certs"
-        cp env/${envname}/certs/grafana.* prometheus/ingress/grafana/${ingress}/base/
+        cp env/${envname}/certs/grafana.* grafana/ingress/${ingress}/base/
     fi
 fi
 
 # Prometheus Ingress
 if [ -n "$PROMETHEUS_DOMAINNAME" ]; then
-    cat prometheus/ingress/prom/${ingress}/base/params.env.template | envsubst > \
-        prometheus/ingress/prom/${ingress}/base/params.env
+    cat prometheus/ingress/${ingress}/base/params.env.template | envsubst > \
+        prometheus/ingress/${ingress}/base/params.env
         
     if [[ "$ingress" == "nginx" ]]; then  # nginx uses bcrypt pw
         ( echo "${AGENT_PASSWORD}" | \
-          htpasswd -c -i prometheus/ingress/prom/$ingress/base/auth "${AGENT_USERNAME}" )
+          htpasswd -c -i prometheus/ingress/$ingress/base/auth "${AGENT_USERNAME}" )
     else  # create base64 auth str for istio VS
         export AGENTAUTHSTR=$(printf "%s" "${AGENT_USERNAME}:${AGENT_PASSWORD}" | base64 -w0)
-        cat prometheus/ingress/prom/${ingress}/base/prometheus-virtualservice-template.yaml | envsubst > \
-            prometheus/ingress/prom/${ingress}/base/prometheus-virtualservice.yaml
+        cat prometheus/ingress/${ingress}/base/prometheus-virtualservice-template.yaml | envsubst > \
+            prometheus/ingress/${ingress}/base/prometheus-virtualservice.yaml
     fi
     if [ -d env/${envname}/certs ]; then
         echo "   -> Copying Prometheus ingress certs"
-        cp env/${envname}/certs/prometheus.* prometheus/ingress/prom/${ingress}/base/
+        cp env/${envname}/certs/prometheus.* prometheus/ingress/${ingress}/base/
     fi
 fi
 

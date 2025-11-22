@@ -1,9 +1,16 @@
+
 enterprise:
-  enabled: true
+  enabled: false
   image:
+    repository: grafana/enterprise-traces
     tag: v2.8.1
 enterpriseGateway:
   enabled: false
+  image:
+    registry: null
+    repository: null
+    tag: null
+    pullSecrets: []
 gateway:
   enabled: false
 license:
