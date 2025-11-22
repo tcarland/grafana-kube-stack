@@ -5,6 +5,11 @@ global:
   podAnnotations:
     bucketSecretVersion: "0"
 
+image:
+  repository: grafana/mimir
+  tag: 2.17.0
+  pullPolicy: IfNotPresent
+
 alertmanager:
   resources:
     requests:
