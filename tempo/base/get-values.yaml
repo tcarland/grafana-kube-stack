@@ -11,6 +11,12 @@ enterpriseGateway:
     repository: null
     tag: null
     pullSecrets: []
+  ingress:
+    enabled: false
+  basicAuth:
+    enabled: true
+    username: ${AGENT_USERNAME}
+    password: ${AGENT_PASSWORD}
 gateway:
   enabled: false
 license:
