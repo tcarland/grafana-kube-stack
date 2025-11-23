@@ -22,6 +22,7 @@ loki/base/loki-gateway-values.yaml
 ingress/nginx/base/nginx-values.yaml
 ingress/istio/istio-operator.yaml
 tempo/base/tempo-values.yaml
+grafana/base/grafana-values.yaml
 prometheus/base/prom-values.yaml
 prometheus/base/prom-addScrapeConfigs.yaml
 prometheus/ingress/istio/base/prometheus-virtualservice.yaml

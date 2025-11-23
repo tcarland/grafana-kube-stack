@@ -1,4 +1,4 @@
-grafana/alloy:v1.11.3
+grafana/alloy:v1.4.0
 grafana/mimir:2.17.0
 grafana/grafana:12.2.0
 grafana/rollout-operator:v0.28.0
@@ -10,6 +10,7 @@ grafana/grafana-enterprise:12.2
 grafana/enterprise-metrics:v2.17.1
 grafana/enterprise-traces:v2.8.1
 quay.io/prometheus-operator/prometheus-operator:v0.86.1
+# alloy
 quay.io/prometheus-operator/prometheus-config-reloader:v0.81.0
 quay.io/prometheus-operator/prometheus-config-reloader:v0.86.1
 quay.io/prometheus/prometheus:v3.7.2

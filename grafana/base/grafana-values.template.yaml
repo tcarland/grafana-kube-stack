@@ -22,7 +22,7 @@ grafana.ini:
     check_for_updates: false
     
 initChownData:
-  enabled: true
+  enabled: false
   image:
     registry: docker.io
     tag: "1.31.1"
@@ -31,20 +31,31 @@ initChownData:
 sidecar:
   dashboards:
     enabled: true
+    defaultFolderName: "Kubernetes"
     label: grafana_dashboard
     labelValue: "1"
-    # Allow discovery in all namespaces for dashboards
+    folderAnnotation: grafana_folder
     searchNamespace: ALL
-    # Support for new table panels, when enabled grafana auto migrates the old table panels to newer table panels
-    enableNewTablePanelSyntax: false
-    annotations: {}
-    multicluster:
-      global:
-        enabled: false
-      etcd:
-        enabled: false
     provider:
-      allowUiUpdates: false
+      allowUiUpdates: true
+      foldersFromFilesStructure: true
+  #dashboards:
+  #  enabled: true
+  #  label: grafana_dashboard
+  #  labelValue: "1"
+  #  # Allow discovery in all namespaces for dashboards
+  #  searchNamespace: "${GRAFANA_NAMESPACE}"
+  #  # Support for new table panels, when enabled grafana auto migrates the old table panels to newer table panels
+  #  enableNewTablePanelSyntax: false
+  #  annotations: {}
+  #  multicluster:
+  #    global:
+  #      enabled: false
+  #    etcd:
+  #      enabled: false
+  #  provider:
+  #    allowUiUpdates: true
+  #    foldersFromFilesStructure: true
   datasources:
     enabled: true
     defaultDatasourceEnabled: true
@@ -60,7 +71,7 @@ datasources:
       - name: Prometheus
         type: prometheus
         access: proxy
-        url: http://prometheus-server.monitoring.svc.cluster.local:9090
+        url: http://prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
         editable: false
         isDefault: true
         jsonData:
@@ -86,18 +97,29 @@ datasources:
         secureJsonData:
           httpHeaderValue1: "${GRAFANA_ENV}"
 
-dashboardProviders:
-  dashboardproviders.yaml:
-    apiVersion: 1
-    providers:
-    - name: 'default'
-      orgId: 1
-      folder: ''
-      type: file
-      disableDeletion: false
-      editable: true
-      options:
-        path: /var/lib/grafana/dashboards/default
+#dashboardProviders: 
+  #dashboardproviders.yaml:
+  #  apiVersion: 1
+  #  providers:
+  #  - name: 'kubernetes'
+  #    orgId: 1
+  #    folder: 'Kubernetes'
+  #    type: file
+  #    disableDeletion: false
+  #    allowUiUpdates: true
+  #    editable: true
+  #    options:
+  #      path: /var/lib/grafana/dashboards/Kubernetes
+    #- name: 'minio'
+    #  orgId: 1
+    #  folder: ''
+    #  type: file
+    #  allowUiUpdates: true
+    #  disableDeletion: false
+    #  editable: true
+    #  options:
+    #    path: /var/lib/grafana/dashboards/minio
 
-dashboardsConfigMaps:
-  default: "dashboard-k8s"
+#dashboardsConfigMaps:
+#   default: dashboards-k8s
+#   minio: dashboard-minio

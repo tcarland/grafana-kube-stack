@@ -5,6 +5,7 @@ clean:
 	  loki/base/loki-values.yaml \
 	  ingress/nginx/base/nginx-values.yaml \
 	  ingress/istio/istio-operator.yaml \
+	  grafana/base/grafana-values.yaml \
 	  prometheus/base/prom-values.yaml \
 	  grafana/base/secrets.env \
 	  tempo/base/tempo-values.yaml \
