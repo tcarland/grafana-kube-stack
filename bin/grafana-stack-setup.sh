@@ -142,6 +142,7 @@ echo "$s3_secrets" | envsubst > mimir/base/secrets.env
 # -----------------
 # Grafana / Prometheus
 echo " -> Creating Prom/Grafana values from templates"
+cat grafana/base/grafana-values.template.yaml | envsubst > grafana/base/grafana-values.yaml
 cat grafana/base/secrets.template.env | envsubst > grafana/base/secrets.env
 cat prometheus/base/prom-values.template.yaml | envsubst > prometheus/base/prom-values.yaml
 cat prometheus/base/prom-addScrapeConfigs.template.yaml | envsubst > prometheus/base/prom-addScrapeConfigs.yaml

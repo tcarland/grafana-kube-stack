@@ -5,6 +5,14 @@ namespace: monitoring
 
 resources: []
 
+configMapGenerator:
+  - name: dashboard-k8s
+    files:
+      - k8s.json=dashboards/k8s_15661_rev2.json
+    options:
+      labels:
+        grafana_dashboard: "1"
+
 secretGenerator:
   - name: grafana-admin
     envs:
