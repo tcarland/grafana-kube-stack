@@ -182,7 +182,8 @@ otelcol.exporter.otlp "tempo" {
     client {
         endpoint = "tempo-cluster-distributor.tempo.svc.cluster.local:4317"
         headers = {
-            "X-Scope-OrgID" = "${GRAFANA_ENV}"
+            "X-Scope-OrgID" = "${GRAFANA_ENV}",
+        }
         tls {
             insecure = true
         }

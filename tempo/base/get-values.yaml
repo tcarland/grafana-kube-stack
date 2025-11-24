@@ -1,9 +1,22 @@
+
 enterprise:
-  enabled: true
+  enabled: false
   image:
+    repository: grafana/enterprise-traces
     tag: v2.8.1
 enterpriseGateway:
   enabled: false
+  image:
+    registry: null
+    repository: null
+    tag: null
+    pullSecrets: []
+  ingress:
+    enabled: false
+  basicAuth:
+    enabled: true
+    username: ${AGENT_USERNAME}
+    password: ${AGENT_PASSWORD}
 gateway:
   enabled: false
 license:

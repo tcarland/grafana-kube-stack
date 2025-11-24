@@ -1,0 +1,125 @@
+replicas: 1
+
+image:
+  registry: docker.io
+  repository: grafana/grafana
+  #tag: 
+admin:
+  existingSecret: "grafana-admin"
+  userKey: admin-user
+  passwordKey: admin-password
+nodeSelector:
+  node-role.kubernetes.io/worker: ""
+persistence:
+  enabled: true
+  size: 4Gi
+ingress:
+  enabled: false
+
+grafana.ini:
+  analytics:
+    reporting_enabled: false
+    check_for_updates: false
+    
+initChownData:
+  enabled: false
+  image:
+    registry: docker.io
+    tag: "1.31.1"
+    repository: library/busybox
+
+sidecar:
+  dashboards:
+    enabled: true
+    defaultFolderName: "Kubernetes"
+    label: grafana_dashboard
+    labelValue: "1"
+    folderAnnotation: grafana_folder
+    searchNamespace: ALL
+    provider:
+      allowUiUpdates: true
+      foldersFromFilesStructure: true
+  #dashboards:
+  #  enabled: true
+  #  label: grafana_dashboard
+  #  labelValue: "1"
+  #  # Allow discovery in all namespaces for dashboards
+  #  searchNamespace: "${GRAFANA_NAMESPACE}"
+  #  # Support for new table panels, when enabled grafana auto migrates the old table panels to newer table panels
+  #  enableNewTablePanelSyntax: false
+  #  annotations: {}
+  #  multicluster:
+  #    global:
+  #      enabled: false
+  #    etcd:
+  #      enabled: false
+  #  provider:
+  #    allowUiUpdates: true
+  #    foldersFromFilesStructure: true
+  datasources:
+    enabled: true
+    defaultDatasourceEnabled: true
+    isDefaultDatasource: true
+    name: Prometheus
+    uid: prometheus
+    url: http://prometheus-server.monitoring.svc.cluster.local:9090
+
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        access: proxy
+        url: http://prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
+        editable: false
+        isDefault: true
+        jsonData:
+          httpHeaderName1: "X-Scope-OrgID"
+        secureJsonData:
+          httpHeaderValue1: "${GRAFANA_ENV}"
+      - name: loki
+        type: loki
+        access: proxy
+        url: http://loki-query-frontend.monitoring.svc.cluster.local:3100
+        editable: false
+        jsonData:
+          httpHeaderName1: "X-Scope-OrgID"
+        secureJsonData:
+          httpHeaderValue1: "${GRAFANA_ENV}"
+      - name: Tempo
+        type: tempo
+        access: proxy
+        url: http://tempo-query-frontend.monitoring.svc.cluster.local:3200
+        editable: false
+        jsonData:
+          httpHeaderName1: "X-Scope-OrgID"
+        secureJsonData:
+          httpHeaderValue1: "${GRAFANA_ENV}"
+
+#dashboardProviders: 
+  #dashboardproviders.yaml:
+  #  apiVersion: 1
+  #  providers:
+  #  - name: 'kubernetes'
+  #    orgId: 1
+  #    folder: 'Kubernetes'
+  #    type: file
+  #    disableDeletion: false
+  #    allowUiUpdates: true
+  #    editable: true
+  #    options:
+  #      path: /var/lib/grafana/dashboards/Kubernetes
+    #- name: 'minio'
+    #  orgId: 1
+    #  folder: ''
+    #  type: file
+    #  allowUiUpdates: true
+    #  disableDeletion: false
+    #  editable: true
+    #  options:
+    #    path: /var/lib/grafana/dashboards/minio
+
+#dashboardsConfigMaps:
+#   default: dashboards-k8s
+#   minio: dashboard-minio

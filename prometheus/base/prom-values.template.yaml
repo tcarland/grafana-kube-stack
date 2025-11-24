@@ -5,6 +5,22 @@ crds:
   enabled: false
 
 prometheusOperator:
+  image:
+    registry: quay.io
+    repository: prometheus-operator/prometheus-operator
+    tag: v0.86.1
+    pullPolicy: IfNotPresent
+  admissionWebhooks:
+    patch:
+      image:
+        registry: registry.k8s.io
+        repository: ingress-nginx/kube-webhook-certgen
+        tag: v1.6.3
+  prometheusConfigReloader:
+    image:
+      registry: quay.io
+      repository: prometheus-operator/prometheus-config-reloader
+      tag: v0.86.1
   nodeSelector:
     node-role.kubernetes.io/worker: ""
 
@@ -42,6 +58,11 @@ nodeExporter:
 
 prometheus:
   prometheusSpec:
+    image:
+      registry: quay.io
+      repository: prometheus/prometheus
+      tag: v3.7.2
+      pullPolicy: IfNotPresent
     enableRemoteWriteReceiver: true
     enableFeatures:
       - metadata-wal-records
@@ -52,20 +73,18 @@ prometheus:
           X-Scope-OrgID: ${GRAFANA_ENV}
   service:
     sessionAffinity: ClientIP
+
 alertmanager:
   alertmanagerSpec:
+    image:
+      registry: quay.io
+      repository: prometheus/alertmanager
+      tag: v0.28.1
+      pullPolicy: IfNotPresent
     nodeSelector:
       node-role.kubernetes.io/worker: ""
   service:
     sessionAffinity: ClientIP
 
 grafana:
-  admin:
-    existingSecret: "grafana-admin"
-    userKey: admin-user
-    passwordKey: admin-password
-  nodeSelector:
-    node-role.kubernetes.io/worker: ""
-  persistence:
-    enabled: true
-    size: 4Gi
+  enabled: false

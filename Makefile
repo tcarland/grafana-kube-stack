@@ -5,8 +5,9 @@ clean:
 	  loki/base/loki-values.yaml \
 	  ingress/nginx/base/nginx-values.yaml \
 	  ingress/istio/istio-operator.yaml \
+	  grafana/base/grafana-values.yaml \
 	  prometheus/base/prom-values.yaml \
-	  prometheus/base/secrets.env \
+	  grafana/base/secrets.env \
 	  tempo/base/tempo-values.yaml \
 	  loki/ingress/istio/base/*.crt \
 	  loki/ingress/istio/base/*.key \
@@ -20,20 +21,20 @@ clean:
 	  tempo/ingress/nginx/base/*.crt \
 	  tempo/ingress/nginx/base/*.key \
 	  tempo/ingress/nginx/base/params.env \
-	  prometheus/ingress/grafana/istio/base/*.crt \
-	  prometheus/ingress/grafana/istio/base/*.key \
-	  prometheus/ingress/grafana/istio/base/params.env \
-	  prometheus/ingress/grafana/nginx/base/*.crt \
-	  prometheus/ingress/grafana/nginx/base/*.key \
-	  prometheus/ingress/grafana/nginx/base/params.env \
-	  prometheus/ingress/prom/istio/base/*.crt \
-	  prometheus/ingress/prom/istio/base/*.key \
-	  prometheus/ingress/prom/istio/base/params.env \
-	  prometheus/ingress/prom/istio/base/prometheus-virtualservice.yaml \
-	  prometheus/ingress/prom/nginx/base/*.crt \
-	  prometheus/ingress/prom/nginx/base/*.key \
-	  prometheus/ingress/prom/nginx/base/params.env \
-	  prometheus/ingress/prom/nginx/base/auth )
+	  grafana/ingress/istio/base/*.crt \
+	  grafana/ingress/istio/base/*.key \
+	  grafana/ingress/istio/base/params.env \
+	  grafana/ingress/nginx/base/*.crt \
+	  grafana/ingress/nginx/base/*.key \
+	  grafana/ingress/nginx/base/params.env \
+	  prometheus/ingress/istio/base/*.crt \
+	  prometheus/ingress/istio/base/*.key \
+	  prometheus/ingress/istio/base/params.env \
+	  prometheus/ingress/istio/base/prometheus-virtualservice.yaml \
+	  prometheus/ingress/nginx/base/*.crt \
+	  prometheus/ingress/nginx/base/*.key \
+	  prometheus/ingress/nginx/base/params.env \
+	  prometheus/ingress/nginx/base/auth )
 
 
 clean-charts:

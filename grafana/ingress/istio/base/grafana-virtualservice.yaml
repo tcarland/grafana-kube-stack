@@ -17,9 +17,9 @@ spec:
     match:
     - uri:
         prefix: /
-    name: prometheus-grafana
+    name: grafana
     route:
     - destination:
-        host: prometheus-grafana.monitoring.svc.cluster.local
+        host: grafana.monitoring.svc.cluster.local
         port:
           number: 80

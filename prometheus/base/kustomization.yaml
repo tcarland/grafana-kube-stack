@@ -5,15 +5,9 @@ namespace: monitoring
 
 resources: []
 
-secretGenerator:
-  - name: grafana-admin
-    envs:
-      - secrets.env
-
 generatorOptions:
   disableNameSuffixHash: true
 
-  
 helmCharts:
   - name: kube-prometheus-stack
     includeCRDs: false

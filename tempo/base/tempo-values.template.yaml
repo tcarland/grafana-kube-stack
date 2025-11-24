@@ -1,8 +1,15 @@
-global:
-  multitenancyEnabled: true
- 
 reportingEnabled: false
 
+global:
+  multitenancyEnabled: true
+
+tempo:
+  image:
+   registry: docker.io
+   repository: grafana/tempo
+   pullSecrets: []
+   pullPolicy: IfNotPresent
+  
 storage:
   trace:
     backend: s3
@@ -59,8 +66,20 @@ compactor:
   config:
     block_retention: 48h
 
+memcached:
+  enabled: true
+  image:
+    registry: null
+    pullSecrets: []
+    repository: memcached
+    tag: 1.6.39-alpine
+    
 gateway:
   enabled: true
+  image:
+    registry: null
+    repository: nginxinc/nginx-unprivileged
+    tag: 1.29-alpine
   ingress:
     enabled: false
   basicAuth:
