@@ -1,3 +1,11 @@
+global:
+  image:
+    registry: null
+    pullSecrets: []
+  clusterDomain: "cluster.local"
+  dnsService: "kube-dns"
+  dnsNamespace: "kube-system"
+
 loki:
   image:
     registry: docker.io
@@ -54,6 +62,17 @@ loki:
 
 deploymentMode: Distributed
 
+memcached:
+  enabled: true
+  image:
+    repository: memcached
+    tag: 1.6.39-alpine
+memcachedExporter:
+  enabled: true
+  image:
+    repository: prom/memcached-exporter
+    tag: v0.15.3
+  
 minio:
   enabled: false
 
@@ -84,6 +103,10 @@ lokiCanary:
 gateway:
   enabled: true
   replicas: 1
+  image:
+    registry: docker.io
+    repository: nginxinc/nginx-unprivileged
+    tag: 1.29-alpine
   verboseLogging: false
   ingress:
     enabled: false
