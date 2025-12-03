@@ -7,20 +7,6 @@ resources:
   - ../dashboards/kubernetes 
   - ../dashboards/trino 
 
-#configMapGenerator:
-#  - name: dashboard-k8s
-#    files:
-#      - k8s.json=../dashboards/k8s_15661_rev2.json
-#    options:
-#      labels:
-#        grafana_dashboard: "1"
-#  - name: dashboard-minio
-#    files:
-#      - minio.json=../dashboards/minio_13502_rev26.json
-#    options:
-#      labels:
-#        grafana_dashboard: "1"
-
 secretGenerator:
   - name: grafana-admin
     envs:

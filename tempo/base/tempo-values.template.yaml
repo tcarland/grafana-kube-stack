@@ -2,6 +2,9 @@ reportingEnabled: false
 
 global:
   multitenancyEnabled: true
+  image:
+    registry: null
+    pullSecrets: []
 
 tempo:
   image:

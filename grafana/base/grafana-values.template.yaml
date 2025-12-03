@@ -29,6 +29,10 @@ initChownData:
     repository: library/busybox
 
 sidecar:
+  image:
+    registry: quay.io
+    repository: kiwigrid/k8s-sidecar
+    tag: 1.30.10
   dashboards:
     enabled: true
     defaultFolderName: "Kubernetes"
