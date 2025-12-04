@@ -23,13 +23,13 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: tempo-distributor.monitoring.svc
+            name: tempo-distributor
             port:
               number: 3200
       - path: /opentelemetry.proto.collector.metrics.v1.MetricsService/
         pathType: prefix
         backend:
           service:
-            name: tempo-gateway.monitoring.svc
+            name: tempo-gateway
             port:
               number: 4317
