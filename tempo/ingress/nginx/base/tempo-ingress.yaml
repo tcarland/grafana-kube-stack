@@ -27,7 +27,7 @@ spec:
             port:
               number: 3200
       - path: /opentelemetry.proto.collector.metrics.v1.MetricsService/
-        pathType: prefix
+        pathType: Prefix
         backend:
           service:
             name: tempo-gateway

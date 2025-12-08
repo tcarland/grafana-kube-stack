@@ -466,6 +466,7 @@ The *Ansible Playbook* performs the following steps:
 | Alloy Config Scenarios     | https://github.com/grafana/alloy-scenarios |
 | Prometheus Feature Flags   | https://prometheus.io/docs/prometheus/latest/feature_flags/ |
 | Tempo CLI                  | https://grafana.com/docs/tempo/latest/operations/tempo_cli/ |
+| Tempo Validation           | https://grafana.com/docs/tempo/latest/set-up-for-tracing/setup-tempo/test/set-up-test-app/ |
 
 Note that much of the Loki documentation for OSS overlaps with the
 Grafana Enterprise Logs, Metrics, Traces documentation for installation, but does have its own 
