@@ -19,7 +19,7 @@ patches:
       kind: ConfigMap
       metadata:
         name: grafana
-        namespace: $(namespace)
+        namespace: monitoring
       data:
         grafana.ini: |
           [analytics]
@@ -43,7 +43,7 @@ patches:
       kind: Deployment
       metadata:
         name: grafana
-        namespace: $(namespace)
+        namespace: monitoring
       spec:
         template:
           spec:
@@ -54,7 +54,7 @@ patches:
                 limits:
                   memory: 4Gi
                 requests:
-                  cpu:100m
+                  cpu: 100m
                   memory: 2Gi
               volumeMounts:
               - name: ge-license
@@ -63,3 +63,4 @@ patches:
             - name: ge-license
               secret:
                 secretName: ge-license
+
