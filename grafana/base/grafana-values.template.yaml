@@ -127,3 +127,7 @@ datasources:
 #dashboardsConfigMaps:
 #   default: dashboards-k8s
 #   minio: dashboard-minio
+
+plugins: []
+  # - grafana-clock-panel
+  # - https://grafana.com/api/plugins/...
