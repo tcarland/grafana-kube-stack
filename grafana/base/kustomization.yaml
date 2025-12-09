@@ -4,7 +4,8 @@ kind: Kustomization
 namespace: monitoring
 
 resources: 
-  - ../dashboards/kubernetes 
+  - ../dashboards/kubernetes
+  - ../dashboards/nodes 
   - ../dashboards/trino 
 
 secretGenerator:

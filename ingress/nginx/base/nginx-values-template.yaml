@@ -1,12 +1,35 @@
+global:
+  image:
+    registry: registry.k8s.io
+
 controller:
   hostNetwork: true
+  image:
+    image: ingress-nginx/controller
+    tag: "v1.13.4"
+    digest: ""
+    digestChroot: ""
+    pullPolicy: IfNotPresent
+    runAsNonRoot: true
   containerPort:
     http: 80
     https: 443
-    grpc: 4137
+    grpc: 4317
   service:
     type: LoadBalancer
     loadBalancerIP: ${INGRESS_LOADBALANCER_IP}
+    ports:
+      grpc: 4317
+    targetPorts:
+      grpc: grpc
+  admissionWebhooks:
+    patch:
+      enabled: true
+      image:
+        image: ingress-nginx/kube-webhook-certgen
+        tag: v1.6.4
+        digest: ""
+        pullPolicy: IfNotPresent
   nodeSelector:
     node-role.kubernetes.io/worker: ""
 

@@ -25,7 +25,7 @@
     # Endpoints
     prometheus_endpoint: 'http://prometheus:9090'
     loki_endpoint: 'http://loki:3100'
-    tempo_http_endpoint: 'tempo:3200'
+    tempo_http_endpoint: 'tempo'
     tempo_otlp_endpoint: 'tempo:4317'
     tenant_org_id: 'fake'
     # Auth Secrets 
