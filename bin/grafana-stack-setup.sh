@@ -2,7 +2,7 @@
 #
 # Timothy C. Arland <tcarland at gmail dot com>
 PNAME=${0##*\/}
-VERSION="v25.12.05"
+VERSION="v25.12.15"
 
 binpath=$(dirname "$0")
 project=$(dirname "$(realpath "$binpath")")
@@ -242,7 +242,7 @@ for b in ${buckets[@]}; do
 done
 echo ""
 
-if [ -n "$s3cmd" ]; then
+if [[ -n "$s3cmd" && -z "$S3_SKIP_CREATE" ]]; then
     echo " -> create_s3_buckets()"
     create_s3_buckets "${buckets[@]}"
 fi

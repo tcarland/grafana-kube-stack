@@ -5,7 +5,6 @@ namespace: monitoring
 
 resources: 
   - ../dashboards/kubernetes
-  - ../dashboards/nodes 
   - ../dashboards/trino 
 
 secretGenerator:

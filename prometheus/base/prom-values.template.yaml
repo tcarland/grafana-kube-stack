@@ -15,7 +15,7 @@ prometheusOperator:
       image:
         registry: registry.k8s.io
         repository: ingress-nginx/kube-webhook-certgen
-        tag: v1.6.3
+        tag: v1.6.4
   prometheusConfigReloader:
     image:
       registry: quay.io

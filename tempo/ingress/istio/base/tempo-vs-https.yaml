@@ -19,6 +19,6 @@ spec:
         prefix: /
     route:
     - destination:
-        host: tempo-gateway.monitoring.svc
+        host: tempo-gateway
         port:
           number: 3200

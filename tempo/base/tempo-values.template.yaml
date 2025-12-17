@@ -76,7 +76,7 @@ memcached:
     pullSecrets: []
     repository: memcached
     tag: 1.6.39-alpine
-    
+
 gateway:
   enabled: true
   image:
