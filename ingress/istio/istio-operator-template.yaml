@@ -35,7 +35,7 @@ spec:
             protocol: TCP
           - port: 4317
             targetPort: 4317
-            name: grpcsecure
+            name: grpc-otlp
             protocol: TCP
     egressGateways:
     - name: istio-egressgateway
