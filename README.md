@@ -1,6 +1,6 @@
 Grafana Stack on Kubernetes
 ===========================
-v25.12.02
+v25.12.20
 
 Steps for customizing and deploying the [Grafana](https://grafana.com)
 Ecosystem, consisting of Loki, Grafana, Tempo, and Mimir; the (LGTM) stack.
@@ -163,6 +163,16 @@ The default namespace for the stack is `monitoring`. If a different
 namespace is desired, update the *base/kustomization.yaml* files
 or create overlays as needed.
 
+### Helm Charts
+The project uses *kustomize* to wrap the management and use of Helm charts.
+As a result *kustomize* requires the `--enable-helm` command switch when 
+running *build*. This can become tedious, so a *bash* function and alias 
+are provided to automatically detect the use of the helm wrapper and will 
+automatically add the switch when running kustomize.
+```sh
+source env/kustom.sh
+```
+
 ### Node labels
 The *Prometheus Community Chart* includes *kube-state-metrics* and other 
 k8s ecosystem components, and some *DaemonSets* or others are configured 
@@ -199,10 +209,7 @@ The necessary buckets are scraped from the generated helm *values* files and
 created via `mc mb` or alternatively `aws s3`. If neither tool is available,
 the buckets needed are displayed and must be manually created prior to applying
 manifests.
-```s
-* sync
-
-* synch
+```sh
 ./bin/grafana-stack-setup.sh dev
 -> Found Minio Client first, using 'mc mb dev/'...
  -> Ingress controller type set to 'istio'
@@ -220,13 +227,16 @@ manifests.
 mimir-dev-alertmanager
 mimir-dev-blocks
 mimir-dev-ruler
-loki-dev-chun
-* sync
-
-* synck
+loki-dev-chunk
 loki-dev-ruler
 loki-dev-admin
 tempo-dev-traces
+```
+
+When testing or re-running the setup script frequently, subsequent runs
+of the create s3 buckets can be skipped by setting the var *S3_SKIP_CREATE*.
+```bash
+export S3_SKIP_CREATE=true
 ```
 
 <br>
@@ -236,7 +246,10 @@ tempo-dev-traces
 
 # Mimir
 
-First pre-fetch the chart for testing or viewing manifests prior to the install.
+Mimir acts as distributed metric storage and is core to the stack, so is the 
+first component installed from the LGTM stack.
+
+First fetch the chart prior to the install.
 ```sh
 kustomize build --enable-helm mimir/ | less
 ```
@@ -257,12 +270,20 @@ Install by shipping the output to *kubectl*
 kustomize build --enable-helm mimir/ | kubectl apply -f -
 ```
 
+## Mimir Ingress
+
+Metrics can be sent to *Mimir* via *Prometheus* or direct to *Mimir*, though 
+the project is currently defaulting to only exposing Prometheus externally.
+This can be changed relatively easy following the same pattern as *Loki* 
+or *Tempo* by enabling the *Mimir Gateway* and enabling Authentication for 
+agents. Ingress manifests are *not* provided as a result of this but can be 
+copied from *Loki* and updated to point to the *mimir-gateway* accordingly.
+
 <br>
 
 ---
-
     
-# Prometheus Operator and Grafana
+# Prometheus Operator 
 
 Note that the kustomize manifests make use of a *node-selector* for
 targeting *worker* nodes. Typically, *control-plane* nodes are already
@@ -296,36 +317,58 @@ kubectl apply -f kube-prometheus-stack/charts/crds/crds/ \
   --server-side=true
 ```
 
-* sync
-
-* sync
 With CRDs applied, now install prometheus
 ```sh
 kustomize build --enable-helm prometheus/ | kubectl apply -f -
 ```
  
-## Prometheus and Grafana Ingress
+## Prometheus Ingress
 
-Ingress resources are provided for *Istio* or *Nginx* and are
-configured when the environment configuration includes
-settings for *GRAFANA_DOMAINNAME*, *PROMETHEUS_DOMAINNAME* and
-*INGRESS_NAMESPACE*. This will also look for certificates in the
-`env/$envname/certs/` path and copy them to *ingress/base* path. 
-Note the setup scripts specifically look for filenames of *grafana.crt*
-and *grafana.key* as well as `prometheus.*` equivalents.
+Ingress resources are provided for *Istio* or *Nginx* (deprecated) and 
+are configured when the environment configuration includes settings for 
+*GRAFANA_DOMAINNAME*, *PROMETHEUS_DOMAINNAME* and *INGRESS_NAMESPACE*. 
+This will also look for certificates in the `env/$envname/certs/` path 
+and copy them to *ingress/$ingress/base* path where `$ingress` will be 
+set to *nginx* or *istio* depending on the 
+value of *INGRESS_NAMESPACE*. 
+Note the setup scripts specifically look for filenames of *prometheus.crt*
+and *prometheus.key*.
 ```sh
-ingress="nginx" # or istio
-kustomize build prometheus/ingress/grafana/$ingress/ | kubectl apply -f -
-kustomize build prometheus/ingress/prom/$ingress/ | kubectl apply -f -
+ingress="istio" # or nginx
+kustomize build prometheus/ingress/$ingress/ | kubectl apply -f -
 ```
+
 <br>
 
 ---
 
+# Grafana 
 
-* sync
+Grafana follows our typical pattern for installation using *kustomize*.
+Running `kustomize build grafana/` provides the standard, non-enterprise 
+install.  If the license file is located in `env/$envname/files` then it 
+is assumed that an *overlay* is created for applying the Grafana Enterprise
+versions. If the overlay path does not yet exist, the setup script will 
+seed an overlay using the envname and copy the example overlay as 
+`grafana/overlays/$envname/kustomization.yaml` which sets the license 
+secret and used the *Enterprise* image for the container.
+```sh
+kustomize build --enable-helm grafana/overlays/$envname/ | kubectl apply -f -
+```
 
-* sync
+## Grafana Ingress
+
+As for other components, there are ingress manifests for *Nginx* (deprecated) 
+and *Istio* which will be configured by the setup script when *GRAFANA_DOMAINNAME* 
+is defined along with *INGRESS_NAMESPACE*.
+```sh
+kustomize build grafana/ingress/$ingress/ | kubectl apply -f -
+```
+
+<br>
+
+---
+
 # Loki
 
 Loki supports a few different deployment modes, *Simple-Scalable*
@@ -351,22 +394,21 @@ kustomize build --enable-helm loki/ | kubectl apply -f -
 
 To ship logs to Loki from outside the K8s cluster we must expose the 
 Loki Distributors via the *Loki Gateway* which acts as a load balancer
-and single endpoint for clients.
+and endpoint for clients.
 
-Ingress manifests for *Nginx* or *Istio* are provided as `loki/nginx`
-and `loki/istio` respectively. The setup script looks for the configuration 
-variable *LOKI_DOMAINNAME* and configures the correct ingress based on
-*INGRESS_NAMESPACE* as well as copying certificates from the envdir or 
+Ingress manifests for *Nginx* or *Istio* are provided as `loki/ingress/nginx`
+and `loki/ingress/istio` respectively. The setup script looks for the 
+configuration variable *LOKI_DOMAINNAME* and configures the correct ingress 
+based on *INGRESS_NAMESPACE* as well as copying certificates from the envdir or 
 `env/$envname/certs/loki.*`.  TLS Certificates should be in PEM format 
-and placed as `loki.crt` and `loki.key`.
+and named as `loki.crt` and `loki.key`.
 ```sh
-kustomize build loki/ningx/ | kubectl apply -f -
+kustomize build loki/ingress/$ingress/ | kubectl apply -f -
 ```
 
 <br>
 
 ---
-
 
 # Tempo
 
@@ -393,12 +435,12 @@ Tempo primarily needs two ports ingressed, both http/2 based, though
 both are intended to have TLS, first for standard *https* and the 
 other port, 4317, for *grpc-otlp*. The ingress controller can forward 
 these either directly to the *distributor* service, or use the 
-*tempo-gateway*. 
+*tempo-gateway*. The project defaults to the *tempo-gateway* for its 
+ability to use authentication, where the agent credentials are used.
 
 <br>
 
 ---
-
 
 # Alloy
 
@@ -409,18 +451,18 @@ standalone binary.
 
 *Grafana* has an [Ansible Collection](https://grafana.com/docs/alloy/latest/set-up/install/ansible/) 
 that can be used to manage Alloy deployments, however it deploys the binary
-as the  `root` user. 
+as the `root` user. 
 
 A playbook is provided as `alloy/ansible` that installs the *Alloy* binary 
 as a service account user and group instead. Refer to the Alloy Ansible [Readme](alloy/ansible/README-ansible.md)
 
-Note that the configured endpoints for Alloy all use a protocol designation (eg. https://)
-except for tempo, whose endpoints are only <SERVICE:PORT>.
+**Note** that the configured endpoints for Alloy all use a protocol designation (eg. https://)
+except for *Tempo*, whose endpoints are only <SERVICE:PORT>.
 
-When collecting metrics, we can choose to route them to either *Prometheus* 
-or directly to *Mimir*. Currently, this project has configured *Prometheus* to 
-be exposed external to the cluster with Authentication for the Alloy agents, so 
-we route metrics to the `prometheus.remote_write` endpoint. Internal to the cluster
+As stated in the *Mimir* section, when collecting metrics, they can be routed to 
+either *Prometheus* or directly to *Mimir*. Currently, the project has configured 
+*Prometheus* to be exposed external to the cluster with Authentication for Alloy 
+agents using the `prometheus.remote_write` endpoint. Internal to the cluster
 we can route either way, but note that the endpoints have a different API path
 respectively.
 
@@ -430,7 +472,7 @@ respectively.
 
 ## Ansible Deployment
 
-The *Ansible Playbook* performs the following steps:
+The *Ansible Playbook* provided performs the following steps:
 
 - A service account or a local *alloy* user is created to allow the 
   system service to run as non-root. The deployed user should be added 
@@ -453,7 +495,6 @@ The *Ansible Playbook* performs the following steps:
 <br>
 
 ---
-
 
 # Additional Document References
 
@@ -492,7 +533,7 @@ additionalScrapeConfigs:
 
 ## Loki Notes
 
-Some additional notes regarding [Loki](resources/loki-nodes.md)
+Some additional notes regarding [Loki](resources/loki-notes.md)
 
 <br>
 
