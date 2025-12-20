@@ -2,12 +2,12 @@
 #
 # Timothy C. Arland <tcarland at gmail dot com>
 PNAME=${0##*\/}
-VERSION="v25.12.15"
+VERSION="v25.12.20"
 
 binpath=$(dirname "$0")
 project=$(dirname "$(realpath "$binpath")")
 envname="$1"
-ingress="nginx"
+ingress="istio"
 s3cmd=
 buckets=()
 
@@ -53,6 +53,7 @@ fi
 
 if ! which yq >/dev/null 2>&1; then
     echo "$PNAME Error, required binary 'yq' not found in PATH." >&2
+    exit 2
 fi
 
 if [ -z "$envname" ]; then
@@ -109,14 +110,15 @@ export GRAFANA_NAMESPACE="${GRAFANA_NAMESPACE:-monitoring}"
 export GRAFANA_ADMIN_USER="${GRAFANA_ADMIN_USER:-admin}"
 export GRAFANA_ADMIN_PASSWORD="${GRAFANA_ADMIN_PASSWORD:-admin}"
 
-# Ingress config
+# Ingress config. INGRESS_NAMESPACE should 'istio-system' for istio or 'ingress-nginx' for nginx
 if [[ "$INGRESS_NAMESPACE" =~ "istio" ]]; then
     ingress="istio"
     cat ingress/istio/istio-operator-template.yaml | envsubst > ingress/istio/istio-operator.yaml
 else
+    ingress="nginx"
     cat ingress/nginx/base/nginx-values-template.yaml | envsubst > ingress/nginx/base/nginx-values.yaml
 fi
-echo " -> Ingress controller type set to '$ingress'"
+echo " -> Ingress controller type set to '$ingress' given INGRESS_NAMESPACE='$INGRESS_NAMESPACE'"
 
 
 # -----------------
@@ -142,8 +144,10 @@ echo "$s3_secrets" | envsubst > mimir/base/secrets.env
 # -----------------
 # Grafana / Prometheus
 echo " -> Creating Prom/Grafana values from templates"
+
 cat grafana/base/grafana-values.template.yaml | envsubst > grafana/base/grafana-values.yaml
 cat grafana/base/secrets.template.env | envsubst > grafana/base/secrets.env
+
 cat prometheus/base/prom-values.template.yaml | envsubst > prometheus/base/prom-values.yaml
 cat prometheus/base/prom-addScrapeConfigs.template.yaml | envsubst > prometheus/base/prom-addScrapeConfigs.yaml
 
@@ -162,10 +166,10 @@ if [ -n "$PROMETHEUS_DOMAINNAME" ]; then
     cat prometheus/ingress/${ingress}/base/params.env.template | envsubst > \
         prometheus/ingress/${ingress}/base/params.env
         
-    if [[ "$ingress" == "nginx" ]]; then  # nginx uses bcrypt pw
+    if [[ "$ingress" == "nginx" ]]; then  # nginx uses bcrypt pw via htpasswd
         ( echo "${AGENT_PASSWORD}" | \
           htpasswd -c -i prometheus/ingress/$ingress/base/auth "${AGENT_USERNAME}" )
-    else  # create base64 auth str for istio VS
+    else  # create base64 auth str for the istio virtualservice
         export AGENTAUTHSTR=$(printf "%s" "${AGENT_USERNAME}:${AGENT_PASSWORD}" | base64 -w0)
         cat prometheus/ingress/${ingress}/base/prometheus-virtualservice-template.yaml | envsubst > \
             prometheus/ingress/${ingress}/base/prometheus-virtualservice.yaml
@@ -199,20 +203,20 @@ cat alloy/base/config-template.alloy | envsubst > alloy/base/config.alloy
 
 # -----------------
 # license check
-if [ -f env/${envname}/license.jwt ]; then
+if [ -f env/${envname}/files/license.jwt ]; then
     echo " -> License file found, copying to overlays.."
-    if [[ ! -d prometheus/overlays/${envname} ]]; then
+    if [[ ! -d grafana/overlays/${envname} ]]; then
         echo " -> Overlay directory for '${envname}' not found, creating.."
-        mkdir -p prometheus/overlays/${envname}
-        cp prometheus/overlays/example/kustomization.yaml prometheus/overlays/${envname}/
+        mkdir -p grafana/overlays/${envname}
+        cp grafana/overlays/example/kustomization.yaml grafana/overlays/${envname}/
     fi
     if [[ ! -d loki/overlays/${envname} ]]; then
         mkdir -p loki/overlays/${envname}
         cp loki/overlays/example/kustomization.yaml loki/overlays/${envname}/
     fi
 
-    cp env/${envname}/license.jwt prometheus/overlays/${envname}/ && \
-    cp env/${envname}/license.jwt loki/overlays/${envname}/
+    cp env/${envname}/files/license.jwt grafana/overlays/${envname}/ && \
+    cp env/${envname}/files/license.jwt loki/overlays/${envname}/
 
     if [ $? -ne 0 ]; then
         echo "$PNAME Error copying license file" >&2

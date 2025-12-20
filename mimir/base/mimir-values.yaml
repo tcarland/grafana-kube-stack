@@ -62,6 +62,26 @@ metaMonitoring:
     scrapeK8s:
       enabled: false
 
+gateway:
+  enabled: false
+  enabledNonEnterprise: false
+  image:
+    repository: grafana/mimir-enterprise
+    tag: 2.17.0
+  replicas: 1
+  ingress:
+    enabled: false
+  nginx:
+    image:
+      registry: docker.io
+      repository: nginxinc/nginx-unprivileged
+      tag: 1.29-alpine
+    basicAuth:
+      enabled: false
+      username: null
+      password: null
+      existingSecret: null
+
 graphite:
   enabled: false
 enterprise:
