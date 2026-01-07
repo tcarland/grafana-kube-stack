@@ -18,3 +18,12 @@ helmCharts:
     valuesFile: prom-values.yaml
     additionalValuesFiles:
       - prom-addScrapeConfigs.yaml
+
+labels:
+  - includeSelectors: true
+    pairs:
+      app.kubernetes.io/component: prometheus-community
+      app.kubernetes.io/name: prometheus
+      app.kubernetes.io/part-of: grafana-kube-stack
+      app.kubernetes.io/version: v26.01.05
+      kustomize.component: prometheus

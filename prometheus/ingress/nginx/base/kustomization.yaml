@@ -50,12 +50,11 @@ replacements:
         fieldPaths:
           - metadata.namespace
 
-
 labels:
   - includeSelectors: true
     pairs:
-      app.kubernetes.io/component: prometheus-ingress
-      app.kubernetes.io/name: nginx
+      app.kubernetes.io/component: prometheus-nginx-ingress
+      app.kubernetes.io/name: prometheus-ingress
       app.kubernetes.io/part-of: grafana-kube-stack
-      app.kubernetes.io/version: v25.12.05
+      app.kubernetes.io/version: v26.01.05
       kustomize.component: prometheus-ingress
