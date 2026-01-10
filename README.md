@@ -1,6 +1,8 @@
 Grafana Stack on Kubernetes
 ===========================
-v25.12.20
+v26.01.10
+
+Copyright (c)2025-2026 Timothy C. Arland <tcarland at gmail dot com>
 
 Steps for customizing and deploying the [Grafana](https://grafana.com)
 Ecosystem, consisting of Loki, Grafana, Tempo, and Mimir; the (LGTM) stack.
@@ -104,8 +106,7 @@ installs the `kube-state-metrics` and `grafana` charts.
 |       **Component**                                |  **Version**  | **Helm Chart** |
 | -------------------------------------------------- | ------------- | -------------- |
 | [Mimir](https://github.com/grafana/mimir)          | **v2.17.0**   |    *5.8.0*     |
-| [Kube-Prometheus-Stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack) |  |  *78.5.0*  |
-|  -> [Prometheus](https://github.com/)              | **v3.7.2**    |      ---       |
+| [Kube-Prometheus-Stack](https://github.com/prometheus-community/helm-charts) | **v3.7.2**  |  *78.5.0*  |
 | [Grafana](https://github.com/grafana/grafana)      | **v12.2.0**   |   *10.1.2*     |
 | [Loki](https://github.com/grafana/loki)            | **v3.5.5**    |    *6.42.0*    |
 | [Tempo](https://github.com/grafana/tempo)          | **v2.9.0**    |    *1.38.2*    |
@@ -284,6 +285,8 @@ copied from *Loki* and updated to point to the *mimir-gateway* accordingly.
 ---
     
 # Prometheus Operator 
+
+The *Prometheus Operator* is installed via the community helm [chart](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)
 
 Note that the kustomize manifests make use of a *node-selector* for
 targeting *worker* nodes. Typically, *control-plane* nodes are already

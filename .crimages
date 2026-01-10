@@ -6,9 +6,9 @@ grafana/loki:3.5.5
 grafana/loki-canary:3.5.7
 grafana/loki-helm-test:latest
 grafana/tempo:2.9.0
-grafana/grafana-enterprise:12.2
-grafana/enterprise-metrics:v2.17.1
-grafana/enterprise-traces:v2.8.1
+#grafana/grafana-enterprise:12.2
+#grafana/enterprise-metrics:v2.17.1
+#grafana/enterprise-traces:v2.8.1
 quay.io/prometheus-operator/prometheus-operator:v0.86.1
 quay.io/prometheus-operator/prometheus-config-reloader:v0.86.1
 quay.io/prometheus/prometheus:v3.7.2
