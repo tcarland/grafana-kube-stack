@@ -9,13 +9,13 @@ generatorOptions:
   disableNameSuffixHash: true
 
 helmCharts:
-- name: tempo-distributed
-  includeCRDs: true
-  releaseName: tempo
-  namespace: monitoring
-  version: 1.52.2
-  repo: https://grafana.github.io/helm-charts
-  valuesFile: tempo-values.yaml
+  - name: tempo-distributed
+    includeCRDs: true
+    releaseName: tempo
+    namespace: monitoring
+    version: 1.52.2
+    repo: https://grafana.github.io/helm-charts
+    valuesFile: tempo-values.yaml
 
 labels:
   - includeSelectors: true

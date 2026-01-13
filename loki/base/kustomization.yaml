@@ -9,15 +9,15 @@ generatorOptions:
   disableNameSuffixHash: true
 
 helmCharts:
-- name: loki
-  includeCRDs: true
-  releaseName: loki
-  namespace: monitoring
-  version: 6.44.0
-  repo: https://grafana.github.io/helm-charts
-  valuesFile: loki-values.yaml
-  #additionalValuesFiles:
-  #  - gel-values.yaml
+  - name: loki
+    includeCRDs: true
+    releaseName: loki
+    namespace: monitoring
+    version: 6.44.0
+    repo: https://grafana.github.io/helm-charts
+    valuesFile: loki-values.yaml
+    #additionalValuesFiles:
+    #  - gel-values.yaml
 
 labels:
   - includeSelectors: true
