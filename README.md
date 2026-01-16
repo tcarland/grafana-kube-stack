@@ -522,6 +522,24 @@ document overlay of enterprise enablement details.
 
 # Additional Notes
 
+## Grafana PVC
+
+Ensure a policy of *Retain* is set on the PV. Usually inherited from the *StorageClass*
+
+Remove any existing `claimRef` from the PV and ensure PV is *Released*.
+```sh
+pv=$(kubectl get pv | grep grafana | awk '{ print $1 }')
+kubectl patch pv $pv -p '{"spec":{"claimRef": null}}'
+```
+
+Typically not needed; set volumeName on the *pvc* manifest:
+```yaml
+spec:
+  volumeName: grafana
+  accessModes:
+    - ReadWriteOnce
+```
+
 ## Add Node Exporters
 
 Note that job names should be unique within Prometheus
