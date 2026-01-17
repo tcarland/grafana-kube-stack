@@ -52,6 +52,7 @@ patches:
               image: grafana/grafana-enterprise:12.2
               resources:
                 limits:
+                  cpu: 500m
                   memory: 4Gi
                 requests:
                   cpu: 100m
@@ -63,4 +64,3 @@ patches:
             - name: ge-license
               secret:
                 secretName: ge-license
-

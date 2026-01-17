@@ -4,24 +4,24 @@ kind: Kustomization
 namespace: monitoring
 
 resources:
-- namespace.yaml
+  - namespace.yaml
 
 secretGenerator:
-- name: mimir-s3-credentials
-  envs:
-  - secrets.env
+  - name: mimir-s3-credentials
+    envs:
+      - secrets.env
 
 helmCharts:
-- name: mimir-distributed
-  includeCRDs: true
-  releaseName: mimir
-  namespace: monitoring
-  version: 5.8.0
-  repo: https://grafana.github.io/helm-charts
-  valuesFile: mimir-values.yaml
-  additionalValuesFiles:
-    - mimir-structuredConfig.yaml
-    - mimir-runtimeConfig.yaml
+  - name: mimir-distributed
+    includeCRDs: true
+    releaseName: mimir
+    namespace: monitoring
+    version: 5.8.0
+    repo: https://grafana.github.io/helm-charts
+    valuesFile: mimir-values.yaml
+    additionalValuesFiles:
+      - mimir-structuredConfig.yaml
+      - mimir-runtimeConfig.yaml
 
 labels:
   - includeSelectors: true
@@ -29,5 +29,5 @@ labels:
       app.kubernetes.io/component: mimir-distributed
       app.kubernetes.io/name: mimir
       app.kubernetes.io/part-of: grafana-kube-stack
-      app.kubernetes.io/version: v26.01.10
+      app.kubernetes.io/version: v26.01.15
       kustomize.component: mimir

@@ -64,5 +64,5 @@ labels:
       app.kubernetes.io/component: tempo-istio-ingress
       app.kubernetes.io/name: tempo-ingress
       app.kubernetes.io/part-of: grafana-kube-stack
-      app.kubernetes.io/version: v26.01.10
+      app.kubernetes.io/version: v26.01.15
       kustomize.component: tempo-ingress
