@@ -25,5 +25,5 @@ labels:
       app.kubernetes.io/component: prometheus-community
       app.kubernetes.io/name: prometheus
       app.kubernetes.io/part-of: grafana-kube-stack
-      app.kubernetes.io/version: v26.01.10
+      app.kubernetes.io/version: v26.01.15
       kustomize.component: prometheus
