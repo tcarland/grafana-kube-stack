@@ -107,8 +107,8 @@ installs the `kube-state-metrics` and `grafana` charts.
 | -------------------------------------------------- | ------------- | -------------- |
 | [Mimir](https://github.com/grafana/mimir)          | **v2.17.0**   |    *5.8.0*     |
 | [Kube-Prometheus-Stack](https://github.com/prometheus-community/helm-charts) | **v3.7.2**  |  *78.5.0*  |
-| [Grafana](https://github.com/grafana/grafana)      | **v12.3.0**   |   *10.3.2*     |
-| [Loki](https://github.com/grafana/loki)            | **v3.5.5**    |    *6.42.0*    |
+| [Grafana](https://github.com/grafana/grafana)      | **v12.3.1**   |   *10.4.3*     |
+| [Loki](https://github.com/grafana/loki)            | **v3.5.7**    |    *6.45.2*    |
 | [Tempo](https://github.com/grafana/tempo)          | **v2.9.0**    |    *1.38.2*    |
 | [Alloy](https://github.com/grafana/alloy)          | **v1.11.0*    |    *1.4.0*     |
 

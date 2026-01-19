@@ -10,7 +10,7 @@ loki:
   image:
     registry: docker.io
     repository: grafana/loki
-    tag: 3.5.5
+    tag: 3.5.7
     pullPolicy: IfNotPresent
   schemaConfig:
     configs:
@@ -76,25 +76,25 @@ memcachedExporter:
 minio:
   enabled: false
 
+distributor:
+  replicas: 3
+  maxUnavailable: 1
 ingester:
   replicas: 3
   zoneAwareReplication:
     enabled: false
 querier:
-  replicas: 3
-  maxUnavailable: 2
+  replicas: 1
+  maxUnavailable: 1
 queryFrontend:
-  replicas: 2
+  replicas: 1
   maxUnavailable: 1
 queryScheduler:
-  replicas: 2
-distributor:
-  replicas: 3
-  maxUnavailable: 2
+  replicas: 1
 compactor:
   replicas: 1
 indexGateway:
-  replicas: 2
+  replicas: 1
   maxUnavailable: 1
 
 lokiCanary:
@@ -136,3 +136,21 @@ write:
 
 singleBinary:
   replicas: 0
+
+enterprise:
+  enabled: false
+  version: 3.5.4
+  useExternalLicense: true
+  externalLicenseName: null
+  image:
+    registry: docker.io
+    repository: grafana/enterprise-logs
+    tag: 3.5.4
+  adminToken:
+    secret: null
+  provisioner:
+    enabled: true
+    image:
+      registry: us-docker.pkg.dev
+      repository: grafanalabs-global/docker-enterprise-provisioner-prod/enterprise-provisioner
+      tag: latest
