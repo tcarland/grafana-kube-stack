@@ -7,16 +7,19 @@ global:
 
 image:
   repository: grafana/mimir
-  tag: 2.17.0
+  tag: 3.0.1
   pullPolicy: IfNotPresent
 
 alertmanager:
+  enabled: true
+  replicas: 1
   resources:
     requests:
       cpu: 10m
       memory: 32Mi
   persistentVolume:
-    size: 4Gi
+    size: 2Gi
+    #storageClass: null
 
 distributor:
   replicas: 3
@@ -32,17 +35,75 @@ ingester:
       cpu: 100m
       memory: 512Mi
   persistentVolume:
-    size: 1Gi
+    size: 2Gi
+    #storageClass: null
+  zoneAwareReplication:
+    enabled: false
 
 compactor:
+  enabled:
+    true
+  replicas: 1
   persistentVolume:
-    size: 1Gi
+    size: 2Gi
+    #storageClass: null
+
+querier:
+  enabled: true
+  replicas: 1
+querier_scheduler:
+  enabled: true
+  replicas: 1
+store_gateway:
+  enabled: true
+  replicas: 1
+  persistentVolume:
+    enabled: true
+    size: 2Gi
+    #storageClass: "-"
+  zoneAwareReplication:
+    enabled: false
+  
+memcached:
+  image:
+    repository: memcached
+    tag: 1.6.39-alpine
+    
+memcachedExporter:
+  enabled: true
+  image:
+    repository: prom/memcached-exporter
+    tag: v0.15.3
+
+chunks-cache:
+  enabled: false
+  replicas: 1
+index-cache:
+  enabled: false
+  replicas: 1
+metadata-cache:
+  enabled: false
+  replicas: 1
+results-cache:
+  enabled: false
+  replicas: 1
+
+kafka:
+  enabled: true
+  image:
+    registry: docker.io
+    repository: apache/kafka-native
+    tag: 4.1.0
+  persistence:
+    enabled: true
+    size: 1Gi  # default 5Gi
+    storageClassName: ""
     
 minio:
   enabled: false
-nginx:
+ingress:
   enabled: false
-store_gateway:
+nginx:
   enabled: false
   
 metaMonitoring:
@@ -64,10 +125,11 @@ metaMonitoring:
 
 gateway:
   enabled: false
-  enabledNonEnterprise: false
-  image:
-    repository: grafana/mimir-enterprise
-    tag: 2.17.0
+  # these values were deprecated after mimir 2.17 chart v5.8.0
+  #enabledNonEnterprise: false
+  #image:
+  #  repository: grafana/mimir-enterprise
+  #  tag: 2.17.0
   replicas: 1
   ingress:
     enabled: false
@@ -86,3 +148,5 @@ graphite:
   enabled: false
 enterprise:
   enabled: false
+  image:
+    tag: r365-3fdf702d

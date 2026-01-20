@@ -53,8 +53,8 @@ replacements:
 labels:
   - includeSelectors: true
     pairs:
-      app.kubernetes.io/component: prometheus-nginx-ingress
-      app.kubernetes.io/name: prometheus-ingress
+      app.kubernetes.io/component: prometheus-ingress
+      app.kubernetes.io/name: prometheus-nginx-ingress
       app.kubernetes.io/part-of: grafana-kube-stack
-      app.kubernetes.io/version: v26.01.15
+      app.kubernetes.io/version: v26.01.20
       kustomize.component: prometheus-ingress

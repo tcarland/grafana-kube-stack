@@ -13,15 +13,12 @@ helmCharts:
     includeCRDs: true
     releaseName: tempo
     namespace: monitoring
-    version: 1.52.2
+    version: 1.58.1
     repo: https://grafana.github.io/helm-charts
     valuesFile: tempo-values.yaml
 
 labels:
-  - includeSelectors: true
+  - includeSelectors: false
     pairs:
-      app.kubernetes.io/component: tempo-distributed
-      app.kubernetes.io/name: tempo
       app.kubernetes.io/part-of: grafana-kube-stack
-      app.kubernetes.io/version: v26.01.15
       kustomize.component: tempo

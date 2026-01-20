@@ -20,15 +20,12 @@ helmCharts:
     includeCRDs: false
     releaseName: grafana
     namespace: monitoring
-    version: 10.1.2
+    version: 10.4.3
     repo: https://grafana.github.io/helm-charts
     valuesFile: grafana-values.yaml
 
 labels:
-  - includeSelectors: true
+  - includeSelectors: false
     pairs:
-      app.kubernetes.io/component: grafana
-      app.kubernetes.io/name: grafana
       app.kubernetes.io/part-of: grafana-kube-stack
-      app.kubernetes.io/version: v26.01.15
       kustomize.component: grafana

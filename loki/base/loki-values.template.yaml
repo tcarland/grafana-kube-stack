@@ -10,7 +10,7 @@ loki:
   image:
     registry: docker.io
     repository: grafana/loki
-    tag: 3.5.5
+    tag: 3.6.3
     pullPolicy: IfNotPresent
   schemaConfig:
     configs:
@@ -39,13 +39,15 @@ loki:
     allow_structured_metadata: true
     volume_enabled: true
     retention_period: 672h # 28 days retention
+  # enables multi-tenant (x-orgid)
+  auth_enabled: true
 
   storage:
     type: s3
     bucketNames:
-        chunks: loki-${GRAFANA_ENV}-chunk
-        ruler: loki-${GRAFANA_ENV}-ruler
-        admin: loki-${GRAFANA_ENV}-admin
+      chunks: loki-${GRAFANA_ENV}-chunk
+      ruler: loki-${GRAFANA_ENV}-ruler
+      admin: loki-${GRAFANA_ENV}-admin
     s3:
       # s3 URL can be used to specify the endpoint, access key, secret key, and bucket name this works well for S3 compatible storage or if you are hosting Loki on-premises and want to use S3 as the storage backend. Either use the s3 URL or the individual fields below (AWS endpoint, region, secret).
       #s3: s3://access_key:secret_access_key@custom_endpoint/bucket_name
@@ -71,31 +73,39 @@ memcachedExporter:
   enabled: true
   image:
     repository: prom/memcached-exporter
-    tag: v0.15.3
+    tag: v0.15.4
   
 minio:
   enabled: false
 
+distributor:
+  replicas: 3
+  maxUnavailable: 2
+  affinity: null
 ingester:
   replicas: 3
+  maxUnavailable: 1
+  affinity: null
   zoneAwareReplication:
     enabled: false
 querier:
   replicas: 3
-  maxUnavailable: 2
+  maxUnavailable: 1
+  affinity: null
 queryFrontend:
   replicas: 2
   maxUnavailable: 1
+  affinity: null
 queryScheduler:
   replicas: 2
-distributor:
-  replicas: 3
-  maxUnavailable: 2
+  affinity: null
 compactor:
   replicas: 1
+  affinity: null
 indexGateway:
-  replicas: 2
+  replicas: 1
   maxUnavailable: 1
+  affinity: null
 
 lokiCanary:
   enabled: false
@@ -114,7 +124,8 @@ gateway:
     enabled: true
     username: ${AGENT_USERNAME}
     password: ${AGENT_PASSWORD}
-
+  affinity: null
+    
 test:
   enabled: false
 
@@ -125,6 +136,8 @@ bloomBuilder:
   replicas: 0
 bloomGateway:
   replicas: 0
+ruler:
+  enabled: false
 
 # Zero out replica counts of other deployment modes
 backend:
@@ -136,3 +149,21 @@ write:
 
 singleBinary:
   replicas: 0
+
+enterprise:
+  enabled: false
+  version: 3.5.4
+  useExternalLicense: true
+  externalLicenseName: null
+  image:
+    registry: docker.io
+    repository: grafana/enterprise-logs
+    tag: 3.5.4
+  adminToken:
+    secret: null
+  provisioner:
+    enabled: true
+    image:
+      registry: us-docker.pkg.dev
+      repository: grafanalabs-global/docker-enterprise-provisioner-prod/enterprise-provisioner
+      tag: latest
