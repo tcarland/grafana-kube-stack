@@ -382,6 +382,13 @@ variable.
 
 Note that *distributed* is the recommneded path by Grafana. 
 
+Recent versions of the chart configure a *podAntiAffinity* to 
+force that components run on a separate host. In some smaller 
+or virtualized clusters, this can cause an issue thus this is 
+disabled by default in our values by setting `affinity: null`
+for the components that define it. This can be removed or 
+commented for larger production deployments where the requiremnts 
+can be met.
 
 Fetch the chart first for validation.
 ```sh

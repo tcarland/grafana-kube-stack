@@ -20,10 +20,7 @@ helmCharts:
       - prom-addScrapeConfigs.yaml
 
 labels:
-  - includeSelectors: true
+  - includeSelectors: false
     pairs:
-      app.kubernetes.io/component: prometheus-community
-      app.kubernetes.io/name: prometheus
       app.kubernetes.io/part-of: grafana-kube-stack
-      app.kubernetes.io/version: v26.01.20
       kustomize.component: prometheus
