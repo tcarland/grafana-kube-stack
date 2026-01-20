@@ -6,6 +6,6 @@ alloy:
 image:
   registry: "docker.io"
   repository: grafana/alloy
-  tag: v1.11.3
+  tag: v1.12.2
   pullPolicy: IfNotPresent
   pullSecrets: []

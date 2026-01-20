@@ -105,11 +105,11 @@ installs the `kube-state-metrics` and `grafana` charts.
 
 |       **Component**                                |  **Version**  | **Helm Chart** |
 | -------------------------------------------------- | ------------- | -------------- |
-| [Mimir](https://github.com/grafana/mimir)          | **v2.17.0**   |    *5.8.0*     |
+| [Mimir](https://github.com/grafana/mimir)          | **v3.0.1**    |    *6.0.5*     |
 | [Kube-Prometheus-Stack](https://github.com/prometheus-community/helm-charts) | **v3.8.0**  |  *79.12.0* |
 | [Grafana](https://github.com/grafana/grafana)      | **v12.3.1**   |   *10.4.3*     |
 | [Loki](https://github.com/grafana/loki)            | **v3.5.7**    |    *6.45.2*    |
-| [Tempo](https://github.com/grafana/tempo)          | **v2.9.0**    |    *1.38.2*    |
+| [Tempo](https://github.com/grafana/tempo)          | **v2.9.0**    |    *1.58.1*    |
 | [Alloy](https://github.com/grafana/alloy)          | **v1.11.0*    |    *1.4.0*     |
 
 <br>
