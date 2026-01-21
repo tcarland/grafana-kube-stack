@@ -20,7 +20,7 @@ helmCharts:
     includeCRDs: false
     releaseName: grafana
     namespace: monitoring
-    version: 10.4.3
+    version: 10.5.8
     repo: https://grafana.github.io/helm-charts
     valuesFile: grafana-values.yaml
 

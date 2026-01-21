@@ -49,7 +49,7 @@ patches:
           spec:
             containers:
             - name: grafana
-              image: grafana/grafana-enterprise:12.2
+              image: grafana/grafana-enterprise:12.3
               resources:
                 limits:
                   cpu: 500m
