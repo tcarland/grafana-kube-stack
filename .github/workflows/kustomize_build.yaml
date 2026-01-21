@@ -14,6 +14,7 @@ env:
   S3_ACCESS_KEY: test
   S3_SECRET_KEY: test
   S3_SKIP_VERIFY: true
+  S3_SKIP_CREATE: true
 
 jobs:
   build:
