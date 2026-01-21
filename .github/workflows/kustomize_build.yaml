@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup Grafana
-        run: ./bin/grafana-stack-setup.sh
+        run: ./bin/grafana-stack-setup.sh example
 
       - name: Build Mimir
         uses: tcarland/kustomize-build-action@v1
