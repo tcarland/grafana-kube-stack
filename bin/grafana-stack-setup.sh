@@ -2,7 +2,7 @@
 #
 # Timothy C. Arland <tcarland at gmail dot com>
 PNAME=${0##*\/}
-VERSION="v26.01.20"
+VERSION="v26.01.21"
 
 binpath=$(dirname "$0")
 project=$(dirname "$(realpath "$binpath")")
@@ -45,7 +45,6 @@ function create_s3_buckets()
 # Validation 
 echo "$PNAME $VERSION"
 
-# validation checks
 if ! which helm >/dev/null 2>&1; then
     echo "$PNAME Error, required binary 'helm' not found in PATH." >&2
     exit 2
@@ -58,6 +57,12 @@ fi
 
 if [ -z "$envname" ]; then
     echo "$PNAME Error, ENV name not provided" >&2
+    echo "  The name should match the environment path under env/" >&2
+    exit 1
+fi
+
+if [ ! -f "env/${envname}/${envname}.env" ]; then
+    echo "$PNAME Error, ENV file env/${envname}/${envname}.env not found." >&2
     exit 1
 fi
 
@@ -68,13 +73,14 @@ if [ -z "$S3_ENDPOINT" ]; then
     exit 1
 fi
 
-if [ -z "$GRAFANA_ENV" ]; then
-    echo "$PNAME Error, GRAFANA_ENV not defined." >&2
+if [[ -z "$S3_ACCESS_KEY" || -z "$S3_SECRET_KEY" ]]; then
+    echo "$PNAME Error, S3 credentials not defined." >&2
     exit 1
 fi
 
-if [[ -z "$S3_ACCESS_KEY" || -z "$S3_SECRET_KEY" ]]; then
-    echo "$PNAME Error, S3 credentials not defined." >&2
+if [ -z "$GRAFANA_ENV" ]; then
+    echo "$PNAME Error, GRAFANA_ENV not defined." >&2
+    echo "  This name is used for overlay paths" >&2
     exit 1
 fi
 
@@ -88,7 +94,7 @@ if which mc >/dev/null 2>&1; then
     if [ -z "${MINIO_ALIAS}" ]; then
         echo " -> MINIO_ALIAS is not set, configure it to use 'mc'"
     else
-        echo " -> Found Minio Client first, using 'mc mb ${MINIO_ALIAS}/'..."
+        echo " -> Found Minio Client, using 'mc mb ${MINIO_ALIAS}/'..."
         s3cmd="mc mb ${MINIO_ALIAS}/"
     fi
 fi
@@ -143,7 +149,7 @@ echo "$s3_secrets" | envsubst > mimir/base/secrets.env
 
 # -----------------
 # Grafana / Prometheus
-echo " -> Creating Prom/Grafana values from templates"
+echo " -> Creating Values from templates"
 
 cat grafana/base/grafana-values.template.yaml | envsubst > grafana/base/grafana-values.yaml
 cat grafana/base/secrets.template.env | envsubst > grafana/base/secrets.env
@@ -226,7 +232,7 @@ fi
 
 
 # -----------------
-printf "\n -> Needed S3 Buckets: \n"
+printf "\n -> Required S3 Buckets: \n"
 
 # mimir s3 bucket names
 buckets+=("$(yq e '.mimir.structuredConfig.alertmanager_storage.s3.bucket_name' mimir/base/mimir-structuredConfig.yaml | envsubst)")
