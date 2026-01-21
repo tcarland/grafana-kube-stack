@@ -107,10 +107,10 @@ installs the `kube-state-metrics` and `grafana` charts.
 | -------------------------------------------------- | ------------- | -------------- |
 | [Mimir](https://github.com/grafana/mimir)          | **v3.0.1**    |    *6.0.5*     |
 | [Kube-Prometheus-Stack](https://github.com/prometheus-community/helm-charts) | **v3.8.0**  |  *79.12.0* |
-| [Grafana](https://github.com/grafana/grafana)      | **v12.3.1**   |   *10.4.3*     |
+| [Grafana](https://github.com/grafana/grafana)      | **v12.3.1**   |   *10.5.8*     |
 | [Loki](https://github.com/grafana/loki)            | **v3.5.7**    |    *6.45.2*    |
 | [Tempo](https://github.com/grafana/tempo)          | **v2.9.0**    |    *1.58.1*    |
-| [Alloy](https://github.com/grafana/alloy)          | **v1.12.2*    |    *1.5.2*     |
+| [Alloy](https://github.com/grafana/alloy)          | **v1.12.2**   |    *1.5.2*     |
 
 <br>
 
@@ -531,15 +531,22 @@ document overlay of enterprise enablement details.
 
 ## Grafana PVC
 
-Ensure a policy of *Retain* is set on the PV. Usually inherited from the *StorageClass*
-
-Remove any existing `claimRef` from the PV and ensure PV is *Released*.
+Ensure a policy of *Retain* is set on the PV. Usually inherited from 
+the *StorageClass*. If the PVC was created with a default SC or is 
+set to *Delete*, it can be changed accordingly.
 ```sh
 pv=$(kubectl get pv | grep grafana | awk '{ print $1 }')
+kubectl patch pv $pv -p '{"spec":{"persistentVolumeReclaimPolicy": "Retain"}}'
+```
+
+Once the Grafana deployment has been dropped, remove any existing `claimRef` 
+from the PV and ensure PV is *Released*.
+```sh
 kubectl patch pv $pv -p '{"spec":{"claimRef": null}}'
 ```
 
-Typically not needed; set volumeName on the *pvc* manifest:
+Alternatively, set volumeName on the *pvc* manifest before deploying. This
+would require a patch to the manifests (or overlay):
 ```yaml
 spec:
   volumeName: grafana
@@ -547,11 +554,11 @@ spec:
     - ReadWriteOnce
 ```
 
-## Add Node Exporters
+## Prometheus - Add Node Exporters
 
-Note that job names should be unique within Prometheus
-additionalScrapeConfigs:
+Note that job names should be unique within Prometheus.
 ```yaml
+    additionalScrapeConfigs:
       - job_name: 'node_exporter_host'
         static_configs:
           - targets: ['<NODE_EXPORTER_IP_OR_HOSTNAME>:9100']
