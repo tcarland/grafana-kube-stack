@@ -232,7 +232,7 @@ fi
 
 
 # -----------------
-printf "\n -> Needed S3 Buckets: \n"
+printf "\n -> Required S3 Buckets: \n"
 
 # mimir s3 bucket names
 buckets+=("$(yq e '.mimir.structuredConfig.alertmanager_storage.s3.bucket_name' mimir/base/mimir-structuredConfig.yaml | envsubst)")
