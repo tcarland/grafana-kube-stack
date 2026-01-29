@@ -2,7 +2,7 @@
 #
 # Timothy C. Arland <tcarland at gmail dot com>
 PNAME=${0##*\/}
-VERSION="v26.01.21"
+VERSION="v26.01.30"
 
 binpath=$(dirname "$0")
 project=$(dirname "$(realpath "$binpath")")
@@ -143,8 +143,19 @@ fi
 
 
 # Mimir
-echo " -> Creating s3 secrets.env for Mimir"
+echo " -> Creating s3 secrets.env and values for Mimir"
 echo "$s3_secrets" | envsubst > mimir/base/secrets.env
+cat mimir/base/mimir-values.template.yaml | envsubst > mimir/base/mimir-values.yaml
+
+# Mimir Ingress
+if [ -n "$MIMIR_DOMAINNAME" ]; then
+    cat mimir/ingress/${ingress}/base/params.env.template | envsubst > \
+        mimir/ingress/${ingress}/base/params.env
+    if [ -f env/${envname}/certs/loki.crt ]; then
+        echo "   -> Copying Loki ingress certificates "
+        cp env/${envname}/certs/loki* loki/ingress/${ingress}/base/
+    fi
+fi    
 
 
 # -----------------
