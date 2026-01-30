@@ -144,7 +144,7 @@ fi
 
 # -----------------
 # Mimir
-echo " -> Creating s3 secrets.env and values for Mimir"
+echo " -> Creating Mimir s3 secrets and values frome template"
 echo "$s3_secrets" | envsubst > mimir/base/secrets.env
 cat mimir/base/mimir-values.template.yaml | envsubst > mimir/base/mimir-values.yaml
 
@@ -161,7 +161,7 @@ fi
 
 # -----------------
 # Grafana / Prometheus
-echo " -> Creating Values from templates"
+echo " -> Creating Grafana and Prometheus Values from templates"
 
 cat grafana/base/grafana-values.template.yaml | envsubst > grafana/base/grafana-values.yaml
 cat grafana/base/secrets.template.env | envsubst > grafana/base/secrets.env
@@ -204,6 +204,7 @@ fi
 echo " -> Creating Tempo values from template"
 cat tempo/base/tempo-values.template.yaml | envsubst > tempo/base/tempo-values.yaml
 
+# Tempo Ingress
 if [ -n "$TEMPO_DOMAINNAME" ]; then
     cat tempo/ingress/${ingress}/base/params.env.template | envsubst > tempo/ingress/${ingress}/base/params.env
     if [ -d env/${envname}/certs ]; then
