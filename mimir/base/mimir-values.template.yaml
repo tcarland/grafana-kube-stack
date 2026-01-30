@@ -22,14 +22,14 @@ alertmanager:
     #storageClass: null
 
 distributor:
-  replicas: 1
+  replicas: 3
   resources:
     requests:
       cpu: 100m
       memory: 512Mi
 
 ingester:
-  replicas: 1
+  replicas: 3
   resources:
     requests:
       cpu: 100m
@@ -41,8 +41,7 @@ ingester:
     enabled: false
 
 compactor:
-  enabled:
-    true
+  enabled: true
   replicas: 1
   persistentVolume:
     size: 2Gi

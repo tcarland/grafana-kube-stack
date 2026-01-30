@@ -142,6 +142,7 @@ if [ -n "$LOKI_DOMAINNAME" ]; then
 fi
 
 
+# -----------------
 # Mimir
 echo " -> Creating s3 secrets.env and values for Mimir"
 echo "$s3_secrets" | envsubst > mimir/base/secrets.env
