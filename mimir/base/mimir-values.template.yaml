@@ -135,7 +135,7 @@ gateway:
     basicAuth:
       enabled: false
       username: ${AGENT_USERNAME}
-      password: ${AGENT_PASSWORD
+      password: ${AGENT_PASSWORD}
       existingSecret: null
 
 graphite:

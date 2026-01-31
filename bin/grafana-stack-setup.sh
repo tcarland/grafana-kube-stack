@@ -2,7 +2,7 @@
 #
 # Timothy C. Arland <tcarland at gmail dot com>
 PNAME=${0##*\/}
-VERSION="v26.01.30"
+VERSION="v26.01.31"
 
 binpath=$(dirname "$0")
 project=$(dirname "$(realpath "$binpath")")
@@ -126,6 +126,11 @@ else
 fi
 echo " -> Ingress controller type set to '$ingress' given INGRESS_NAMESPACE='$INGRESS_NAMESPACE'"
 
+# Create namespace if not exists
+if ! kubectl get namespace "$GRAFANA_NAMESPACE" >/dev/null 2>&1; then
+    echo " -> Creating namespace '$GRAFANA_NAMESPACE'"
+    kubectl create namespace "$GRAFANA_NAMESPACE"
+fi
 
 # -----------------
 # Loki
@@ -152,9 +157,9 @@ cat mimir/base/mimir-values.template.yaml | envsubst > mimir/base/mimir-values.y
 if [ -n "$MIMIR_DOMAINNAME" ]; then
     cat mimir/ingress/${ingress}/base/params.env.template | envsubst > \
         mimir/ingress/${ingress}/base/params.env
-    if [ -f env/${envname}/certs/loki.crt ]; then
-        echo "   -> Copying Loki ingress certificates "
-        cp env/${envname}/certs/loki* loki/ingress/${ingress}/base/
+    if [ -f env/${envname}/certs/mimir.crt ]; then
+        echo "   -> Copying Mimir ingress certificates "
+        cp env/${envname}/certs/mimir* mimir/ingress/${ingress}/base/
     fi
 fi    
 
@@ -224,12 +229,12 @@ cat alloy/base/config-template.alloy | envsubst > alloy/base/config.alloy
 # license check
 if [ -f env/${envname}/files/license.jwt ]; then
     echo " -> License file found, copying to overlays.."
-    if [[ ! -d grafana/overlays/${envname} ]]; then
+    if [[ ! -f grafana/overlays/${envname}/kustomization.yaml ]]; then
         echo " -> Overlay directory for '${envname}' not found, creating.."
         mkdir -p grafana/overlays/${envname}
         cp grafana/overlays/example/kustomization.yaml grafana/overlays/${envname}/
     fi
-    if [[ ! -d loki/overlays/${envname} ]]; then
+    if [[ ! -f loki/overlays/${envname}/kustomization.yaml ]]; then
         mkdir -p loki/overlays/${envname}
         cp loki/overlays/example/kustomization.yaml loki/overlays/${envname}/
     fi
