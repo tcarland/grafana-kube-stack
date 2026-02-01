@@ -1,0 +1,57 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: monitoring
+
+resources:
+  - mimir-ingress.yaml
+
+configMapGenerator:
+  - name: mimir-nginx-params
+    envs:
+      - params.env
+
+secretGenerator:
+  - name: mimir-tls
+    behavior: create
+    type: "kubernetes.io/tls"
+    files:
+      - tls.crt=mimir.crt
+      - tls.key=mimir.key
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+replacements:
+  - source:
+      fieldPath: data.MIMIR_DOMAINNAME
+      kind: ConfigMap
+      name: mimir-nginx-params
+      version: v1
+    targets:
+      - select:
+          name: mimir-ingress
+          kind: Ingress
+        fieldPaths:
+          - spec.tls.*.hosts.0
+          - spec.rules.0.host
+  - source:
+      fieldPath: data.namespace
+      kind: ConfigMap
+      name: loki-nginx-params
+      version: v1
+    targets:
+      - select:
+          name: mimir-ingress
+          kind: ingress
+        fieldPaths:
+          - metadata.namespace
+
+labels:
+  - includeSelectors: true
+    pairs:
+      app.kubernetes.io/component: mimir-ingress
+      app.kubernetes.io/name: mimir-nginx-ingress
+      app.kubernetes.io/part-of: grafana-kube-stack
+      app.kubernetes.io/version: v26.01.30
+      kustomize.component: mimir-ingress

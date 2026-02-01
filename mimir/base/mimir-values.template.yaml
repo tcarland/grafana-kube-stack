@@ -41,8 +41,7 @@ ingester:
     enabled: false
 
 compactor:
-  enabled:
-    true
+  enabled: true
   replicas: 1
   persistentVolume:
     size: 2Gi
@@ -124,12 +123,7 @@ metaMonitoring:
       enabled: false
 
 gateway:
-  enabled: false
-  # these values were deprecated after mimir 2.17 chart v5.8.0
-  #enabledNonEnterprise: false
-  #image:
-  #  repository: grafana/mimir-enterprise
-  #  tag: 2.17.0
+  enabled: true
   replicas: 1
   ingress:
     enabled: false
@@ -140,8 +134,8 @@ gateway:
       tag: 1.29-alpine
     basicAuth:
       enabled: false
-      username: null
-      password: null
+      username: ${AGENT_USERNAME}
+      password: ${AGENT_PASSWORD}
       existingSecret: null
 
 graphite:

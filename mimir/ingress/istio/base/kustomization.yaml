@@ -1,0 +1,62 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: monitoring
+
+resources:
+  - mimir-virtualservice.yaml
+  - mimir-gateway.yaml
+
+configMapGenerator:
+  - name: mimir-istio-params
+    envs:
+      - params.env
+      
+secretGenerator:
+  - name: mimir-tls
+    namespace: istio-system
+    behavior: create
+    type: "kubernetes.io/tls"
+    files:
+      - tls.crt=mimir.crt
+      - tls.key=mimir.key
+      
+generatorOptions:
+  disableNameSuffixHash: true
+
+replacements:
+  - source:
+      fieldPath: data.MIMIR_DOMAINNAME
+      kind: ConfigMap
+      name: mimir-istio-params
+      version: v1
+    targets:
+      - select:
+          name: mimir-gateway
+          kind: Gateway
+        fieldPaths:
+          - spec.servers.*.hosts.0
+      - select:
+          name: mimir-vs
+          kind: VirtualService
+        fieldPaths:
+          - spec.hosts.0
+  - source:
+      fieldPath: data.ingress_namespace
+      kind: ConfigMap
+      name: mimir-istio-params
+      version: v1
+    targets:
+      - select:
+          name: mimir-tls
+          kind: Secret
+        fieldPaths:
+          - metadata.namespace
+
+labels:
+  - includeSelectors: true
+    pairs:
+      app.kubernetes.io/component: mimir-ingress
+      app.kubernetes.io/name: mimir-istio-ingress
+      app.kubernetes.io/part-of: grafana-kube-stack
+      app.kubernetes.io/version: v26.01.20
+      kustomize.component: mimir-ingress

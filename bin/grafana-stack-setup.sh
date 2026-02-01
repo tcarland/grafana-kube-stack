@@ -2,7 +2,7 @@
 #
 # Timothy C. Arland <tcarland at gmail dot com>
 PNAME=${0##*\/}
-VERSION="v26.01.21"
+VERSION="v26.01.31"
 
 binpath=$(dirname "$0")
 project=$(dirname "$(realpath "$binpath")")
@@ -126,6 +126,11 @@ else
 fi
 echo " -> Ingress controller type set to '$ingress' given INGRESS_NAMESPACE='$INGRESS_NAMESPACE'"
 
+# Create namespace if not exists
+if ! kubectl get namespace "$GRAFANA_NAMESPACE" >/dev/null 2>&1; then
+    echo " -> Creating namespace '$GRAFANA_NAMESPACE'"
+    kubectl create namespace "$GRAFANA_NAMESPACE" >/dev/null 2>&1
+fi
 
 # -----------------
 # Loki
@@ -142,14 +147,26 @@ if [ -n "$LOKI_DOMAINNAME" ]; then
 fi
 
 
+# -----------------
 # Mimir
-echo " -> Creating s3 secrets.env for Mimir"
+echo " -> Creating Mimir s3 secrets and values frome template"
 echo "$s3_secrets" | envsubst > mimir/base/secrets.env
+cat mimir/base/mimir-values.template.yaml | envsubst > mimir/base/mimir-values.yaml
+
+# Mimir Ingress
+if [ -n "$MIMIR_DOMAINNAME" ]; then
+    cat mimir/ingress/${ingress}/base/params.env.template | envsubst > \
+        mimir/ingress/${ingress}/base/params.env
+    if [ -f env/${envname}/certs/mimir.crt ]; then
+        echo "   -> Copying Mimir ingress certificates "
+        cp env/${envname}/certs/mimir* mimir/ingress/${ingress}/base/
+    fi
+fi    
 
 
 # -----------------
 # Grafana / Prometheus
-echo " -> Creating Values from templates"
+echo " -> Creating Grafana and Prometheus Values from templates"
 
 cat grafana/base/grafana-values.template.yaml | envsubst > grafana/base/grafana-values.yaml
 cat grafana/base/secrets.template.env | envsubst > grafana/base/secrets.env
@@ -192,6 +209,7 @@ fi
 echo " -> Creating Tempo values from template"
 cat tempo/base/tempo-values.template.yaml | envsubst > tempo/base/tempo-values.yaml
 
+# Tempo Ingress
 if [ -n "$TEMPO_DOMAINNAME" ]; then
     cat tempo/ingress/${ingress}/base/params.env.template | envsubst > tempo/ingress/${ingress}/base/params.env
     if [ -d env/${envname}/certs ]; then
@@ -211,12 +229,12 @@ cat alloy/base/config-template.alloy | envsubst > alloy/base/config.alloy
 # license check
 if [ -f env/${envname}/files/license.jwt ]; then
     echo " -> License file found, copying to overlays.."
-    if [[ ! -d grafana/overlays/${envname} ]]; then
+    if [[ ! -f grafana/overlays/${envname}/kustomization.yaml ]]; then
         echo " -> Overlay directory for '${envname}' not found, creating.."
         mkdir -p grafana/overlays/${envname}
         cp grafana/overlays/example/kustomization.yaml grafana/overlays/${envname}/
     fi
-    if [[ ! -d loki/overlays/${envname} ]]; then
+    if [[ ! -f loki/overlays/${envname}/kustomization.yaml ]]; then
         mkdir -p loki/overlays/${envname}
         cp loki/overlays/example/kustomization.yaml loki/overlays/${envname}/
     fi
