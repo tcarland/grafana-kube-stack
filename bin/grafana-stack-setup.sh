@@ -130,10 +130,6 @@ echo " -> Ingress controller type set to '$ingress' given INGRESS_NAMESPACE='$IN
 if ! kubectl get namespace "$GRAFANA_NAMESPACE" >/dev/null 2>&1; then
     echo " -> Creating namespace '$GRAFANA_NAMESPACE'"
     kubectl create namespace "$GRAFANA_NAMESPACE" >/dev/null 2>&1
-    if [ $? -ne 0 ]; then
-        echo "$PNAME Error creating namespace '$GRAFANA_NAMESPACE'" >&2
-        exit 2
-    fi
 fi
 
 # -----------------
