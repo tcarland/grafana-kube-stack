@@ -110,7 +110,7 @@ installs the `kube-state-metrics` and `grafana` charts.
 | [Grafana](https://github.com/grafana/grafana)      | **v12.3.1**   |   *10.5.15*    | https://github.com/grafana-community/helm-charts |
 | [Loki](https://github.com/grafana/loki)            | **v3.6.7**    |    *6.55.0*    | source repo |
 | [Tempo](https://github.com/grafana/tempo)          | **v2.10.3**   |    *2.6.5*     | https://github.com/grafana-community/helm-charts |
-| [Alloy](https://github.com/grafana/alloy)          | **v1.14.0**   |    *1.6.2*     | source repo |
+| [Alloy](https://github.com/grafana/alloy)          | **v1.14.2**   |    *1.6.2*     | source repo |
 
 <br>
 
