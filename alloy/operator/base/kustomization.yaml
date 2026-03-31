@@ -3,20 +3,14 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: monitoring
 
-configMapGenerator:
-  - name: alloy-config
-    files:
-      - config.alloy=config.alloy
-
 generatorOptions:
   disableNameSuffixHash: true
 
 helmCharts:
-  - name: alloy
+  - name: alloy-operator
     includeCRDs: true
-    releaseName: grafana-alloy
+    releaseName: alloy-operator
     namespace: monitoring
-    version: 1.6.2
+    version: 0.5.2
     repo: https://grafana.github.io/helm-charts
-    valuesFile: alloy-values.yaml
   

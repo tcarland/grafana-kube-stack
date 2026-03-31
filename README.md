@@ -103,14 +103,14 @@ installs the `kube-state-metrics` and `grafana` charts.
 
 ## Components Matrix
 
-|       **Component**                                |  **Version**  | **Helm Chart** |
-| -------------------------------------------------- | ------------- | -------------- |
-| [Mimir](https://github.com/grafana/mimir)          | **v3.0.1**    |    *6.0.5*     |
-| [Kube-Prometheus-Stack](https://github.com/prometheus-community/helm-charts) | **v3.8.0**  |  *79.12.0* |
-| [Grafana](https://github.com/grafana/grafana)      | **v12.3.1**   |   *10.5.8*     |
-| [Loki](https://github.com/grafana/loki)            | **v3.5.7**    |    *6.45.2*    |
-| [Tempo](https://github.com/grafana/tempo)          | **v2.9.0**    |    *1.58.1*    |
-| [Alloy](https://github.com/grafana/alloy)          | **v1.12.2**   |    *1.5.2*     |
+|       **Component**                                |  **Version**  | **Helm Chart** | Chart Location |
+| -------------------------------------------------- | ------------- | -------------- | -------- |
+| [Mimir](https://github.com/grafana/mimir)          | **v3.0.4**    |    *6.0.6*     | source repo  |
+| [Kube-Prometheus-Stack](https://github.com/prometheus-community/helm-charts) | **v3.10.0**  |  *82.15.1* |  at link |
+| [Grafana](https://github.com/grafana/grafana)      | **v12.3.1**   |   *10.5.15*    | https://github.com/grafana-community/helm-charts |
+| [Loki](https://github.com/grafana/loki)            | **v3.6.7**    |    *6.55.0*    | source repo |
+| [Tempo](https://github.com/grafana/tempo)          | **v2.10.3**   |    *2.6.5*     | https://github.com/grafana-community/helm-charts |
+| [Alloy](https://github.com/grafana/alloy)          | **v1.12.2**   |    *1.6.2*     | source repo |
 
 <br>
 
