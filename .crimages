@@ -1,4 +1,4 @@
-grafana/alloy:v1.12.2
+grafana/alloy:v1.14.0
 grafana/mimir:3.0.4
 grafana/grafana:12.3.1
 grafana/rollout-operator:v0.28.0
