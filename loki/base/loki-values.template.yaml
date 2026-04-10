@@ -10,7 +10,7 @@ loki:
   image:
     registry: docker.io
     repository: grafana/loki
-    tag: 3.6.3
+    tag: 3.6.7
     pullPolicy: IfNotPresent
   schemaConfig:
     configs:
@@ -68,12 +68,12 @@ memcached:
   enabled: true
   image:
     repository: memcached
-    tag: 1.6.39-alpine
+    tag: 1.6.41-alpine
 memcachedExporter:
   enabled: true
   image:
     repository: prom/memcached-exporter
-    tag: v0.15.4
+    tag: v0.15.5
   
 minio:
   enabled: false
@@ -152,13 +152,13 @@ singleBinary:
 
 enterprise:
   enabled: false
-  version: 3.5.4
+  version: 3.6.7
   useExternalLicense: true
   externalLicenseName: null
   image:
     registry: docker.io
     repository: grafana/enterprise-logs
-    tag: 3.5.4
+    tag: 3.6.7
   adminToken:
     secret: null
   provisioner:

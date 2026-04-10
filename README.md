@@ -1,6 +1,6 @@
 Grafana Stack on Kubernetes
 ===========================
-v26.01.10
+v26.04.10
 
 Copyright (c)2025-2026 Timothy C. Arland <tcarland at gmail dot com>
 
@@ -105,12 +105,16 @@ installs the `kube-state-metrics` and `grafana` charts.
 
 |       **Component**                                |  **Version**  | **Helm Chart** |
 | -------------------------------------------------- | ------------- | -------------- |
-| [Mimir](https://github.com/grafana/mimir)          | **v3.0.1**    |    *6.0.5*     |
-| [Kube-Prometheus-Stack](https://github.com/prometheus-community/helm-charts) | **v3.8.0**  |  *79.12.0* |
-| [Grafana](https://github.com/grafana/grafana)      | **v12.3.1**   |   *10.5.8*     |
-| [Loki](https://github.com/grafana/loki)            | **v3.5.7**    |    *6.45.2*    |
-| [Tempo](https://github.com/grafana/tempo)          | **v2.9.0**    |    *1.58.1*    |
-| [Alloy](https://github.com/grafana/alloy)          | **v1.12.2**   |    *1.5.2*     |
+| [Mimir](https://github.com/grafana/mimir)          | **v3.0.4**    |    *6.0.6*     |
+| [Kube-Prometheus-Stack](https://github.com/prometheus-community/helm-charts) | **v3.10.0**  |  *82.15.1* |
+| [Grafana](https://github.com/grafana/grafana)      | **v12.3.1**   |   *10.5.15*    |
+| [Loki](https://github.com/grafana/loki)            | **v3.6.7**    |    *6.55.0*    |
+| [Tempo](https://github.com/grafana/tempo)          | **v2.10.3**   |    *2.6.5*     |
+| [Alloy](https://github.com/grafana/alloy)          | **v1.14.2**   |    *1.6.2*     |
+
+** Note that Chart tags can be located in the source repository for most components
+   save for Grafana and Tempo having been relocated to the 
+   [grafana-community](https://github.com/grafana-community/helm-charts) repository.
 
 <br>
 

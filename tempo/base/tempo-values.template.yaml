@@ -75,7 +75,14 @@ memcached:
     registry: null
     pullSecrets: []
     repository: memcached
-    tag: 1.6.39-alpine
+    tag: 1.6.41-alpine
+memcachedExporter:
+  enabled: false
+  image:
+    registry: null
+    pullSecrets: []
+    repository: prom/memcached-exporter
+    tag: v0.15.5
 
 gateway:
   enabled: true
