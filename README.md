@@ -1,6 +1,6 @@
 Grafana Stack on Kubernetes
 ===========================
-v26.01.10
+v26.04.10
 
 Copyright (c)2025-2026 Timothy C. Arland <tcarland at gmail dot com>
 
