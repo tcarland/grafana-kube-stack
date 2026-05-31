@@ -5,22 +5,23 @@ namespace: monitoring
 
 resources: []
 
-generatorOptions:
-  disableNameSuffixHash: true
+secretGenerator:
+  - name: mcp-grafana-apikey
+    envs:
+      - secrets.env
+
 
 helmCharts:
-  - name: loki
-    includeCRDs: true
-    releaseName: loki
+  - name: grafana-mcp
+    includeCRDs: false
+    releaseName: grafana-mcp
     namespace: monitoring
-    version: 15.0.1
+    version: 0.3.1
     repo: https://grafana-community.github.io/helm-charts
-    valuesFile: loki-values.yaml
-    #additionalValuesFiles:
-    #  - gel-values.yaml
+    valuesFile: grafana-mcp-values.yaml
 
 labels:
   - includeSelectors: false
     pairs:
       app.kubernetes.io/part-of: grafana-kube-stack
-      kustomize.component: loki
+      kustomize.component: grafana-mcp

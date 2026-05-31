@@ -82,14 +82,14 @@ memcachedExporter:
     registry: null
     pullSecrets: []
     repository: prom/memcached-exporter
-    tag: v0.15.5
+    tag: v0.16.0
 
 gateway:
   enabled: true
   image:
     registry: null
     repository: nginxinc/nginx-unprivileged
-    tag: 1.29-alpine
+    tag: 1.31-alpine
   ingress:
     enabled: false
   basicAuth:

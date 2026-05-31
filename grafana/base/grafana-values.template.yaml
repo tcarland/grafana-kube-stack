@@ -3,7 +3,7 @@ replicas: 1
 image:
   registry: docker.io
   repository: grafana/grafana
-  tag: 12.3.1
+  tag: 12.4.3
 admin:
   existingSecret: "grafana-admin"
   userKey: admin-user
@@ -25,14 +25,14 @@ initChownData:
   enabled: false
   image:
     registry: docker.io
-    tag: "1.31.1"
+    tag: "1.37.0"
     repository: library/busybox
 
 sidecar:
   image:
     registry: quay.io
     repository: kiwigrid/k8s-sidecar
-    tag: 2.5.0
+    tag: 2.7.3
   dashboards:
     enabled: true
     defaultFolderName: "Kubernetes"
