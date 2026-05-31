@@ -1,6 +1,6 @@
 Grafana Stack on Kubernetes
 ===========================
-v26.05.30
+v26.05.31
 
 Copyright (c)2025-2026 Timothy C. Arland <tcarland at gmail dot com>
 
@@ -110,7 +110,6 @@ installs the `kube-state-metrics` and `grafana` charts.
 |    -->  Prometheus Operator                        | **v0.90.1**   |   " " |
 |    -->  Prometheus                                 | **v3.11.2**   |   " " |
 | [Grafana](https://github.com/grafana/grafana)      | **v12.4.3**   |   *11.6.1*    |
-| [MCP](https://github.com/grafana/mcp-grafana)      | **v0.8.2**    |   *0.3.1*     |
 | [Oncall](https://github.com/grafana/oncall)        | **v1.16.10**  |   *1.16.10*   |  
 | [Loki](https://github.com/grafana/loki)            | **v3.7.2**    |   *15.0.1*    |
 | [Tempo](https://github.com/grafana/tempo)          | **v2.10.5**   |   *2.23.1*    |
