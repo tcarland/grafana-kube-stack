@@ -11,11 +11,11 @@
     alloy_groups:
       - systemd-journal
       - adm
-    alloy_version: 'v1.14.2'
+    alloy_version: 'v1.16.1'
     alloy_config: 'config.alloy.j2'
     alloy_url: 'https://github.com/grafana/alloy/releases/download'
     alloy_archive: 'alloy-linux-amd64.zip'
-    alloy_sha256: '1b8050bf1dd4dc1088abfd924430dde04e948f5617ec64eb25ec50ba2aae3beb'
+    alloy_sha256: '68fa7b1c75dc701f5bdc5242ce043ddb52f538ede493b7e9fc73226800fbfd3b'
     # Alloy Config
     alloy_config_template: 'templates/config.alloy.j2'
     alloy_env_template: 'templates/alloy-env.j2'

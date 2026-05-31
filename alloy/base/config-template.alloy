@@ -180,7 +180,7 @@ otelcol.receiver.otlp "otlp_receiver" {
 otelcol.exporter.otlp "tempo" {
     // Define the client for exporting.
     client {
-        endpoint = "tempo-cluster-distributor.tempo.svc.cluster.local:4317"
+        endpoint = "tempo-cluster-distributor.monitoring.svc.cluster.local:4317"
         headers = {
             "X-Scope-OrgID" = "${GRAFANA_ENV}",
         }
