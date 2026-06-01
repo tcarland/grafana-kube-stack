@@ -49,7 +49,7 @@ prometheus.scrape "integrations_node_exporter" {
 
 prometheus.remote_write "prom" {
     endpoint {
-        url = "{{ prometheus_endpoint }}/api/v1/write"
+        url = "{{ mimir_endpoint }}/api/v1/push"
         basic_auth {
             username = "{{ agent_username }}"
             password = "{{ agent_password }}"

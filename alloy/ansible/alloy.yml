@@ -24,6 +24,7 @@
     alloy_listen_port: '12380'
     # Endpoints
     prometheus_endpoint: 'http://prometheus:9090'
+    mimir_endpoint: 'http://mimir-distributor:8080'
     loki_endpoint: 'http://loki:3100'
     tempo_http_endpoint: 'tempo'
     tempo_otlp_endpoint: 'tempo:4317'
