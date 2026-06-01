@@ -117,6 +117,7 @@ including Grafana Enterprise versions.
 |    -->  Prometheus Operator                        | **v0.90.1**   |   " " |
 |    -->  Prometheus                                 | **v3.11.2**   |   " " |
 | [Grafana](https://github.com/grafana/grafana)      | **v12.4.3**   |   *11.6.1*    |
+|    -->  PostgresDb  (*optional*)
 | [Loki](https://github.com/grafana/loki)            | **v3.7.2**    |   *15.0.1*    |
 | [Tempo](https://github.com/grafana/tempo)          | **v2.10.5**   |   *2.23.1*    |
 | [Alloy](https://github.com/grafana/alloy)          | **v1.16.1**   |   *1.8.2*     |
