@@ -29,9 +29,10 @@ that *Tempo* does not use a protocol designation for its endpoints.
 envname=dev
 source ../../env/${envname}/${envname}.env
 
+     #prometheus_endpoint=https://${PROMETHEUS_DOMAINNAME} \
 ansible-playbook -i "hostA,hostB,host[10:15]," \
   -e "loki_endpoint=https://${LOKI_DOMAINNAME} \
-      prometheus_endpoint=https://${PROMETHEUS_DOMAINNAME} \
+      mimir_endpoint=https://${MIMIR_DOMAINNAME} \
       tempo_http_endpoint=${TEMPO_DOMAINNAME}:3200 \
       tempo_otlp_endpoint=${TEMPO_DOMAINNAME}:4317 \
       tenant_org_id=${GRAFANA_ENV} \

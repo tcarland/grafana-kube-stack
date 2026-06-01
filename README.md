@@ -1,6 +1,6 @@
 Grafana Stack on Kubernetes
 ===========================
-v26.05.31
+v26.06.01
 
 Copyright (c)2025-2026 Timothy C. Arland <tcarland at gmail dot com>
 
@@ -42,14 +42,21 @@ generation.
 
 Given the flexible pattern of handling various environment
 configurations with *kustomize*, the project uses the `--enable-helm`
-feature of *kustomize* to manage environment overlays combining the
+feature of *kustomize* to manage environment *overlays* combining the
 use of *kustomize* and *helm*; essentially acting as a wrapper to the
-official *Prometheus Community*  [helm charts](https://github.com/prometheus-community/helm-chart)
+*Grafana* and *Prometheus Community* helm charts.
 
-The [Prometheus-Community](https://github.com/prometheus-community) helm
-chart `kube-prometheus-stack` is used to install *Prometheus*, which also
-installs the `kube-state-metrics` and `grafana` charts.
+- [Grafana OSS Charts](https://github.com/grafana-community/helm-charts)
+- [Prometheus Community Charts](https://github.com/prometheus-community/helm-chart)
 
+In addition to the OSS versions we can support the official Grafana, 
+including Grafana Enterprise versions.
+
+- [Grafana Charts](https://github.com/grafana/helm-charts)
+
+
+
+## Data Flow
 ```
                     ┌───────────────────────────────┐
                     │         Data Sources          │
@@ -110,7 +117,6 @@ installs the `kube-state-metrics` and `grafana` charts.
 |    -->  Prometheus Operator                        | **v0.90.1**   |   " " |
 |    -->  Prometheus                                 | **v3.11.2**   |   " " |
 | [Grafana](https://github.com/grafana/grafana)      | **v12.4.3**   |   *11.6.1*    |
-| [Oncall](https://github.com/grafana/oncall)        | **v1.16.10**  |   *1.16.10*   |  
 | [Loki](https://github.com/grafana/loki)            | **v3.7.2**    |   *15.0.1*    |
 | [Tempo](https://github.com/grafana/tempo)          | **v2.10.5**   |   *2.23.1*    |
 | [Alloy](https://github.com/grafana/alloy)          | **v1.16.1**   |   *1.8.2*     |
@@ -138,9 +144,10 @@ details of the internal architecture.
 ## Requirements
 
 - [kustomize](https://github.com/kubernetes-sigs/kustomize) : v5.8.0
-- [helm](https://github.com/helm/helm) : v3.19.0
-- [yq](https://github.com/mikefarah/yq) : v4.47.2
+- [helm](https://github.com/helm/helm) : v4.2.0
+- [yq](https://github.com/mikefarah/yq) : v4.53.2
 - [mc](https://github.com/minio/mc) : latest stable (if using MinIO)
+- [aws](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) 
 - httpd-tools : system package
 
 <br>
@@ -251,7 +258,6 @@ export S3_SKIP_CREATE=true
 
 ---
 
-
 # Mimir
 
 Mimir acts as distributed metric storage and is core to the stack, so is the 
@@ -278,15 +284,23 @@ Install by shipping the output to *kubectl*
 kustomize build --enable-helm mimir/ | kubectl apply -f -
 ```
 
+The `mimir-gateway` is used to expose Mimir and provide an authentication 
+layer for external clients. Note that Mimir can be used directly as a 
+replacement of *Prometheus* using the endpoint `/api/v1/push` which 
+implements the same *remote_write* api as the Prometheus endpoint: 
+`api/v1/write`.
+
+Prometheus is near complete deprecation given that the *exporter* pattern 
+used previously with Prometheus has be incorporated into *Grafana Alloy* 
+and can ship metrics to either Prometheus or Mimir.
+
+
 ## Mimir Ingress
 
-Metrics can be sent to *Mimir* via *Prometheus* or direct to *Mimir*, though 
-the project is currently defaulting to exposing Prometheus externally.
-This can be changed relatively easy following the same pattern as *Loki* 
-or *Tempo* by enabling the *Mimir Gateway* and enabling Authentication for 
-agents. 
-
 Ingress manifests are provided in `mimir/ingress`
+```sh
+kustomize build mimir/ingress/istio | k apply -f -
+```
 
 <br>
 
@@ -484,8 +498,8 @@ agents using the `prometheus.remote_write` endpoint. Internal to the cluster
 we can route either way, but note that the endpoints have a different API path
 respectively.
 
-- Prometheus  :  http://prometheus/api/v1/write
-- Mimir       :  http://mimir-distributor/api/v1/push
+- Prometheus  :  http://prometheus:9090/api/v1/write
+- Mimir       :  http://mimir-distributor:8080/api/v1/push
 
 
 ## Ansible Deployment
