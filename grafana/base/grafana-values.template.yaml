@@ -1,4 +1,5 @@
-replicas: 1
+replicas: 2
+headlessService: true
 
 image:
   registry: docker.io
@@ -22,15 +23,17 @@ grafana.ini:
     check_for_updates: false
   database:
     url: postgres://${GRAFANA_ADMIN_USER}:${GRAFANA_ADMIN_PASSWORD}@postgresdb.monitoring.svc.cluster.local:5432/${GRAFANA_DB_NAME}?sslmode=disable
-    #type: postgres
-    #host: postgresdb.monitoring.svc.cluster.local:5432
-    #name: ${GRAFANA_DB_NAME}
-    #user: ${GRAFANA_ADMIN_USER}
-    #password: ${GRAFANA_ADMIN_PASSWORD}
     ssl_mode: disable 
     max_idle_conn: 10
     max_open_conn: 100
     #conn_max_lifetime: 14400
+  unified_alerting:
+    enabled: true
+    ha_listen_address: "${POD_IP}:9094"
+    ha_peers: "grafana-alerting.monitoring.svc.cluster.local:9094"
+    ha_advertise_address: "${POD_IP}:9094"
+    ha_peer_timeout: 15s
+    ha_reconnect_timeout: 2m
 initChownData:
   enabled: false
   image:

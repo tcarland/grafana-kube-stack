@@ -307,7 +307,7 @@ kustomize build mimir/ingress/istio | k apply -f -
 
 ---
     
-# Prometheus Operator 
+# Prometheus Operator (*Optional)
 
 The *Prometheus Operator* is installed via the community helm [chart](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)
 
@@ -362,33 +362,6 @@ and *prometheus.key*.
 ```sh
 ingress="istio" # or nginx
 kustomize build prometheus/ingress/$ingress/ | kubectl apply -f -
-```
-
-<br>
-
----
-
-# Grafana 
-
-Grafana follows our typical pattern for installation using *kustomize*.
-Running `kustomize build grafana/` provides the standard, non-enterprise 
-install.  If the license file is located in `env/$envname/files` then it 
-is assumed that an *overlay* is created for applying the Grafana Enterprise
-versions. If the overlay path does not yet exist, the setup script will 
-seed an overlay using the envname and copy the example overlay as 
-`grafana/overlays/$envname/kustomization.yaml` which sets the license 
-secret and used the *Enterprise* image for the container.
-```sh
-kustomize build --enable-helm grafana/overlays/$envname/ | kubectl apply -f -
-```
-
-## Grafana Ingress
-
-As for other components, there are ingress manifests for *Nginx* (deprecated) 
-and *Istio* which will be configured by the setup script when *GRAFANA_DOMAINNAME* 
-is defined along with *INGRESS_NAMESPACE*.
-```sh
-kustomize build grafana/ingress/$ingress/ | kubectl apply -f -
 ```
 
 <br>
@@ -475,6 +448,70 @@ ability to use authentication, where the agent credentials are used.
 
 ---
 
+# Grafana 
+
+Grafana follows our typical pattern for installation using *kustomize*.
+Running `kustomize build grafana/` provides the standard, non-enterprise 
+install.  If the license file is located in `env/$envname/files` then it 
+is assumed that an *overlay* is created for applying the Grafana Enterprise
+versions. If the overlay path does not yet exist, the setup script will 
+seed an overlay using the envname and copy the example overlay as 
+`grafana/overlays/$envname/kustomization.yaml` which sets the license 
+secret and used the *Enterprise* image for the container.
+```sh
+kustomize build --enable-helm grafana/overlays/$envname/ | kubectl apply -f -
+```
+
+## High-Availability
+
+Grafana supports HA mode but requires an alternate database configuration 
+to the default built-in *sqllite*. This deployment uses HA by default, though 
+that can be easily reverted by changing the replica count and commenting the 
+`[database]` configuration of the *grafana.ini*.
+
+### PostgresDb
+
+Postgres is the default db type supported here and should be installed first.
+The setup script uses the *Grafana* Admin principal credentials for the pg db.
+This deployment utilizes a customized Postgres Container Image to provision 
+the database for access by the admin account. See this [Readme](grafana/postgresdb/resources/README-postgres.md)
+for building the custom image. Note the example postgres overlay for using
+this image.
+
+Also note that a *StorageClass* should be set using `Retain` for the database 
+via the *grafana/postgresdb/base/pgsql-pvc.yaml* manifest.
+
+Install Postgres.
+```sh
+kustomize build grafana/postgresdb/overlays/mydeployment | k apply -f -
+```
+
+### Validate Grafana 
+
+Validate the Grafana Values file and ensure chart is seeded by running
+kustomize without applying.
+```sh
+kustomize build --enable-helm grafana/  | less # or grafana/overlays/myenv 
+```
+
+Repeat to install
+```sh
+kustomize build --enable-helm grafana/  | kubectl apply -f -
+```
+
+## Grafana Ingress
+
+As for other components, there are ingress manifests for *Nginx* (deprecated) 
+and *Istio* which will be configured by the setup script when *GRAFANA_DOMAINNAME* 
+is defined along with *INGRESS_NAMESPACE*.
+```sh
+kustomize build grafana/ingress/$ingress/ | kubectl apply -f -
+```
+
+<br>
+
+---
+
 # Alloy
 
 Hosts that are having *Alloy* provisioned locally will need the `gnupg` package.
@@ -552,7 +589,7 @@ document overlay of enterprise enablement details.
 
 # Additional Notes
 
-## Grafana PVC
+## Grafana (and Postgres) PVCs
 
 Ensure a policy of *Retain* is set on the PV. Usually inherited from 
 the *StorageClass*. If the PVC was created with a default SC or is 
