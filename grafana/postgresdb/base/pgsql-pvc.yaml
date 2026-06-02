@@ -2,7 +2,8 @@
 apiVersion: v1
 kind: PersistentVolumeClaim 
 metadata:
-  name: postgres-pvc 
+  name: pgdb-grafana-pvc
+  namespace: $(namespace) 
   labels:
     app: postgres 
 spec:

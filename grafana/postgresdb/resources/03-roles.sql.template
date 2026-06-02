@@ -1,9 +1,0 @@
-CREATE ROLE grafana_admin_role;
-GRANT CONNECT ON DATABASE metastore_db TO grafana_admin_role;
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA metastore_db TO grafana_admin_role;
-GRANT USAGE,CREATE ON SCHEMA grafana TO grafana_admin_role;
-GRANT USAGE ON ALL SEQUENCES IN SCHEMA metastore_db TO pgadmin_role;
-
-CREATE USER '${GRAFANA_ADMIN_USER}' WITH PASSWORD '${GRAFANA_ADMIN_PASSWORD}';
-GRANT grafana_admin_role TO ${GRAFANA_ADMIN_USER};
-ALTER SCHEMA grafana OWNER TO grafana_admin_role;

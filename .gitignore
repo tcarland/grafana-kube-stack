@@ -24,6 +24,7 @@ ingress/nginx/base/nginx-values.yaml
 ingress/istio/istio-operator.yaml
 tempo/base/tempo-values.yaml
 grafana/base/grafana-values.yaml
+grafana/postgresdb/resources/03-roles.sql
 prometheus/base/prom-values.yaml
 prometheus/base/prom-addScrapeConfigs.yaml
 prometheus/ingress/istio/base/prometheus-virtualservice.yaml

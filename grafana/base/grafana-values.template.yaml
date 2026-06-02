@@ -20,7 +20,17 @@ grafana.ini:
   analytics:
     reporting_enabled: false
     check_for_updates: false
-    
+  database:
+    url: postgres://${GRAFANA_ADMIN_USER}:${GRAFANA_ADMIN_PASSWORD}@postgresdb.monitoring.svc.cluster.local:5432/${GRAFANA_DB_NAME}?sslmode=disable
+    #type: postgres
+    #host: postgresdb.monitoring.svc.cluster.local:5432
+    #name: ${GRAFANA_DB_NAME}
+    #user: ${GRAFANA_ADMIN_USER}
+    #password: ${GRAFANA_ADMIN_PASSWORD}
+    ssl_mode: disable 
+    max_idle_conn: 10
+    max_open_conn: 100
+    #conn_max_lifetime: 14400
 initChownData:
   enabled: false
   image:
@@ -60,22 +70,22 @@ sidecar:
   #  provider:
   #    allowUiUpdates: true
   #    foldersFromFilesStructure: true
-  datasources:
-    enabled: true
-    defaultDatasourceEnabled: true
-    isDefaultDatasource: true
-    name: Prometheus
-    uid: prometheus
-    url: http://prometheus-server.monitoring.svc.cluster.local:9090
+  #datasources:
+  #  enabled: true
+  #  defaultDatasourceEnabled: true
+  #  isDefaultDatasource: true
+  #  name: Prometheus
+  #  uid: prometheus
+  #  url: http://prometheus-server.monitoring.svc.cluster.local:8080
 
 datasources:
   datasources.yaml:
     apiVersion: 1
     datasources:
-      - name: Prometheus
+      - name: Mimir
         type: prometheus
         access: proxy
-        url: http://prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
+        url: http://mimir-query-frontend.monitoring.svc.cluster.local:8080/prometheus
         editable: false
         isDefault: true
         jsonData:
