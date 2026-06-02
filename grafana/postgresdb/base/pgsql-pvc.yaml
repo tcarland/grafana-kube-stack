@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim 
+metadata:
+  name: pgdb-grafana-pvc
+  namespace: $(namespace) 
+  labels:
+    app: postgres 
+spec:
+  #storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 4Gi

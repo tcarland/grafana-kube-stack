@@ -2,7 +2,7 @@
 #
 # Timothy C. Arland <tcarland at gmail dot com>
 PNAME=${0##*\/}
-VERSION="v26.06.01"
+VERSION="v26.06.02"
 
 binpath=$(dirname "$0")
 project=$(dirname "$(realpath "$binpath")")
@@ -113,8 +113,9 @@ fi
 
 export S3_SKIP_VERIFY=${S3_SKIP_VERIFY:-"false"}
 export GRAFANA_NAMESPACE="${GRAFANA_NAMESPACE:-monitoring}"
-export GRAFANA_ADMIN_USER="${GRAFANA_ADMIN_USER:-admin}"
-export GRAFANA_ADMIN_PASSWORD="${GRAFANA_ADMIN_PASSWORD:-admin}"
+export GRAFANA_ADMIN_USER="${GRAFANA_ADMIN_USER:-grafana_admin}"
+export GRAFANA_ADMIN_PASSWORD="${GRAFANA_ADMIN_PASSWORD:-grafana_admin}"
+export GRAFANA_DB_NAME="${GRAFANA_DB_NAME:-grafana}"
 
 # Ingress config. INGRESS_NAMESPACE should 'istio-system' for istio or 'ingress-nginx' for nginx
 if [[ "$INGRESS_NAMESPACE" =~ "istio" ]]; then
@@ -170,6 +171,8 @@ echo " -> Creating Grafana and Prometheus Values from templates"
 
 cat grafana/base/grafana-values.template.yaml | envsubst > grafana/base/grafana-values.yaml
 cat grafana/base/secrets.template.env | envsubst > grafana/base/secrets.env
+cat grafana/postgresdb/base/secrets.template.env | envsubst > grafana/postgresdb/base/secrets.env
+cat grafana/postgresdb/resources/03-roles.template.sql | envsubst > grafana/postgresdb/resources/03-roles.sql
 
 cat prometheus/base/prom-values.template.yaml | envsubst > prometheus/base/prom-values.yaml
 cat prometheus/base/prom-addScrapeConfigs.template.yaml | envsubst > prometheus/base/prom-addScrapeConfigs.yaml

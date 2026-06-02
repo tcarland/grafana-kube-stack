@@ -1,4 +1,5 @@
-replicas: 1
+replicas: 2
+headlessService: true
 
 image:
   registry: docker.io
@@ -20,7 +21,19 @@ grafana.ini:
   analytics:
     reporting_enabled: false
     check_for_updates: false
-    
+  database:
+    url: postgres://${GRAFANA_ADMIN_USER}:${GRAFANA_ADMIN_PASSWORD}@postgresdb.monitoring.svc.cluster.local:5432/${GRAFANA_DB_NAME}?sslmode=disable
+    ssl_mode: disable 
+    max_idle_conn: 10
+    max_open_conn: 100
+    #conn_max_lifetime: 14400
+  unified_alerting:
+    enabled: true
+    ha_listen_address: "${POD_IP}:9094"
+    ha_peers: "grafana-alerting.monitoring.svc.cluster.local:9094"
+    ha_advertise_address: "${POD_IP}:9094"
+    ha_peer_timeout: 15s
+    ha_reconnect_timeout: 2m
 initChownData:
   enabled: false
   image:
@@ -60,22 +73,22 @@ sidecar:
   #  provider:
   #    allowUiUpdates: true
   #    foldersFromFilesStructure: true
-  datasources:
-    enabled: true
-    defaultDatasourceEnabled: true
-    isDefaultDatasource: true
-    name: Prometheus
-    uid: prometheus
-    url: http://prometheus-server.monitoring.svc.cluster.local:9090
+  #datasources:
+  #  enabled: true
+  #  defaultDatasourceEnabled: true
+  #  isDefaultDatasource: true
+  #  name: Prometheus
+  #  uid: prometheus
+  #  url: http://prometheus-server.monitoring.svc.cluster.local:8080
 
 datasources:
   datasources.yaml:
     apiVersion: 1
     datasources:
-      - name: Prometheus
+      - name: Mimir
         type: prometheus
         access: proxy
-        url: http://prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
+        url: http://mimir-query-frontend.monitoring.svc.cluster.local:8080/prometheus
         editable: false
         isDefault: true
         jsonData:

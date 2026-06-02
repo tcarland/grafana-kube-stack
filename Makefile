@@ -2,13 +2,8 @@
 clean:
 	( rm -f mimir/base/secrets.env \
 	  alloy/base/config.alloy \
-	  loki/base/loki-values.yaml \
 	  ingress/nginx/base/nginx-values.yaml \
 	  ingress/istio/istio-operator.yaml \
-	  grafana/base/grafana-values.yaml \
-	  prometheus/base/prom-values.yaml \
-	  grafana/base/secrets.env \
-	  tempo/base/tempo-values.yaml \
 	  loki/base/loki-values.yaml \
 	  loki/ingress/istio/base/*.crt \
 	  loki/ingress/istio/base/*.key \
@@ -32,6 +27,8 @@ clean:
 	  tempo/ingress/nginx/base/*.key \
 	  tempo/ingress/nginx/base/params.env \
 	  grafana/base/grafana-values.yaml \
+	  grafana/base/secrets.env \
+	  grafana/postgresdb/base/secrets.env \
 	  grafana/ingress/istio/base/*.crt \
 	  grafana/ingress/istio/base/*.key \
 	  grafana/ingress/istio/base/params.env \

@@ -5,6 +5,7 @@ grafana/rollout-operator:v0.49.0
 grafana/loki:3.7.2
 grafana/loki-canary:3.7.2
 grafana/tempo:2.10.5
+postgres/16.4
 quay.io/prometheus-operator/prometheus-operator:v0.90.1
 quay.io/prometheus-operator/prometheus-config-reloader:v0.90.1
 quay.io/prometheus/prometheus:v3.11.2
