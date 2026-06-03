@@ -23,3 +23,5 @@ apache/kafka-native:4.1.0
 
 #grafana/grafana-enterprise:12.4
 #grafana/enterprise-traces:v2.8.9
+#grafana/enterprise-metrics
+#grafana/enterprise-logs
