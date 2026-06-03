@@ -14,17 +14,23 @@ Community chart.
 
 - [Grafana Stack on Kubernetes](#grafana-stack-on-kubernetes)
   * [Overview](#overview)
+    + [Data Flow](#data-flow)
     + [Components Matrix](#components-matrix)
     + [Architecture and Documentation](#architecture-and-documentations)
     + [Requirements](#requirements)
     + [Deployment Configuration](#deployment-configuration)
     + [S3 Buckets](#s3-buckets)
   * [Mimir](#mimir)
-  * [Prometheus Operator and Grafana](#prometheus-operator-and-grafana)
-    + [Prometheus and Grafana Ingress](#prometheus-and-grafana-ingress)
+    + [Mimir Ingress](#mimir-ingress)
+  * [Prometheus Operator](#prometheus-operator)
+    + [Prometheus Ingress](#prometheus-ingress)
   * [Loki](#loki)
     + [Loki Ingress](#loki-ingress)
   * [Tempo](#tempo)
+    + [Tempo Ingress](#tempo-ingress)
+  * [Grafana](#grafana)
+    + [High Availability](#high-availability)
+    + [Grafana Ingress](#grafana-ingress)
   * [Alloy](#alloy)
     + [Ansible Deployment](#ansible-deployment)
   * [Additional Document References](#additional-document-references)
@@ -167,29 +173,27 @@ in `env`.  The project will ignore all configuration from being
 checked in, so the overlay of those secrets should be managed 
 outside of this project.
 
-Create an Environment Configuration from the template.
-```sh
-mkdir ./env/myenvname/
-cp ./env/env.template !$/myenvname/myenvname.env
-# set configuration and secrets in myenvname.env
-```
+- Create an Environment Configuration from the template.
+  ```sh
+  mkdir ./env/myenvname/
+  cp ./env/env.template !$/myenvname/myenvname.env
+  # set configuration and secrets in myenvname.env
+  ```
 
+- Namespace
+  The default namespace for the stack is `monitoring`. If a different
+  namespace is desired, update the *base/kustomization.yaml* files
+  or create overlays as needed.
 
-### Namespace
-The default namespace for the stack is `monitoring`. If a different
-namespace is desired, update the *base/kustomization.yaml* files
-or create overlays as needed.
-
-
-### Helm Charts
-The project uses *kustomize* to wrap the management and use of Helm charts.
-As a result *kustomize* requires the `--enable-helm` command switch when 
-running *build*. This can become tedious, so a *bash* function and alias 
-are provided to automatically detect the use of the helm wrapper and will 
-automatically add the switch when running kustomize.
-```sh
-source env/kustom.sh
-```
+- Helm Charts
+  The project uses *kustomize* to wrap the management and use of Helm charts.
+  As a result *kustomize* requires the `--enable-helm` command switch when 
+  running *build*. This can become tedious, so a *bash* function and alias 
+  are provided to automatically detect the use of the helm wrapper and will 
+  automatically add the switch when running kustomize.
+  ```sh
+  source env/kustom.sh
+  ```
 
 
 ### Node labels
@@ -310,7 +314,9 @@ kustomize build mimir/ingress/istio | k apply -f -
 
 ---
     
-# Prometheus Operator (*Optional*)
+# Prometheus Operator 
+
+    (*Optional*)
 
 The *Prometheus Operator* is installed via the community 
 helm [chart](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)
@@ -439,7 +445,7 @@ Install the chart via *kustomize*
 kustomize build --enable-helm tempo/ | kubectl apply -f -
 ```
 
-# Tempo Ingress
+## Tempo Ingress
 
 Tempo primarily needs two ports ingressed, both http/2 based, though
 both are intended to have TLS, first for standard *https* and the 
@@ -619,7 +625,7 @@ spec:
     - ReadWriteOnce
 ```
 
-## Prometheus - Add Node Exporters
+## Prometheus - Node Exporters
 
 If choosing not to use Alloy...
 
