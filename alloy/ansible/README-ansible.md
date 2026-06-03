@@ -1,9 +1,10 @@
 Alloy Ansible Playbook
 ======================
 
-Grafana does provide an Ansible Collection, but installs *Alloy* as root.
-The provided playbook creates an *alloy* user/group and attaches it to a
-set of defined/provided groups to join for controlling permissions. 
+Grafana does provide an Ansible Collection, but installs *Alloy* 
+as root. The provided playbook creates an *alloy* user/group and 
+attaches it to a set of defined/provided groups to join for 
+controlling permissions. 
 ```yaml
 vars:
   alloy_groups:
@@ -11,17 +12,23 @@ vars:
     - systemd-journal
 ```
 
-Update the provided playbook *alloy.yaml* accordingly, or create 
-a proper  Ansible *inventory* to define the groups as well as the typical 
-variables described below. The playbook has been tested against 
-*Ansible v5.3.0*
+While this playbook is completely functional and usable, it is 
+intended to serve as more of an example of a role that could be 
+incorporated into a more complete ansible project. The reasons 
+become are stated below.
 
-Passing lists via *extra-vars* requires passing all the vars 
-as *json* making an inventory file more effective and maintainable.
+One must update the provided playbook *alloy.yaml*, or create a 
+proper Ansible *inventory* to define the groups as well as the 
+typical variables described below. The playbook has been tested 
+against *Ansible v5.3.0*.
+
+Passing lists via *extra-vars* (eg. alloy_groups) requires passing 
+all the vars as *json* making an inventory file more effective and 
+maintainable.
 
 Running the playbook without creating an inventory would require 
 providing the service endpoints, tenant id, and agent credentials, 
-though we can use our environment config to achieve this. 
+though we can use our environment config to simplify this.
 
 The following assumes TLS is enabled for all exposed endpoints. Note 
 that *Tempo* does not use a protocol designation for its endpoints.

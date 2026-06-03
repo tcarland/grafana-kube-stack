@@ -1,6 +1,6 @@
 Grafana Stack on Kubernetes
 ===========================
-v26.06.01
+v26.06.03
 
 Copyright (c)2025-2026 Timothy C. Arland <tcarland at gmail dot com>
 
@@ -14,17 +14,23 @@ Community chart.
 
 - [Grafana Stack on Kubernetes](#grafana-stack-on-kubernetes)
   * [Overview](#overview)
+    + [Data Flow](#data-flow)
     + [Components Matrix](#components-matrix)
     + [Architecture and Documentation](#architecture-and-documentations)
     + [Requirements](#requirements)
     + [Deployment Configuration](#deployment-configuration)
     + [S3 Buckets](#s3-buckets)
   * [Mimir](#mimir)
-  * [Prometheus Operator and Grafana](#prometheus-operator-and-grafana)
-    + [Prometheus and Grafana Ingress](#prometheus-and-grafana-ingress)
+    + [Mimir Ingress](#mimir-ingress)
+  * [Prometheus Operator](#prometheus-operator)
+    + [Prometheus Ingress](#prometheus-ingress)
   * [Loki](#loki)
     + [Loki Ingress](#loki-ingress)
   * [Tempo](#tempo)
+    + [Tempo Ingress](#tempo-ingress)
+  * [Grafana](#grafana)
+    + [High Availability](#high-availability)
+    + [Grafana Ingress](#grafana-ingress)
   * [Alloy](#alloy)
     + [Ansible Deployment](#ansible-deployment)
   * [Additional Document References](#additional-document-references)
@@ -134,11 +140,11 @@ Each component in the stack uses a distributed set of microservices running as p
 in Kubernetes. Refer to the official Grafana documentation for each component for 
 details of the internal architecture.
 
-- [Loki](https://grafana.com/docs/loki/latest/get-started/architecture/)
-- [Grafana](https://grafana.com/docs/grafana/latest/fundamentals/)
-- [Tempo](https://grafana.com/docs/tempo/latest/introduction/architecture/)
-- [Mimir](https://grafana.com/docs/mimir/latest/get-started/about-grafana-mimir-architecture/)
-- [Alloy](https://grafana.com/docs/alloy/latest/)
+- [Loki](https://grafana.com/docs/loki/v3.7.x/)
+- [Grafana](https://grafana.com/docs/grafana/v12.4/)
+- [Tempo](https://grafana.com/docs/tempo/v2.10.x/)
+- [Mimir](https://grafana.com/docs/mimir/v3.0.x/)
+- [Alloy](https://grafana.com/docs/alloy/v1.16/)
 
 <br>
 
@@ -149,7 +155,7 @@ details of the internal architecture.
 - [yq](https://github.com/mikefarah/yq) : v4.53.2
 - [mc](https://github.com/minio/mc) : latest stable (if using MinIO)
 - [aws](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) 
-- httpd-tools : system package
+- **httpd-tools** : system package for htpasswd (deprecated; for use with nginx only)
 
 <br>
 
@@ -167,27 +173,28 @@ in `env`.  The project will ignore all configuration from being
 checked in, so the overlay of those secrets should be managed 
 outside of this project.
 
-Create an Environment Configuration from the template.
-```sh
-mkdir ./env/myenvname/
-cp ./env/env.template !$/myenvname/myenvname.env
-# set configuration and secrets in myenvname.env
-```
+- Create an Environment Configuration from the template.
+  ```sh
+  mkdir ./env/myenvname/
+  cp ./env/env.template !$/myenvname/myenvname.env
+  # set configuration and secrets in myenvname.env
+  ```
 
-### Namespace
-The default namespace for the stack is `monitoring`. If a different
-namespace is desired, update the *base/kustomization.yaml* files
-or create overlays as needed.
+- Namespace
+  The default namespace for the stack is `monitoring`. If a different
+  namespace is desired, update the *base/kustomization.yaml* files
+  or create overlays as needed.
 
-### Helm Charts
-The project uses *kustomize* to wrap the management and use of Helm charts.
-As a result *kustomize* requires the `--enable-helm` command switch when 
-running *build*. This can become tedious, so a *bash* function and alias 
-are provided to automatically detect the use of the helm wrapper and will 
-automatically add the switch when running kustomize.
-```sh
-source env/kustom.sh
-```
+- Helm Charts
+  The project uses *kustomize* to wrap the management and use of Helm charts.
+  As a result *kustomize* requires the `--enable-helm` command switch when 
+  running *build*. This can become tedious, so a *bash* function and alias 
+  are provided to automatically detect the use of the helm wrapper and will 
+  automatically add the switch when running kustomize.
+  ```sh
+  source env/kustom.sh
+  ```
+
 
 ### Node labels
 The *Prometheus Community Chart* includes *kube-state-metrics* and other 
@@ -307,9 +314,12 @@ kustomize build mimir/ingress/istio | k apply -f -
 
 ---
     
-# Prometheus Operator (*Optional)
+# Prometheus Operator 
 
-The *Prometheus Operator* is installed via the community helm [chart](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)
+    (*Optional*)
+
+The *Prometheus Operator* is installed via the community 
+helm [chart](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)
 
 Note that the kustomize manifests make use of a *node-selector* for
 targeting *worker* nodes. Typically, *control-plane* nodes are already
@@ -435,7 +445,7 @@ Install the chart via *kustomize*
 kustomize build --enable-helm tempo/ | kubectl apply -f -
 ```
 
-# Tempo Ingress
+## Tempo Ingress
 
 Tempo primarily needs two ports ingressed, both http/2 based, though
 both are intended to have TLS, first for standard *https* and the 
@@ -514,26 +524,27 @@ kustomize build grafana/ingress/$ingress/ | kubectl apply -f -
 
 # Alloy
 
-Hosts that are having *Alloy* provisioned locally will need the `gnupg` package.
-
 The *Alloy* binary can be installed via RHEL or Debian package repositories or as a 
 standalone binary.
+
+Hosts that have *Alloy* provisioned locally will need the `gnupg` package.
 
 *Grafana* has an [Ansible Collection](https://grafana.com/docs/alloy/latest/set-up/install/ansible/) 
 that can be used to manage Alloy deployments, however it deploys the binary
 as the `root` user. 
 
-A playbook is provided as `alloy/ansible` that installs the *Alloy* binary 
+The playbook provided as `alloy/ansible` installs the *Alloy* binary 
 as a service account user and group instead. Refer to the Alloy Ansible [Readme](alloy/ansible/README-ansible.md)
 
-**Note** that the configured endpoints for Alloy all use a protocol designation (eg. https://)
-except for *Tempo*, whose endpoints are only <SERVICE:PORT>.
+**Note** that the configured endpoints for Alloy (mostly all use a protocol designation 
+(eg. https://) except for *Tempo*, whose endpoints are only <SERVICE:PORT>.
 
 As stated in the *Mimir* section, when collecting metrics, they can be routed to 
-either *Prometheus* or directly to *Mimir*. Currently, the project has configured 
-*Prometheus* to be exposed external to the cluster with Authentication for Alloy 
-agents using the `prometheus.remote_write` endpoint. Internal to the cluster
-we can route either way, but note that the endpoints have a different API path
+either *Prometheus* (legacy) or directly to *Mimir* (preferred). Currently, the 
+project has configured both Mimir and Prometheus* to be exposed external to the cluster 
+with authentication for agents using the `prometheus.remote_write` endpoint. Internal 
+to the cluster we do not enforce auth and we can route direct the the distributor, but 
+note that the Prometheus and Mimir *remote_write* endpoints have a different API path
 respectively.
 
 - Prometheus  :  http://prometheus:9090/api/v1/write
@@ -579,9 +590,9 @@ The *Ansible Playbook* provided performs the following steps:
 | Tempo CLI                  | https://grafana.com/docs/tempo/latest/operations/tempo_cli/ |
 | Tempo Validation           | https://grafana.com/docs/tempo/latest/set-up-for-tracing/setup-tempo/test/set-up-test-app/ |
 
-Note that much of the Loki documentation for OSS overlaps with the
-Grafana Enterprise Logs, Metrics, Traces documentation for installation, but does have its own 
-document overlay of enterprise enablement details.
+Note that much of the LGTM documentation for OSS overlaps with the
+Grafana Enterprise Logs, Metrics, Traces documentation for installation, 
+but typically has its own document overlay of enterprise enablement details.
 
 <br>
 
@@ -614,7 +625,9 @@ spec:
     - ReadWriteOnce
 ```
 
-## Prometheus - Add Node Exporters
+## Prometheus - Node Exporters
+
+If choosing not to use Alloy...
 
 Note that job names should be unique within Prometheus.
 ```yaml

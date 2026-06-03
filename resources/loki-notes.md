@@ -4,8 +4,6 @@ Grafana Loki Notes
 Some notes discovered during deployment testing.
 
 
-
-
 ## Open File Handles
 
 A full LGTM stack can create a ton of open file handles on 
@@ -22,107 +20,11 @@ tenpercent   = (TOTAL_SYSTEM_MEMORY_GB * 0.1) * (1024^3)
 fs.file-max  = tenpercent / 1024
 ```
 
-An example Loki-distributed values file
+An example Loki-distributed values file can be pulled from the 
+kustomize or found at the Chart [Repo](https://github.com/grafana-community/helm-charts/blob/loki-15.0.1/charts/loki/values.yaml)
+
+Sample Config snippet.
 ```yaml
----
-deploymentMode: Distributed
-
-gateway:
-  image:
-    registry: quay.io
-    repository: nginx/nginx-unprivileged
-    tag: 1.24-alpine
-  nginxConfig:
-    resolver: "dns-default.openshift-dns.svc.cluster.local."
-
-
-loki:
-  auth_enabled: true
-  commonConfig:
-    path_prefix: /var/loki
-  storage:
-    type: s3
-  schemaConfig:
-    configs:
-      - from: "2024-04-01"
-        store: tsdb
-        object_store: s3
-        schema: v13
-        index:
-          prefix: loki_index_
-          period: 24h
-  compactor:
-    working_directory: /var/loki/compactor
-
-podSecurityContext:
-  runAsNonRoot: false
-  allowPrivilegeEscalation: false
-
-containerSecurityContext:
-  runAsNonRoot: false
-  allowPrivilegeEscalation: false
-  capabilities:
-    drop:
-      - ALL
-  readOnlyRootFilesystem: true
-
-test:
-  enabled: false
-
-sidecar:
-  rules:
-    enabled: false
-  datasources:
-    enabled: false
-
-
-singleBinary:
-  replicas: 0
-backend:
-  replicas: 0
-read:
-  replicas: 0
-write:
-  replicas: 0
-
-bloomPlanner:
-  replicas: 0
-bloomBuilder:
-  replicas: 0
-bloomGateway:
-  replicas: 0
-
-lokiCanary:
-  enabled: false
-
-ruler:
-  enabled: false
-
-global:
-  extraArgs:
-    - "-log.level=debug"
-
-gateway:
-  service:
-    type: LoadBalancer
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      memory: 256Mi
-
-loki:
-  commonConfig:
-    replication_factor: 3
-  storage:
-    type: s3
-    s3:
-      region: us-east-1
-  storage_config:
-    aws:
-      region: us-east-1
-      s3forcepathstyle: false
   limits_config:
       retention_period: 744h  # 31 days retention
       ingestion_rate_mb: 100
@@ -155,142 +57,6 @@ loki:
     chunk_retain_period: 1h           # Keep chunks in memory after flush
     flush_op_timeout: 10m             # Add timeout for S3 operations
 
-  querier:
-    max_concurrent: 8
-  query_range:
-    parallelise_shardable_queries: true
-
-ingester:
-  replicas: 3
-  autoscaling:
-    enabled: true
-  zoneAwareReplication:
-    enabled: true
-  maxUnavailable: 1
-  resources:
-    requests:
-      cpu: 500m
-      memory: 1Gi
-    limits:
-      cpu: 2000m
-      memory: 2Gi
-  persistence:
-    enabled: true
-    size: 10Gi
-  affinity: {}
-  podAntiAffinity:
-    soft: {}
-    hard: {}
-
-querier:
-  replicas: 3
-  autoscaling:
-    enabled: true
-  maxUnavailable: 1
-  resources:
-    requests:
-      cpu: 300m
-      memory: 512Mi
-    limits:
-      memory: 1Gi
-  affinity: {}
-
-queryFrontend:
-  replicas: 2
-  maxUnavailable: 1
-  resources:
-    requests:
-      cpu: 200m
-      memory: 256Mi
-    limits:
-      memory: 512Mi
-
-queryScheduler:
-  replicas: 2
-  maxUnavailable: 1
-  resources:
-    requests:
-      cpu: 200m
-      memory: 256Mi
-    limits:
-      memory: 512Mi
-
-distributor:
-  replicas: 5
-  autoscaling:
-    enabled: true
-    minReplicas: 5
-    maxReplicas: 10
-    targetCPUUtilizationPercentage: 70
-  maxUnavailable: 1
-  resources:
-    requests:
-      cpu: 500m
-      memory: 1Gi
-    limits:
-      memory: 2Gi
-  affinity: {}
-
-compactor:
-  replicas: 1
-  retention_enabled: true
-  retention_delete_delay: 2h
-  retention_delete_worker_count: 150
-  resources:
-    requests:
-      cpu: 200m
-      memory: 512Mi
-    limits:
-      memory: 1Gi
-
-indexGateway:
-  replicas: 2
-  maxUnavailable: 0
-  resources:
-    requests:
-      cpu: 300m
-      memory: 512Mi
-    limits:
-      memory: 1Gi
-  affinity: {}
-
-chunksCache:
-  enabled: true
-  replicas: 1
-
-resultsCache:
-  enabled: true
-  replicas: 1
-
-memcached:
-  enabled: true
-
-memcachedResults:
-  enabled: true
-
-memcachedChunks:
-  enabled: true
-
-memcachedFrontend:
-  enabled: true
-
-memcachedIndexQueries:
-  enabled: true
-
-memcachedIndexWrites:
-  enabled: true
-
-minio:
-  enabled: false
-
-memcachedExporter:
-  resources:
-    requests:
-      cpu: 50m
-      memory: 64Mi
-    limits:
-      memory: 128Mi
-```
 
 ## GPRC size issues
 
@@ -312,7 +78,7 @@ And then we were able to see the exact error messages, like:
 level=debug ts=2025-09-30T15:25:53.687936029Z caller=http.go:108 org_id=kubearchive msg=“push request failed” code=500 err=“rpc error: code = ResourceExhausted desc = grpc: received message larger than max (5257394 vs. 4194304)”
 ```
 
-So increas the grpc message sizes as the following:
+So increase the grpc message sizes as the following:
 ```yaml
 server:
   grpc_server_max_recv_msg_size: 15728640 # 15MB
@@ -327,7 +93,8 @@ query_scheduler:
     max_send_msg_size: 15728640 # 15MB
 ```
 
-Nginx controller would need to have GRPC support added to the Service
+Nginx (**deprecated**) controller would need to have GRPC support added to 
+the Service manifest.
 ```yaml
 apiVersion: v1
 kind: Service

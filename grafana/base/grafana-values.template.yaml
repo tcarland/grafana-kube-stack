@@ -30,10 +30,12 @@ grafana.ini:
   unified_alerting:
     enabled: true
     ha_listen_address: "${POD_IP}:9094"
-    ha_peers: "grafana-alerting.monitoring.svc.cluster.local:9094"
+    ha_peers: "grafana-headless.monitoring.svc.cluster.local:9094"
     ha_advertise_address: "${POD_IP}:9094"
     ha_peer_timeout: 15s
     ha_reconnect_timeout: 2m
+    #ha_single_node_evaluation: true
+ 
 initChownData:
   enabled: false
   image:
@@ -56,6 +58,7 @@ sidecar:
     provider:
       allowUiUpdates: true
       foldersFromFilesStructure: true
+  
   #dashboards:
   #  enabled: true
   #  label: grafana_dashboard
@@ -127,15 +130,6 @@ datasources:
   #    editable: true
   #    options:
   #      path: /var/lib/grafana/dashboards/Kubernetes
-    #- name: 'minio'
-    #  orgId: 1
-    #  folder: ''
-    #  type: file
-    #  allowUiUpdates: true
-    #  disableDeletion: false
-    #  editable: true
-    #  options:
-    #    path: /var/lib/grafana/dashboards/minio
 
 #dashboardsConfigMaps:
 #   default: dashboards-k8s
