@@ -1,4 +1,4 @@
-grafana/alloy:v1.16.1
+grafana/alloy:v1.16.3
 grafana/mimir:3.0.4
 grafana/grafana:12.4.3
 grafana/rollout-operator:v0.49.0
@@ -15,6 +15,9 @@ quay.io/kiwigrid/k8s-sidecar:2.7.3
 ghcr.io/jkroepke/kube-webhook-certgen:1.8.1
 bats/bats:1.13.0
 busybox:1.37.0
+
+istio/proxyv2:1.30.2
+istio/pilot:1.30.2
 
 memcached:1.6.41-alpine
 prom/memcached-exporter:v0.16.0

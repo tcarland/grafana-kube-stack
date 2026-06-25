@@ -1,6 +1,6 @@
 Grafana Stack on Kubernetes
 ===========================
-v26.06.03
+v26.06.26
 
 Copyright (c)2025-2026 Timothy C. Arland <tcarland at gmail dot com>
 
@@ -126,7 +126,7 @@ including Grafana Enterprise versions.
 |    -->  PostgresDb  (*optional*)
 | [Loki](https://github.com/grafana/loki)            | **v3.7.2**    |   *15.0.1*    |
 | [Tempo](https://github.com/grafana/tempo)          | **v2.10.5**   |   *2.23.1*    |
-| [Alloy](https://github.com/grafana/alloy)          | **v1.16.1**   |   *1.8.2*     |
+| [Alloy](https://github.com/grafana/alloy)          | **v1.16.3**   |   *1.9.0*     |
 
 ** Note that Chart tags can be located in the source repository for most components
    save for Grafana, Loki and Tempo having been relocated to the 
@@ -150,10 +150,11 @@ details of the internal architecture.
 
 ## Requirements
 
-- [kustomize](https://github.com/kubernetes-sigs/kustomize) : v5.8.0
+- [kustomize](https://github.com/kubernetes-sigs/kustomize) : v5.8.1
 - [helm](https://github.com/helm/helm) : v4.2.0
-- [yq](https://github.com/mikefarah/yq) : v4.53.2
+- [yq](https://github.com/mikefarah/yq) : v4.53.3
 - [mc](https://github.com/minio/mc) : latest stable (if using MinIO)
+- [istio](https://github.com/istio/istio) : v1.30.2 (for the Ingress Controller)
 - [aws](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) 
 - **httpd-tools** : system package for htpasswd (deprecated; for use with nginx only)
 
