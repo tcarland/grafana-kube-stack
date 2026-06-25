@@ -16,6 +16,9 @@ ghcr.io/jkroepke/kube-webhook-certgen:1.8.1
 bats/bats:1.13.0
 busybox:1.37.0
 
+istio/proxyv2:1.30.2
+istio/pilot:1.30.2
+
 memcached:1.6.41-alpine
 prom/memcached-exporter:v0.16.0
 nginxinc/nginx-unprivileged:1.31-alpine
