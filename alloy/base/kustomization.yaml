@@ -16,6 +16,6 @@ helmCharts:
     includeCRDs: true
     releaseName: grafana-alloy
     namespace: monitoring
-    version: 1.8.2
+    version: 1.9.0
     repo: https://grafana.github.io/helm-charts
     valuesFile: alloy-values.yaml
