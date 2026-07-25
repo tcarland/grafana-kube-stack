@@ -7,7 +7,7 @@ global:
 
 image:
   repository: grafana/mimir
-  tag: 3.0.4
+  tag: 3.1.2
   pullPolicy: IfNotPresent
 
 alertmanager:
@@ -66,13 +66,12 @@ store_gateway:
 memcached:
   image:
     repository: memcached
-    tag: 1.6.41-alpine
-    
+    tag: 1.6.45-alpine
 memcachedExporter:
   enabled: true
   image:
     repository: prom/memcached-exporter
-    tag: v0.15.5
+    tag: v0.16.0
 
 chunks-cache:
   enabled: false
