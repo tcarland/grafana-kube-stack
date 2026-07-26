@@ -130,7 +130,7 @@ gateway:
     image:
       registry: docker.io
       repository: nginxinc/nginx-unprivileged
-      tag: 1.29-alpine
+      tag: 1.31-alpine
     basicAuth:
       enabled: false
       username: ${AGENT_USERNAME}
@@ -142,4 +142,4 @@ graphite:
 enterprise:
   enabled: false
   image:
-    tag: r365-3fdf702d
+    tag: v2.17

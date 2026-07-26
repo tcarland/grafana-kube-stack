@@ -8,9 +8,10 @@ grafana/tempo:3.0.2
 postgres/16.4
 quay.io/prometheus-operator/prometheus-operator:v0.92.1
 quay.io/prometheus-operator/prometheus-config-reloader:v0.92.1
-quay.io/prometheus/prometheus:v3.13.1
+quay.io/prometheus/prometheus:v3.13.1    # -distroless
 quay.io/prometheus/alertmanager:v0.33.1
-quay.io/prometheus/node-exporter:v1.9.1
+quay.io/prometheus/node-exporter:v1.12.1 # -distroless
+registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.19.1
 quay.io/kiwigrid/k8s-sidecar:2.8.1
 ghcr.io/jkroepke/kube-webhook-certgen:1.8.5
 bats/bats:1.13.0
@@ -19,12 +20,12 @@ busybox:1.38.0
 istio/proxyv2:1.30.3
 istio/pilot:1.30.3
 
-memcached:1.6.41-alpine
+memcached:1.6.45-alpine
 prom/memcached-exporter:v0.16.0
 nginxinc/nginx-unprivileged:1.31-alpine
 apache/kafka-native:4.1.0
 
-#grafana/grafana-enterprise:12.4
-#grafana/enterprise-traces:v2.8.9
-#grafana/enterprise-metrics
-#grafana/enterprise-logs
+#grafana/grafana-enterprise:13.1
+#grafana/enterprise-traces:2.8
+#grafana/enterprise-metrics:2.17
+#grafana/enterprise-logs:3.6

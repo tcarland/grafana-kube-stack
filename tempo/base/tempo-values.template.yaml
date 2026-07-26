@@ -75,7 +75,7 @@ memcached:
     registry: null
     pullSecrets: []
     repository: memcached
-    tag: 1.6.41-alpine
+    tag: 1.6.45-alpine
 memcachedExporter:
   enabled: false
   image:

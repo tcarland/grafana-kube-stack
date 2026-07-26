@@ -10,7 +10,7 @@ enterprise:
   image:
     registry: docker.io
     repository: grafana/enterprise-logs
-    tag: 3.5.7
+    tag: 3.6
     pullPolicy: IfNotPresent
   provisioner:
     enabled: false
