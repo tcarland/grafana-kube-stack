@@ -8,11 +8,11 @@ grafana/tempo:3.0.2
 postgres/16.4
 quay.io/prometheus-operator/prometheus-operator:v0.92.1
 quay.io/prometheus-operator/prometheus-config-reloader:v0.92.1
-quay.io/prometheus/prometheus:v3.11.2
-quay.io/prometheus/alertmanager:v0.32.0
+quay.io/prometheus/prometheus:v3.13.1
+quay.io/prometheus/alertmanager:v0.33.1
 quay.io/prometheus/node-exporter:v1.9.1
 quay.io/kiwigrid/k8s-sidecar:2.8.1
-ghcr.io/jkroepke/kube-webhook-certgen:1.8.1
+ghcr.io/jkroepke/kube-webhook-certgen:1.8.5
 bats/bats:1.13.0
 busybox:1.38.0
 
