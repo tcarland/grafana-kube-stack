@@ -25,7 +25,13 @@ mimir:
         secret_access_key: ${S3_SECRET_KEY}
         http:
           insecure_skip_verify: ${S3_SKIP_VERFIY}
+    #ingest_storage:
+    #  kafka:
+    #    address: "mimir-kafka.monitoring.svc.cluster.local:9092"
+    #    topic: mimir-ingest
+    #    auto_create_topic_enabled: true
+    #    auto_create_topic_default_parititions: 100
     usage_stats:
       enabled: false
-    #tenant_federation:
-    #  enabled: true
+    tenant_federation:
+      enabled: true
