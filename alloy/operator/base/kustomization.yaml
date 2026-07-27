@@ -11,6 +11,6 @@ helmCharts:
     includeCRDs: true
     releaseName: alloy-operator
     namespace: monitoring
-    version: 0.5.2
+    version: 0.6.1
     repo: https://grafana.github.io/helm-charts
   

@@ -1,6 +1,6 @@
 Grafana Stack on Kubernetes
 ===========================
-v26.06.26
+v26.07.26
 
 Copyright (c)2025-2026 Timothy C. Arland <tcarland at gmail dot com>
 
@@ -118,15 +118,15 @@ including Grafana Enterprise versions.
 
 |       **Component**                                |  **Version**  | **Helm Chart** |
 | -------------------------------------------------- | ------------- | -------------- |
-| [Mimir](https://github.com/grafana/mimir)          | **v3.0.4**    |   *6.0.6*      |
-| [Kube-Prometheus-Stack](https://github.com/prometheus-community/helm-charts) |  **  |  *83.7.0* |
-|    -->  Prometheus Operator                        | **v0.90.1**   |   " " |
+| [Mimir](https://github.com/grafana/mimir)          | **v3.1.2**    |   *6.1.0*      |
+| [Kube-Prometheus-Stack](https://github.com/prometheus-community/helm-charts) |  **  |  *87.19.1* |
+|    -->  Prometheus Operator                        | **v0.92.1**   |   " " |
 |    -->  Prometheus                                 | **v3.11.2**   |   " " |
-| [Grafana](https://github.com/grafana/grafana)      | **v12.4.3**   |   *11.6.1*    |
+| [Grafana](https://github.com/grafana/grafana)      | **v13.1.1**   |   *12.7.3*     |
 |    -->  PostgresDb  (*optional*)
-| [Loki](https://github.com/grafana/loki)            | **v3.7.2**    |   *15.0.1*    |
-| [Tempo](https://github.com/grafana/tempo)          | **v2.10.5**   |   *2.23.1*    |
-| [Alloy](https://github.com/grafana/alloy)          | **v1.16.3**   |   *1.9.0*     |
+| [Loki](https://github.com/grafana/loki)            | **v3.7.4**    |   *18.5.4*     |
+| [Tempo](https://github.com/grafana/tempo)          | **v3.0.2**    |   *3.0.6*      |
+| [Alloy](https://github.com/grafana/alloy)          | **v1.17.1**   |   *1.10.1*     |
 
 ** Note that Chart tags can be located in the source repository for most components
    save for Grafana, Loki and Tempo having been relocated to the 
@@ -141,10 +141,10 @@ in Kubernetes. Refer to the official Grafana documentation for each component fo
 details of the internal architecture.
 
 - [Loki](https://grafana.com/docs/loki/v3.7.x/)
-- [Grafana](https://grafana.com/docs/grafana/v12.4/)
-- [Tempo](https://grafana.com/docs/tempo/v2.10.x/)
-- [Mimir](https://grafana.com/docs/mimir/v3.0.x/)
-- [Alloy](https://grafana.com/docs/alloy/v1.16/)
+- [Grafana](https://grafana.com/docs/grafana/v13.1/)
+- [Tempo](https://grafana.com/docs/tempo/v3.0.x/)
+- [Mimir](https://grafana.com/docs/mimir/v3.1.x/)
+- [Alloy](https://grafana.com/docs/alloy/v1.17/)
 
 <br>
 
@@ -154,7 +154,7 @@ details of the internal architecture.
 - [helm](https://github.com/helm/helm) : v4.2.0
 - [yq](https://github.com/mikefarah/yq) : v4.53.3
 - [mc](https://github.com/minio/mc) : latest stable (if using MinIO)
-- [istio](https://github.com/istio/istio) : v1.30.2 (for the Ingress Controller)
+- [istio](https://github.com/istio/istio) : v1.30.3 (for the Ingress Controller)
 - [aws](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) 
 - **httpd-tools** : system package for htpasswd (deprecated; for use with nginx only)
 
@@ -177,7 +177,7 @@ outside of this project.
 - Create an Environment Configuration from the template.
   ```sh
   mkdir ./env/myenvname/
-  cp ./env/env.template !$/myenvname/myenvname.env
+  cp ./env/env.template .env/myenvname/myenvname.env
   # set configuration and secrets in myenvname.env
   ```
 

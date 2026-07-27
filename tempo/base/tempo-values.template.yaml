@@ -8,10 +8,11 @@ global:
 
 tempo:
   image:
-   registry: docker.io
-   repository: grafana/tempo
-   pullSecrets: []
-   pullPolicy: IfNotPresent
+    registry: docker.io
+    repository: grafana/tempo'
+    tag: 3.0.2
+    pullSecrets: []
+    pullPolicy: IfNotPresent
   
 storage:
   trace:
@@ -27,22 +28,30 @@ storage:
 minio:
   enabled: false
 
-ingester:
-  replicas: 1
-  config:
-    replication_factor: 1
-  persistence:
-    enabled: true
-    inMemory: false
-    size: 2Gi
-    #storageClass: standard
+ingest:
+  kafka:
+    #address: ${GRAFANA_ENV}-kafka-bootstrap.kafka.svc.cluster.local:9092
+    address: kafka-mimir.monitoring.svc.cluster.local:9092
+    topic: tempo-traces
+    auto_create_topic_enabled: true
+    auto_create_topic_default_partitions: 3
 
-metricsGenerator:
+# Configuration for the block-builder (Tempo 3.0+)
+# Consumes spans from Kafka and writes blocks to object storage.
+# One replica per Kafka partition — replica count must equal ingest.kafka.auto_create_topic_default_partitions.
+blockbuilder:
+  enabled: true
+  replicas: 3
+
+# Configuration for the live-store (Tempo 3.0+)
+# Consumes spans from Kafka and serves recent-data queries (last ~30 minutes).
+# One replica per Kafka partition — replica count must equal ingest.kafka.auto_create_topic_default_partitions.
+liveStore:
+  enabled: true
+  replicas: 3
+
+backendScheduler:
   enabled: false
-  replicas: 1
-  walEmptyDir:
-    medium: "Memory"
-    sizeLimit: 1Gi
 
 traces:
   otlp:
@@ -69,13 +78,34 @@ compactor:
   config:
     block_retention: 48h
 
+querier:
+  replicas: 1
+  config:
+    trace_by_id:
+      query_timeout: 10s
+    search:
+      query_timeout: 30s
+    max_concurrent_queries: 20
+
+queryFrontend:
+  query:
+    enabled: false
+
+metricsGenerator:
+  enabled: false
+  replicas: 1
+  walEmptyDir:
+    medium: "Memory"
+    sizeLimit: 1Gi
+
 memcached:
   enabled: true
   image:
     registry: null
     pullSecrets: []
     repository: memcached
-    tag: 1.6.41-alpine
+    tag: 1.6.45-alpine
+
 memcachedExporter:
   enabled: false
   image:

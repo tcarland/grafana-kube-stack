@@ -8,19 +8,19 @@ prometheusOperator:
   image:
     registry: quay.io
     repository: prometheus-operator/prometheus-operator
-    tag: v0.89.0
+    tag: v0.92.1
     pullPolicy: IfNotPresent
   admissionWebhooks:
     patch:
       image:
         registry: ghcr.io
         repository: jkroepke/kube-webhook-certgen
-        tag: 1.8.0
+        tag: 1.8.5
   prometheusConfigReloader:
     image:
       registry: quay.io
       repository: prometheus-operator/prometheus-config-reloader
-      tag: v0.86.2
+      tag: v0.92.1
   nodeSelector:
     node-role.kubernetes.io/worker: ""
 
@@ -61,7 +61,7 @@ prometheus:
     image:
       registry: quay.io
       repository: prometheus/prometheus
-      tag: v3.10.0
+      tag: v3.13.1 # -distroless
       pullPolicy: IfNotPresent
     enableRemoteWriteReceiver: true
     enableFeatures:
@@ -79,7 +79,7 @@ alertmanager:
     image:
       registry: quay.io
       repository: prometheus/alertmanager
-      tag: v0.31.1
+      tag: v0.33.1
       pullPolicy: IfNotPresent
     nodeSelector:
       node-role.kubernetes.io/worker: ""
