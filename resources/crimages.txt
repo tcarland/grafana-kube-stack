@@ -13,6 +13,7 @@ quay.io/prometheus/node-exporter:v1.12.1 # -distroless
 registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.19.1
 quay.io/kiwigrid/k8s-sidecar:2.8.1
 ghcr.io/jkroepke/kube-webhook-certgen:1.8.5
+ghcr.io/jkroepke/access-log-exporter:0.4.11
 bats/bats:1.13.0
 busybox:1.38.0
 
