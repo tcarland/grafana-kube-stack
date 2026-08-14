@@ -28,19 +28,27 @@ function kustom()
         args=("${args[@]:2}")
     fi
 
-    if [ -r $target/base/kustomization.yaml ]; then
-        yml=$target/base/kustomization.yaml
-    elif [ -r $target/../../base/kustomization.yaml ]; then
-        yml=$target/../../base/kustomization.yaml
-    elif [ -r $target/kustomization.yaml ]; then
-        yml=$target/kustomization.yaml
+    if [ -r ${target}/base/kustomization.yaml ]; then
+        yml=${target}/base/kustomization.yaml
+    elif [ -r ${target}/../../base/kustomization.yaml ]; then
+        yml=${target}/../../base/kustomization.yaml
+    elif [ -r ${target}/kustomization.yaml ]; then
+        yml=${target}/kustomization.yaml
     fi
 
     if [[ $(yq e 'has("helmCharts")' $yml) == "true" ]]; then
         action="$action --enable-helm"
     fi
 
-    ( \kustomize $action $target ${args[@]} )
+    cmd="kustomize $action"
+    if ! which kustomize >/dev/null 2>&1; then
+        cmd="kubectl kustomize"
+        if [[ "$action" =~ "helm" ]]; then
+            cmd="$cmd --enable-helm"
+        fi
+    fi
+
+    ( $cmd $target ${args[@]} )
 
     return $?
 }

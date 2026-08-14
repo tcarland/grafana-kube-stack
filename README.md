@@ -122,11 +122,11 @@ including Grafana Enterprise versions.
 | [Kube-Prometheus-Stack](https://github.com/prometheus-community/helm-charts) |  **  |  *87.19.1* |
 |    -->  Prometheus Operator                        | **v0.92.1**   |   " " |
 |    -->  Prometheus                                 | **v3.11.2**   |   " " |
-| [Grafana](https://github.com/grafana/grafana)      | **v13.1.1**   |   *12.7.3*     |
-|    -->  PostgresDb  (*optional*)
-| [Loki](https://github.com/grafana/loki)            | **v3.7.4**    |   *18.5.4*     |
-| [Tempo](https://github.com/grafana/tempo)          | **v3.0.2**    |   *3.0.6*      |
-| [Alloy](https://github.com/grafana/alloy)          | **v1.17.1**   |   *1.10.1*     |
+| [Grafana](https://github.com/grafana/grafana)      | **v13.1.3**   |   *12.10.4*    |
+|    -->  PostgresDb  (*optional*)                   |   **17**      |     n/a        |
+| [Loki](https://github.com/grafana/loki)            | **v3.7.6**    |   *18.8.1*     |
+| [Tempo](https://github.com/grafana/tempo)          | **v3.0.3**    |   *3.0.7*      |
+| [Alloy](https://github.com/grafana/alloy)          | **v1.18.1**   |   *1.11.1*     |
 
 ** Note that Chart tags can be located in the source repository for most components
    save for Grafana, Loki and Tempo having been relocated to the 

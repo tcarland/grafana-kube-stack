@@ -21,5 +21,5 @@ cat 03-roles.sql.template | envsubst > 03-roles.sql
 The example here uses *containerd* **nerdctl** to build the 
 container, but the command is the same using *docker*.
 ```sh
-nerdctl build . -t repo/postgres:16.4-grafana -f Containerfile
+nerdctl build . -t repo/postgres:17-grafana -f Containerfile
 ```
