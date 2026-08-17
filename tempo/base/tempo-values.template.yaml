@@ -10,7 +10,7 @@ tempo:
   image:
     registry: docker.io
     repository: grafana/tempo'
-    tag: 3.0.2
+    tag: 3.0.3
     pullSecrets: []
     pullPolicy: IfNotPresent
   
