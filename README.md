@@ -118,15 +118,15 @@ including Grafana Enterprise versions.
 
 |       **Component**                                |  **Version**  | **Helm Chart** |
 | -------------------------------------------------- | ------------- | -------------- |
-| [Mimir](https://github.com/grafana/mimir)          | **v3.1.2**    |   *6.1.0*      |
+| [Mimir](https://github.com/grafana/mimir)          | **v3.2.0**    |   *6.2.0*      |
 | [Kube-Prometheus-Stack](https://github.com/prometheus-community/helm-charts) |  **  |  *87.19.1* |
 |    -->  Prometheus Operator                        | **v0.92.1**   |   " " |
 |    -->  Prometheus                                 | **v3.11.2**   |   " " |
-| [Grafana](https://github.com/grafana/grafana)      | **v13.1.3**   |   *12.10.4*    |
+| [Grafana](https://github.com/grafana/grafana)      | **v13.2.3**   |   *13.2.7*    |
 |    -->  PostgresDb  (*optional*)                   |   **17**      |     n/a        |
-| [Loki](https://github.com/grafana/loki)            | **v3.7.6**    |   *18.8.1*     |
-| [Tempo](https://github.com/grafana/tempo)          | **v3.0.3**    |   *3.0.7*      |
-| [Alloy](https://github.com/grafana/alloy)          | **v1.18.1**   |   *1.11.1*     |
+| [Loki](https://github.com/grafana/loki)            | **v3.7.8**    |   *18.13.7*     |
+| [Tempo](https://github.com/grafana/tempo)          | **v3.0.3**    |   *3.7.2*      |
+| [Alloy](https://github.com/grafana/alloy)          | **v1.20.0**   |   *1.13.0*     |
 
 ** Note that Chart tags can be located in the source repository for most components
    save for Grafana, Loki and Tempo having been relocated to the 
@@ -141,10 +141,10 @@ in Kubernetes. Refer to the official Grafana documentation for each component fo
 details of the internal architecture.
 
 - [Loki](https://grafana.com/docs/loki/v3.7.x/)
-- [Grafana](https://grafana.com/docs/grafana/v13.1/)
+- [Grafana](https://grafana.com/docs/grafana/v13.2/)
 - [Tempo](https://grafana.com/docs/tempo/v3.0.x/)
 - [Mimir](https://grafana.com/docs/mimir/v3.1.x/)
-- [Alloy](https://grafana.com/docs/alloy/v1.17/)
+- [Alloy](https://grafana.com/docs/alloy/v1.20/)
 
 <br>
 
@@ -154,7 +154,7 @@ details of the internal architecture.
 - [helm](https://github.com/helm/helm) : v4.2.0
 - [yq](https://github.com/mikefarah/yq) : v4.53.3
 - [mc](https://github.com/minio/mc) : latest stable (if using MinIO)
-- [istio](https://github.com/istio/istio) : v1.30.3 (for the Ingress Controller)
+- [istio](https://github.com/istio/istio) : v1.31.1 (for the Ingress Controller)
 - [aws](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) 
 - **httpd-tools** : system package for htpasswd (deprecated; for use with nginx only)
 

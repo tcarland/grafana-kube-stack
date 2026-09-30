@@ -7,7 +7,7 @@ global:
 
 image:
   repository: grafana/mimir
-  tag: 3.1.2
+  tag: 3.2.0
   pullPolicy: IfNotPresent
 
 alertmanager:
@@ -71,7 +71,7 @@ memcachedExporter:
   enabled: true
   image:
     repository: prom/memcached-exporter
-    tag: v0.16.0
+    tag: v0.17.0
 
 chunks-cache:
   enabled: false
