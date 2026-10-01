@@ -1,6 +1,6 @@
 Grafana Stack on Kubernetes
 ===========================
-v26.08.15
+v26.10.02
 
 Copyright (c)2025-2026 Timothy C. Arland <tcarland at gmail dot com>
 
@@ -118,13 +118,13 @@ including Grafana Enterprise versions.
 
 |       **Component**                                |  **Version**  | **Helm Chart** |
 | -------------------------------------------------- | ------------- | -------------- |
-| [Mimir](https://github.com/grafana/mimir)          | **v3.2.0**    |   *6.2.0*      |
-| [Kube-Prometheus-Stack](https://github.com/prometheus-community/helm-charts) |  **  |  *87.19.1* |
-|    -->  Prometheus Operator                        | **v0.92.1**   |   " " |
-|    -->  Prometheus                                 | **v3.11.2**   |   " " |
-| [Grafana](https://github.com/grafana/grafana)      | **v13.2.3**   |   *13.2.7*    |
-|    -->  PostgresDb  (*optional*)                   |   **17**      |     n/a        |
-| [Loki](https://github.com/grafana/loki)            | **v3.7.8**    |   *18.13.7*     |
+| [Mimir](https://github.com/grafana/mimir)          | **v3.2.0**    |    *6.2.0*     |
+| [Kube-Prometheus-Stack](https://github.com/prometheus-community/helm-charts) | * | *91.8.2* |
+|    -->  Prometheus Operator                        | **v0.94.1**   |      " "       |
+|    -->  Prometheus                                 | **v3.15.0**   |      " "       |
+| [Grafana](https://github.com/grafana/grafana)      | **v13.2.3**   |   *13.2.7*     |
+|    -->  PostgresDb  (*optional*)                   |   **17**      |      n/a       |
+| [Loki](https://github.com/grafana/loki)            | **v3.7.8**    |   *18.13.7*    |
 | [Tempo](https://github.com/grafana/tempo)          | **v3.0.3**    |   *3.7.2*      |
 | [Alloy](https://github.com/grafana/alloy)          | **v1.20.0**   |   *1.13.0*     |
 
@@ -143,7 +143,7 @@ details of the internal architecture.
 - [Loki](https://grafana.com/docs/loki/v3.7.x/)
 - [Grafana](https://grafana.com/docs/grafana/v13.2/)
 - [Tempo](https://grafana.com/docs/tempo/v3.0.x/)
-- [Mimir](https://grafana.com/docs/mimir/v3.1.x/)
+- [Mimir](https://grafana.com/docs/mimir/v3.2.x/)
 - [Alloy](https://grafana.com/docs/alloy/v1.20/)
 
 <br>
