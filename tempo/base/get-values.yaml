@@ -3,7 +3,7 @@ enterprise:
   enabled: false
   image:
     repository: grafana/enterprise-traces
-    tag: v2.8.1
+    tag: v2.8.11
 enterpriseGateway:
   enabled: false
   image:

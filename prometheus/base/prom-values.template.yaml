@@ -8,7 +8,7 @@ prometheusOperator:
   image:
     registry: quay.io
     repository: prometheus-operator/prometheus-operator
-    tag: v0.92.1
+    tag: v0.94.1
     pullPolicy: IfNotPresent
   admissionWebhooks:
     patch:
@@ -20,7 +20,7 @@ prometheusOperator:
     image:
       registry: quay.io
       repository: prometheus-operator/prometheus-config-reloader
-      tag: v0.92.1
+      tag: v0.94.1
   nodeSelector:
     node-role.kubernetes.io/worker: ""
 
@@ -61,7 +61,7 @@ prometheus:
     image:
       registry: quay.io
       repository: prometheus/prometheus
-      tag: v3.13.1 # -distroless
+      tag: v3.15.0 # -distroless
       pullPolicy: IfNotPresent
     enableRemoteWriteReceiver: true
     enableFeatures:
@@ -79,7 +79,7 @@ alertmanager:
     image:
       registry: quay.io
       repository: prometheus/alertmanager
-      tag: v0.33.1
+      tag: v0.34.1
       pullPolicy: IfNotPresent
     nodeSelector:
       node-role.kubernetes.io/worker: ""
