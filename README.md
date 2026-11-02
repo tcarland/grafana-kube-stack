@@ -1,6 +1,6 @@
 Grafana Stack on Kubernetes
 ===========================
-v26.10.02
+v26.11.02
 
 Copyright (c)2025-2026 Timothy C. Arland <tcarland at gmail dot com>
 
@@ -59,7 +59,6 @@ In addition to the OSS versions we can support the official Grafana,
 including Grafana Enterprise versions.
 
 - [Grafana Charts](https://github.com/grafana/helm-charts)
-
 
 
 ## Data Flow
