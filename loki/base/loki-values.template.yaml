@@ -109,6 +109,7 @@ lokiCanary:
   
 gateway:
   enabled: true
+  type: nginx  # envoy
   replicas: 1
   image:
     registry: docker.io
