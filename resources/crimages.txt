@@ -1,9 +1,9 @@
-grafana/alloy:v1.20.0
-grafana/mimir:3.2.0
-grafana/grafana:13.2.3
-grafana/loki:3.7.8
-grafana/loki-canary:3.7.8
-grafana/tempo:3.0.3
+grafana/alloy:v1.21.3
+grafana/mimir:3.2.3
+grafana/grafana:13.3.0
+grafana/loki:3.7.9
+grafana/loki-canary:3.7.9
+grafana/tempo:3.1.1
 postgres/17-alpine
 quay.io/prometheus-operator/prometheus-operator:v0.94.1
 quay.io/prometheus-operator/prometheus-config-reloader:v0.94.1
@@ -11,17 +11,17 @@ quay.io/prometheus/prometheus:v3.15.0    # -distroless
 quay.io/prometheus/alertmanager:v0.34.1
 quay.io/prometheus/node-exporter:v1.12.1 # -distroless
 registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.20.0
-quay.io/kiwigrid/k8s-sidecar:2.11.2
+quay.io/kiwigrid/k8s-sidecar:2.14.1
 ghcr.io/jkroepke/kube-webhook-certgen:1.8.9
 ghcr.io/jkroepke/access-log-exporter:0.4.11
 bats/bats:1.14.0
 busybox:1.38.0
 
-istio/proxyv2:1.31.1
-istio/pilot:1.31.1
+istio/proxyv2:1.31.3
+istio/pilot:1.31.3
 
 memcached:1.6.45-alpine
-prom/memcached-exporter:v0.17.0
+prom/memcached-exporter:v0.18.0
 nginxinc/nginx-unprivileged:1.31-alpine
 apache/kafka-native:4.1.0
 
